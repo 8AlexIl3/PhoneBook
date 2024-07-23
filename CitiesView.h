@@ -10,15 +10,15 @@
 class CCitiesView : public CListView
 {
 protected: // create from serialization only
-	CCitiesView() noexcept;
 	DECLARE_DYNCREATE(CCitiesView)
 
 // Attributes
-public:
+private:
 	CCitiesDocument* GetDocument() const;
+	CListCtrl& m_oListCtrl;
 // Operations
 public:
-
+	CCitiesView() noexcept;
 // Overrides
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);

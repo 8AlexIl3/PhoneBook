@@ -9,7 +9,9 @@ class CCitiesDlg : public CDialogEx
 	DECLARE_DYNAMIC(CCitiesDlg)
 
 public:
-	CCitiesDlg(CWnd* pParent = nullptr);   // standard constructor
+	CCitiesDlg(CWnd* pParent = nullptr,
+		const CString& cityName = _T(""),
+		const CString& townResidence = _T(""));
 	virtual ~CCitiesDlg();
 
 // Dialog Data
@@ -22,11 +24,15 @@ protected:
 	void OnOK();
 	DECLARE_MESSAGE_MAP()
 public:
-	// City name to be entered
 	CEdit m_EdbName;
 	CEdit m_EdbResidence;
 	CString m_szCityName;
 	CString m_szTownResidence;
 	CListCtrl m_ListControl;
 	virtual BOOL OnInitDialog();
+
+private:
+	CString m_initialCityName;
+	CString m_initialTownResidence;
+	BOOL ValidateData();
 };
