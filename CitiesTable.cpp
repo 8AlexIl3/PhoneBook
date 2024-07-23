@@ -2,7 +2,7 @@
 #include "CitiesTable.h"
 #include "DBconnection.h"
 
-BOOL CCitiesTable::SelectAll(CAutoArray<CITIES>& oCitiesArray)
+BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
 {
     //Connect to server->database->open session
     if (!m_oConnection.InitializeConnection()) {

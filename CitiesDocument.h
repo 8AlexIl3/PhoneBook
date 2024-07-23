@@ -9,7 +9,7 @@ protected:
 
 public:
     // Array to hold city records
-    CAutoArray<CITIES> m_oCitiesArray;
+    CAutoMemoryArray<CITIES> m_oCitiesArray;
     BOOL InsertCity(CITIES& oCity);
     BOOL DeleteCityByID(const long lID, const long lrowIndexer);
     BOOL UpdateCityByID(const long lID, CITIES& oCity);

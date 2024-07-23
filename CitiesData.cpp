@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CitiesData.h"
-BOOL CCitiesData::SelectAll(CAutoArray<CITIES>& oCitiesArray){
+BOOL CCitiesData::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray){
     return CCitiesTable::SelectAll(oCitiesArray);
 }
 

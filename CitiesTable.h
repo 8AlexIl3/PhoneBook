@@ -21,7 +21,7 @@ public:
     /// <summary>Loads up all cities from the table </summary>
     /// <param name="oCitiesArray">Cities that will be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    BOOL SelectAll(CAutoArray<CITIES>& oCitiesArray);
+    BOOL SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray);
 
     /// <summary>Get a city structure by its' id </summary>
     /// <param name="lID">ID to be searched for</param>

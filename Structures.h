@@ -73,10 +73,10 @@ typedef CTypedPtrArray<CPtrArray, CITIES*> CPtrCitiesArray;
 /// <summary>Array that frees the memory upon destruction</summary>
 /// <typeparam name="TYPE">Type of pointer the array will be</typeparam>
 template<class TYPE>
-class CAutoArray : public CTypedPtrArray<CPtrArray, TYPE*>
+class CAutoMemoryArray : public CTypedPtrArray<CPtrArray, TYPE*>
 {
 public:
-	virtual ~CAutoArray()
+	virtual ~CAutoMemoryArray()
 	{
 		RemoveAllAndDelete();
 	}
