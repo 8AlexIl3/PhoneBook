@@ -1,21 +1,39 @@
 
 // CitiesView.h : interface of the CCitiesView class
 //
-
 #pragma once
 #define ID_COLUMN			0
 #define CITY_COLUMN			1
 #define RESIDENCE_COLUMN	2
+
+#define DEFAULT_COLUMN_WIDTH 100
+
+#define INDEX_NOT_FOUND -1
 
 class CCitiesView : public CListView
 {
 protected: // create from serialization only
 	DECLARE_DYNCREATE(CCitiesView)
 
-// Attributes
+///Members----------------------------------------------------------------------------------------------------
+private:
+	/// <summary> List control associated with the document upon initialization</summary>
+	CListCtrl& m_oListCtrl;
+
+///Member functions-------------------------------------------------------------------------------------------
 private:
 	CCitiesDocument* GetDocument() const;
-	CListCtrl& m_oListCtrl;
+	/// <summary> Called by pressing insert</summary>
+	void InsertCity();
+	/// <summary> Called by pressing enter key while selected a city </summary>
+	void CitySelector();
+	/// <summary> Called by pressing delete key while selected a city </summary>
+	void DeleteCity();
+	/// <summary> Called by pressing delete key while selected a city </summary>
+	void UpdateCity();
+	/// <summary> Show all cities currently in the document</summary>
+	void DisplayData();
+
 // Operations
 public:
 	CCitiesView() noexcept;
@@ -33,18 +51,13 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:
-
 // Generated message map functions
 protected:
-	afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnInsertCity();
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	
 
 	DECLARE_MESSAGE_MAP()
 };

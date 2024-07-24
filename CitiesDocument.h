@@ -1,4 +1,3 @@
-// Add necessary includes and member variables
 #include "CitiesData.h"
 
 class CCitiesDocument : public CDocument
@@ -6,17 +5,21 @@ class CCitiesDocument : public CDocument
 protected:
     CCitiesDocument() noexcept;
     DECLARE_DYNCREATE(CCitiesDocument)
-
+///Members----------------------------------------------------------------------------------------------------
 public:
     // Array to hold city records
     CAutoMemoryArray<CITIES> m_oCitiesArray;
+private:
+    //Data object to call functions from the data class
+    CCitiesData oCitiesData;
+///Member functions-------------------------------------------------------------------------------------------
+public:
     BOOL InsertCity(CITIES& oCity);
     BOOL DeleteCityByID(const long lID, const long lrowIndexer);
     BOOL UpdateCityByID(const long lID, CITIES& oCity);
     BOOL SelectCityByID(const long lID, CITIES& oCity);
     BOOL LoadCities();
 private:
-    CCitiesData oCitiesData;
     void ClearArray();
     // Overrides
 public:
