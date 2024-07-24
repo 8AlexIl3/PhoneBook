@@ -24,7 +24,6 @@ void CCitiesDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDB_CITIES_NAME, m_EdbName);
 	DDX_Control(pDX, IDC_EDB_CITIES_RESIDENCE, m_EdbResidence);
-	DDX_Control(pDX, IDC_LSC_CITIES, m_ListControl);
 }
 
 BEGIN_MESSAGE_MAP(CCitiesDlg, CDialogEx)

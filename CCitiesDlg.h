@@ -28,8 +28,8 @@ public:
 	CEdit m_EdbResidence;
 	CString m_szCityName;
 	CString m_szTownResidence;
-	CListCtrl m_ListControl;
-	virtual BOOL OnInitDialog();
+
+	BOOL OnInitDialog() override;
 
 private:
 	CString m_initialCityName;

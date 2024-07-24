@@ -7,17 +7,24 @@ END_MESSAGE_MAP()
 
 CCitiesDocument::CCitiesDocument() noexcept
 {
-    // TODO: add one-time construction code here
 }
 
 CCitiesDocument::~CCitiesDocument()
 {
 }
 
+CITIES CCitiesDocument::GetCity(long lIndexer)
+{
+    CITIES oCity=*m_oCitiesArray.GetAt(lIndexer);
+    return oCity;
+}
+
 BOOL CCitiesDocument::OnNewDocument()
 {
+    
     if (!CDocument::OnNewDocument())
         return FALSE;
+        SetTitle(L"CitiesDocument");
 
    if (!LoadCities())
        return FALSE;
@@ -36,6 +43,11 @@ void CCitiesDocument::Serialize(CArchive& ar)
     {
         // TODO: add loading code here
     }
+}
+
+void CCitiesDocument::SetTitle(LPCTSTR lpszTitle)
+{
+    CDocument::SetTitle(lpszTitle);
 }
 
 BOOL CCitiesDocument::LoadCities()

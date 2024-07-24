@@ -17,7 +17,6 @@ BEGIN_MESSAGE_MAP(CCitiesView, CListView)
     ON_WM_RBUTTONDOWN()
     ON_WM_UPDATEUISTATE()
     ON_WM_KEYDOWN()
-    ON_COMMAND(IDM_INSERT_CITY, &CCitiesView::InsertCity)
 END_MESSAGE_MAP()
 
 CCitiesView::CCitiesView() noexcept
@@ -59,6 +58,7 @@ void CCitiesView::DisplayData() {
 
     CCitiesDocument* pDoc = GetDocument();
 
+
     for (int indexer(0); indexer < pDoc->m_oCitiesArray.GetSize(); ++indexer)
     {
         CITIES* pCity = pDoc->m_oCitiesArray.GetAt(indexer);
@@ -90,97 +90,137 @@ void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     CListView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
-void CCitiesView::DeleteCity(){
+long CCitiesView::GetCurselView() {
     POSITION pos = m_oListCtrl.GetFirstSelectedItemPosition();
-    if (pos != NULL)
-    {
-        CCitiesDocument* pDoc = GetDocument();
-        int lIndexer = m_oListCtrl.GetNextSelectedItem(pos);
-        if (lIndexer != INDEX_NOT_FOUND)
-        {
-            
-            //Get ID from the selected row
-            long lItemID = _wtoi(m_oListCtrl.GetItemText(lIndexer, ID_COLUMN));
+    if (!pos)
+        return INDEX_NOT_FOUND;
 
-            if (!lItemID)//ID is equal to 0
-                AfxMessageBox(L"Грешка: Градът не може да бъде избран");
-            else if (!pDoc->DeleteCityByID(lItemID, lIndexer)) {
-                AfxMessageBox(L"Грешка: Градът не може да бъде изтрит");
-            }
-        }
+    int lIndexer = m_oListCtrl.GetNextSelectedItem(pos);
+    if (lIndexer == INDEX_NOT_FOUND)
+        return INDEX_NOT_FOUND;
+
+    return lIndexer;
+}
+BOOL CCitiesView::DeleteCity(){
+
+    long lIndexer = GetCurselView();
+
+    if (lIndexer==INDEX_NOT_FOUND)
+        return FALSE;
+    
+    CCitiesDocument* pDoc = GetDocument();
+
+    if (!pDoc) {
+        AfxMessageBox(L"Не може да бъде извлечен документ");
+        return FALSE;
     }
+    //Get ID from the selected row
+    CITIES oCity = pDoc->GetCity(lIndexer);
+
+    if (!oCity.lID) {//ID is equal to 0
+        AfxMessageBox(L"Грешка: Градът с ID не трябва да съществува");
+        return FALSE;
+    }
+    else if (!pDoc->DeleteCityByID(oCity.lID, lIndexer)) {
+        AfxMessageBox(L"Грешка: Градът не може да бъде изтрит");
+        return FALSE;
+    }
+
+    return TRUE;
 }
 //Display additionial info
-void CCitiesView::CitySelector() {
-    POSITION pos = m_oListCtrl.GetFirstSelectedItemPosition();
-    if (pos != NULL)
-    {
-        int lIndexer = m_oListCtrl.GetNextSelectedItem(pos);
-        CCitiesDocument* pDoc = GetDocument();
-        if (lIndexer != INDEX_NOT_FOUND)
-        {
-            CITIES oCitySelector;
+BOOL CCitiesView::CitySelector() {
+    long lIndexer = GetCurselView();
 
-            //Get ID from the selected row
-            long lItemID = _wtoi(m_oListCtrl.GetItemText(lIndexer, ID_COLUMN));
+    if (lIndexer == INDEX_NOT_FOUND)
+        return FALSE;
 
-            CString strCity;
-            if (!lItemID) {
-                AfxMessageBox(L"Грешка: Невалидно избиране на град");
-            }
-            else if (pDoc->SelectCityByID(lItemID, oCitySelector)) {
-                strCity.Format(L"Населено място: %s,Област: %s, ID: %d, Брояч: %d",
-                    oCitySelector.szCityName,
-                    oCitySelector.szTownResidence,
-                    oCitySelector.lID,
-                    oCitySelector.lUpdateCounter);
-                AfxMessageBox(strCity);
-            }
-        }
+    CCitiesDocument* pDoc = GetDocument();
+
+    if (!pDoc) {
+        AfxMessageBox(L"Не може да бъде извлечен документ");
+        return FALSE;
     }
+    CITIES oCitySelector;
+
+    //Get ID from the selected row
+    CITIES oCity = pDoc->GetCity(lIndexer);
+
+    if (!oCity.lID) {
+        AfxMessageBox(L"Грешка: Невалидно избиране на град");
+        return FALSE;
+    }
+    if (!pDoc->SelectCityByID(oCity.lID, oCitySelector)) {
+        AfxMessageBox(L"Грешка: Не може да бъде избран град");
+        return FALSE;
+    }
+    CString strCity;
+
+    //Print City
+        strCity.Format(L"Населено място: %s,Област: %s, ID: %d, Брояч: %d",
+        oCitySelector.szCityName,
+        oCitySelector.szTownResidence,
+        oCitySelector.lID,
+        oCitySelector.lUpdateCounter);
+        AfxMessageBox(strCity);
+
+    return TRUE;
 }
-void CCitiesView::UpdateCity()
+BOOL CCitiesView::UpdateCity()
 {
-    POSITION pos = m_oListCtrl.GetFirstSelectedItemPosition();
-    if (pos != NULL)
-    {
-        CCitiesDocument* pDoc = GetDocument();
-        int lIndexer = m_oListCtrl.GetNextSelectedItem(pos);
-        if (lIndexer != INDEX_NOT_FOUND)
-        {
-            //Convert the selected rows' ID to integer
-            CITIES* pCityUpdater = pDoc->m_oCitiesArray.GetAt(lIndexer);
+    long lIndexer = GetCurselView();
 
-            //Get ID from the selected row
-            long lItemID = _wtoi(m_oListCtrl.GetItemText(lIndexer, ID_COLUMN));
-            
-            //Initialize the dialog edit controls with values from the selected city
-            CCitiesDlg oCityUpdateDialog(nullptr, pCityUpdater->szCityName, pCityUpdater->szTownResidence);
+    if (lIndexer == INDEX_NOT_FOUND)
+        return FALSE;
 
-            //Set the updated values upon pressing confirm 
-            if (oCityUpdateDialog.DoModal() == IDOK) {
-                _tcscpy_s(pCityUpdater->szCityName, oCityUpdateDialog.m_szCityName);
-                _tcscpy_s(pCityUpdater->szTownResidence, oCityUpdateDialog.m_szTownResidence);
-                pDoc->UpdateCityByID(lItemID, *pCityUpdater);
-            }
-        }
+    CCitiesDocument* pDoc = GetDocument();
+
+    if (!pDoc) {
+        AfxMessageBox(L"Не може да бъде извлечен документ");
+        return FALSE;
     }
+
+    CITIES* pCityUpdater = &pDoc->GetCity(lIndexer);
+
+    //Initialize the dialog edit controls with values from the selected city
+    CCitiesDlg oCityUpdateDialog(nullptr, pCityUpdater->szCityName, pCityUpdater->szTownResidence);
+
+    if (oCityUpdateDialog.DoModal() == IDCANCEL) {
+        return FALSE;
+    }
+
+    //Copy the data
+    _tcscpy_s(pCityUpdater->szCityName, oCityUpdateDialog.m_szCityName);
+    _tcscpy_s(pCityUpdater->szTownResidence, oCityUpdateDialog.m_szTownResidence);
+    if (!pDoc->UpdateCityByID(pCityUpdater->lID, *pCityUpdater)) {
+        return FALSE;
+    }
+
+    return TRUE;
 }
-void CCitiesView::InsertCity() {
+BOOL CCitiesView::InsertCity() {
     CCitiesDocument* pDoc = GetDocument();
 
     if (!pDoc) {
         AfxMessageBox(L"Unable to fetch data.\n");
-        return;
+        return FALSE;
     }
+
     CCitiesDlg oCityInsertDialog;
-    //Set the updated values upon pressing confirm 
-    if (oCityInsertDialog.DoModal() == IDOK) {
-        CITIES oInsertCity;
-        _tcscpy_s(oInsertCity.szCityName, oCityInsertDialog.m_szCityName);
-        _tcscpy_s(oInsertCity.szTownResidence, oCityInsertDialog.m_szTownResidence);
-        bool bRresult=pDoc->InsertCity(oInsertCity);
+
+    if (oCityInsertDialog.DoModal() == IDCANCEL) {
+        return FALSE;
     }
+
+    CITIES oInsertCity;
+    //Copy the data
+    _tcscpy_s(oInsertCity.szCityName, oCityInsertDialog.m_szCityName);
+    _tcscpy_s(oInsertCity.szTownResidence, oCityInsertDialog.m_szTownResidence);
+
+    if (!pDoc->InsertCity(oInsertCity))
+        return FALSE;
+
+    return TRUE;
 }
 
 

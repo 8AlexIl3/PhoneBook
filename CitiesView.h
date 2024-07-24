@@ -19,20 +19,24 @@ protected: // create from serialization only
 private:
 	/// <summary> List control associated with the document upon initialization</summary>
 	CListCtrl& m_oListCtrl;
-
 ///Member functions-------------------------------------------------------------------------------------------
 private:
 	CCitiesDocument* GetDocument() const;
 	/// <summary> Called by pressing insert</summary>
-	void InsertCity();
+	BOOL InsertCity();
 	/// <summary> Called by pressing enter key while selected a city </summary>
-	void CitySelector();
+	BOOL CitySelector();
 	/// <summary> Called by pressing delete key while selected a city </summary>
-	void DeleteCity();
+	BOOL DeleteCity();
 	/// <summary> Called by pressing delete key while selected a city </summary>
-	void UpdateCity();
+	BOOL UpdateCity();
 	/// <summary> Show all cities currently in the document</summary>
 	void DisplayData();
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	long GetCurselView();
 
 // Operations
 public:

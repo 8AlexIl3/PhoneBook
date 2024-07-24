@@ -9,10 +9,7 @@ public:
     BOOL SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray);
 
     /// <summary>Get a city structure by its' id </summary>
-    /// <param name=
-    /// 
-    /// 
-    /// "lID">ID to be searched for</param>
+    /// <param name="lID">ID to be searched for</param>
     /// <param name="recCity">Reference to the city that is searched (if not found
     /// remains empty)</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>

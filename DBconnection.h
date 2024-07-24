@@ -10,7 +10,7 @@ public:
     BOOL InitializeConnection();
     /// <summary>Determine if query is successful</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
-    BOOL QuerySuccessful(const HRESULT& hResult);
+    BOOL IsActionSuccessful(const HRESULT& hResult);
 
     void CloseSessionAndDataSource();
 

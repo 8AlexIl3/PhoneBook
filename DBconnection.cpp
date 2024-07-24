@@ -38,7 +38,7 @@ BOOL CDBConnection::InitializeConnection()
 
     return TRUE;
 }
-BOOL CDBConnection::QuerySuccessful(const HRESULT& hResult) {
+BOOL CDBConnection::IsActionSuccessful(const HRESULT& hResult) {
 
     if (hResult == S_OK)
         return TRUE;

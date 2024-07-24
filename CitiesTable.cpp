@@ -14,7 +14,7 @@ BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
 
     oHresult = Open(m_oConnection.GetSession(), oStrQuery);
     //If query is not successful
-    if (!m_oConnection.QuerySuccessful(oHresult))
+    if (!m_oConnection.IsActionSuccessful(oHresult))
     {
         m_oConnection.CloseSessionAndDataSource();
 
@@ -22,7 +22,7 @@ BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
     }
     oHresult = MoveFirst();
     //If there is no data in the table
-    if (!m_oConnection.QuerySuccessful(oHresult))
+    if (!m_oConnection.IsActionSuccessful(oHresult))
     {
         m_oConnection.CloseSessionAndDataSource();
 
@@ -50,7 +50,7 @@ BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
     oHresult = Open(m_oConnection.GetSession(), strQuery);
 
     //If query is NOT sucessful 
-    if (!m_oConnection.QuerySuccessful(oHresult)) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
@@ -81,7 +81,7 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
     //If query is successful
-    if (!m_oConnection.QuerySuccessful(oHresult) ) {
+    if (!m_oConnection.IsActionSuccessful(oHresult) ) {
         m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
@@ -129,7 +129,7 @@ BOOL CCitiesTable::InsertCity(CITIES& recCity) {
     strQuery.Format(_T("SELECT * FROM CITIES WHERE 1=0"));
 
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
-    if (!m_oConnection.QuerySuccessful(oHresult)) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
@@ -139,7 +139,7 @@ BOOL CCitiesTable::InsertCity(CITIES& recCity) {
     m_recCity = recCity;
     // Insert new record
     oHresult = Insert(ACCESSOR_1);
-    if (!m_oConnection.QuerySuccessful(oHresult)) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
         m_oConnection.CloseSessionAndDataSource();
 
@@ -164,7 +164,7 @@ BOOL CCitiesTable::DeleteWhereID(const long lID) {
 
     oHresult = Open(m_oConnection.GetSession(), strQuery,&m_oConnection.GetUpdatePropSet());
 
-    if (!m_oConnection.QuerySuccessful(oHresult)) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
@@ -172,7 +172,7 @@ BOOL CCitiesTable::DeleteWhereID(const long lID) {
 
     oHresult = MoveFirst();
 
-    if (!m_oConnection.QuerySuccessful(oHresult)) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
         m_oConnection.CloseSessionAndDataSource();
 
@@ -181,7 +181,7 @@ BOOL CCitiesTable::DeleteWhereID(const long lID) {
 
     oHresult = Delete();
 
-    if (!m_oConnection.QuerySuccessful(oHresult)) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
         m_oConnection.CloseSessionAndDataSource();
 
