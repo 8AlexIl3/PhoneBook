@@ -1,9 +1,9 @@
 #pragma once
+
 #include <atldbcli.h>
 #include <atlstr.h> 
 #include "Structures.h"
 #include "CitiesAccessor.h"
-
 #include "DBconnection.h"
 /// <summary>Клас за работа с таблица CITIES</summary>
 class CCitiesTable : private CCommand<CAccessor<CCitiesAccessor>>
@@ -54,7 +54,7 @@ private:
 
     /// <param name="oCitiesArray">array to add cities to</param>
     /// <returns>TRUE if succesful/FALSE if not</returns>
-    BOOL CCitiesTable::AddRecord(CPtrCitiesArray& oCitiesArray);
+    BOOL CCitiesTable::AddRecord(CAutoMemoryArray<CITIES>& oCitiesArray);
     /// Members ----------------------------------------------------------------------------
 private:
     CDBConnection m_oConnection; 

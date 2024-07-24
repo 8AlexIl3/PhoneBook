@@ -218,7 +218,7 @@ BOOL CCitiesTable::GetRecord(const long lID) {
     return FALSE;
 
 }
-BOOL CCitiesTable::AddRecord(CPtrCitiesArray& oCitiesArray) {
+BOOL CCitiesTable::AddRecord(CAutoMemoryArray<CITIES>& oCitiesArray) {
     CITIES* pCity = new CITIES(m_recCity);
 
     if (pCity) {//If memory is allocated
