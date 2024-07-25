@@ -1,5 +1,12 @@
 #include "pch.h"
 #include "DBconnection.h"
+CDBConnection::CDBConnection() {
+    InitializeConnection();
+}
+
+CDBConnection::~CDBConnection() {
+    CloseSessionAndDataSource();
+}
 CDBPropSet CDBConnection::ConnectToSQLServer() {
 
     CDBPropSet oDBPropSet(DBPROPSET_DBINIT);
@@ -20,10 +27,7 @@ CDBPropSet CDBConnection::UpdateDbPropSet() {
     return oUpdateDBPropSet;
 }
 
-
-BOOL CDBConnection::InitializeConnection()
-{
-    m_oDBPropSet = ConnectToSQLServer();
+BOOL CDBConnection::ViewSessionResult() {
 
     if (!ConnectToSQLDB(m_oDataSource.Open(_T("SQLOLEDB.1"), &m_oDBPropSet))) {
         return FALSE;
@@ -35,8 +39,12 @@ BOOL CDBConnection::InitializeConnection()
         return FALSE;
     }
     m_oUpdatePropSet = UpdateDbPropSet();
-
     return TRUE;
+}
+void CDBConnection::InitializeConnection()
+{
+    m_oDBPropSet = ConnectToSQLServer();
+
 }
 BOOL CDBConnection::IsActionSuccessful(const HRESULT& hResult) {
 

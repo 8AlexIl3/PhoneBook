@@ -4,7 +4,7 @@
 #include <atlstr.h> 
 #include "Structures.h"
 #include "CitiesAccessor.h"
-#include "DBconnection.h"
+#include "DBconnectionSingleton.h"
 /// <summary>Клас за работа с таблица CITIES</summary>
 class CCitiesTable : private CCommand<CAccessor<CCitiesAccessor>>
 {
@@ -57,6 +57,6 @@ private:
     BOOL AddRecord(CAutoMemoryArray<CITIES>& oCitiesArray);
     /// Members ----------------------------------------------------------------------------
 private:
-    CDBConnection m_oConnection; 
+    CDBConnection& m_oConnection = CDBConnectionSingleton::GetInstance();
 };
 

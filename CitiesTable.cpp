@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "CitiesTable.h"
-#include "DBconnection.h"
+#include "DBconnectionSingleton.h"
 
 BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
 {
     //Connect to server->database->open session
-    if (!m_oConnection.InitializeConnection()) {
+    if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
     }
     //Set query
@@ -40,7 +40,7 @@ BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
 }
 
 BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
-    if (!m_oConnection.InitializeConnection()){
+    if (!m_oConnection.ViewSessionResult()){
         return FALSE;
     }
     CString strQuery;
@@ -71,7 +71,7 @@ BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
 BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 {
-    if (!m_oConnection.InitializeConnection()) {
+    if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
     }
     HRESULT oHresult;
@@ -121,7 +121,7 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 
 BOOL CCitiesTable::InsertCity(CITIES& recCity) {
     // Connect to server -> database -> open session
-    if (!m_oConnection.InitializeConnection()) {
+    if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
     }
     HRESULT oHresult;
@@ -155,7 +155,7 @@ BOOL CCitiesTable::InsertCity(CITIES& recCity) {
 BOOL CCitiesTable::DeleteWhereID(const long lID) {
     
     //Connect to server->database->open session
-    if (!m_oConnection.InitializeConnection()) {
+    if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
     }
     HRESULT oHresult;

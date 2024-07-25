@@ -5,9 +5,9 @@ class CDBConnection {
 
 public:
     /// Methods -----------------------------------------------------------------
-
-
-    BOOL InitializeConnection();
+    ~CDBConnection();
+    CDBConnection();
+    void InitializeConnection();
     /// <summary>Determine if query is successful</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
     BOOL IsActionSuccessful(const HRESULT& hResult);
@@ -17,6 +17,7 @@ public:
     /// <summary>Update Data in the table</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
     BOOL UpdateData(const HRESULT& hResult, const long& lID);
+    BOOL ViewSessionResult();
 
 private:
     /// <returns>Database connection to the server</returns>

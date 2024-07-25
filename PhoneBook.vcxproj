@@ -191,6 +191,7 @@
     <ClInclude Include="CitiesDocument.h" />
     <ClInclude Include="CitiesView.h" />
     <ClInclude Include="DBconnection.h" />
+    <ClInclude Include="DBConnectionSingleton.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
