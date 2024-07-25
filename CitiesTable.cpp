@@ -82,12 +82,14 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 
     //If query is successful
     if (!m_oConnection.IsActionSuccessful(oHresult) ) {
+
         m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
     //if record exists in table
     if (!GetRecord(lID)) {
+        Close();
         m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
@@ -95,7 +97,8 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 
     //record is NOT up to date
     if (recCity.lUpdateCounter != m_recCity.lUpdateCounter) {
-        AfxMessageBox(_T("Update counter mismatch"));
+        AfxMessageBox(_T("Update counter mismatch,please refresh"));
+        Close();
         m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
@@ -131,7 +134,7 @@ BOOL CCitiesTable::InsertCity(CITIES& recCity) {
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         m_oConnection.CloseSessionAndDataSource();
-
+        Close();
         return FALSE;
     }
 
@@ -166,6 +169,7 @@ BOOL CCitiesTable::DeleteWhereID(const long lID) {
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         m_oConnection.CloseSessionAndDataSource();
+        Close();
 
         return FALSE;
     }

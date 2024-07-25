@@ -5,7 +5,9 @@
 #include "Structures.h"
 #include "CitiesAccessor.h"
 #include "DBconnectionSingleton.h"
+
 /// <summary>Клас за работа с таблица CITIES</summary>
+
 class CCitiesTable : private CCommand<CAccessor<CCitiesAccessor>>
 {
 public:
@@ -45,7 +47,6 @@ public:
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     BOOL DeleteWhereID(const long lID);
-
 
 private:
     /// <param name="lID">ID to search for </param>

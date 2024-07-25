@@ -15,11 +15,11 @@ private:
 ///Member functions-------------------------------------------------------------------------------------------
 public:
     BOOL InsertCity(CITIES& oCity);
-    BOOL DeleteCityByID(const long lID, const long lrowIndexer);
-    BOOL UpdateCityByID(const long lID, CITIES& oCity);
-    BOOL SelectCityByID(const long lID, CITIES& oCity);
+    BOOL DeleteCity(const long lID, const long lrowIndexer);
+    BOOL UpdateCity(CITIES& oCity);
+    BOOL SelectCity(const long lID, CITIES& oCity);
     BOOL LoadCities();
-    CITIES GetCity(long lIndexer);
+    CITIES& GetCity(long lIndexer);
 private:
     void ClearArray();
     // Overrides

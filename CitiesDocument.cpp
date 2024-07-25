@@ -13,25 +13,26 @@ CCitiesDocument::~CCitiesDocument()
 {
 }
 
-CITIES CCitiesDocument::GetCity(long lIndexer)
+CITIES& CCitiesDocument::GetCity(long lIndexer)
 {
-    CITIES oCity=*m_oCitiesArray.GetAt(lIndexer);
-    return oCity;
+     return *m_oCitiesArray.GetAt(lIndexer);
+    
 }
 
 BOOL CCitiesDocument::OnNewDocument()
 {
-    
+    static int numberDoc=1;
     if (!CDocument::OnNewDocument())
         return FALSE;
-        SetTitle(L"CitiesDocument");
+    CString strName;
+    strName.Format(L"Cities Document %d", numberDoc++);
+    SetTitle(strName);
 
    if (!LoadCities())
        return FALSE;
    
     return TRUE;
 }
-
 
 void CCitiesDocument::Serialize(CArchive& ar)
 {
@@ -69,7 +70,6 @@ void CCitiesDocument::ClearArray()
 }
 BOOL CCitiesDocument::InsertCity(CITIES& oCity)
 {
-
     if (!oCitiesData.InsertCity(oCity))
         return FALSE;
 
@@ -84,7 +84,7 @@ BOOL CCitiesDocument::InsertCity(CITIES& oCity)
 
     return TRUE;
 }
-BOOL CCitiesDocument::DeleteCityByID(const long lID, const long lrowIndexer)
+BOOL CCitiesDocument::DeleteCity(const long lID, const long lrowIndexer)
 {
     if (!oCitiesData.DeleteWhereID(lID))
         return FALSE;
@@ -101,16 +101,16 @@ BOOL CCitiesDocument::DeleteCityByID(const long lID, const long lrowIndexer)
 
     return TRUE;
 }
-BOOL CCitiesDocument::UpdateCityByID(const long lID,CITIES& oCity)
+BOOL CCitiesDocument::UpdateCity(CITIES& oCity)
 {
-    if (!oCitiesData.UpdateWhereID(lID, oCity))
+    if (!oCitiesData.UpdateWhereID(oCity.lID, oCity))
         return FALSE;
 
     LoadCities();
 
     return TRUE;
 }
-BOOL CCitiesDocument::SelectCityByID(const long lID, CITIES& oCity)
+BOOL CCitiesDocument::SelectCity(const long lID, CITIES& oCity)
 {
     if (!oCitiesData.SelectWhereID(lID,oCity))
         return FALSE;

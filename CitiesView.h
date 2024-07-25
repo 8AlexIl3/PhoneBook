@@ -19,23 +19,21 @@ protected: // create from serialization only
 private:
 	/// <summary> List control associated with the document upon initialization</summary>
 	CListCtrl& m_oListCtrl;
+	CCitiesDocument* m_pDoc;
 ///Member functions-------------------------------------------------------------------------------------------
 private:
 	CCitiesDocument* GetDocument() const;
 	/// <summary> Called by pressing insert</summary>
 	BOOL InsertCity();
 	/// <summary> Called by pressing enter key while selected a city </summary>
-	BOOL CitySelector();
+	BOOL SelectCity();
 	/// <summary> Called by pressing delete key while selected a city </summary>
 	BOOL DeleteCity();
 	/// <summary> Called by pressing delete key while selected a city </summary>
 	BOOL UpdateCity();
 	/// <summary> Show all cities currently in the document</summary>
 	void DisplayData();
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <returns></returns>
+	///<returns>Index of the users cursel on the list control</returns>
 	long GetCurselView();
 
 // Operations
@@ -46,6 +44,7 @@ public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
 	virtual void OnInitialUpdate(); // called first time after construct
+
 
 // Implementation
 public:
@@ -61,7 +60,8 @@ protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	
+	afx_msg void OnInsertCity();
+	afx_msg void OnRefresh();
 
 	DECLARE_MESSAGE_MAP()
 };

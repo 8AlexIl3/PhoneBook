@@ -49,32 +49,33 @@ BOOL CCitiesDlg::OnInitDialog()
 	m_EdbName.SetWindowTextW(m_initialCityName);
 	m_EdbResidence.SetWindowTextW(m_initialTownResidence);
 	UpdateData(TRUE);
+
 	return TRUE;
 }
 BOOL CCitiesDlg::ValidateData() {
 	CArray<CString> oErrors;
-	std::wstring patternChecker;
+	std::wstring oPatternChecker;
 
-	//Pattern that allows only bulgarian and whitespaces
-	std::wregex pattern(L"^[\\u0400-\\u04FF\\s]+$");
+	//oPattern that allows only bulgarian and whitespaces
+	std::wregex oPattern(L"^[\\u0400-\\u04FF\\s]+$");
 
 	m_szCityName.Trim();
 
-	patternChecker = m_szCityName.GetString();
+	oPatternChecker = m_szCityName.GetString();
 	if (m_szCityName.IsEmpty()) {
 		oErrors.Add(L"Грешка: въведете град");
 	}
-	else if (!std::regex_match(patternChecker, pattern)) {
+	else if (!std::regex_match(oPatternChecker, oPattern)) {
 		oErrors.Add(L"Грешка: въведете полето на града с бълграски текст");
 	}
 
-
 	m_szTownResidence.Trim();
-	patternChecker = m_szTownResidence.GetString();
+
+	oPatternChecker = m_szTownResidence.GetString();
 	if (m_szTownResidence.IsEmpty()) {
 		oErrors.Add(L"Грешка: въведете област");
 	}
-	else if (!std::regex_match(patternChecker, pattern)) {
+	else if (!std::regex_match(oPatternChecker, oPattern)) {
 		oErrors.Add(L"Грешка: въведете полето на областта с бълграски текст");
 	}
 	else if (m_szCityName== m_initialCityName &&

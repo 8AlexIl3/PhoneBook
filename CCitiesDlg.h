@@ -23,16 +23,19 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	void OnOK();
 	DECLARE_MESSAGE_MAP()
+//Members----------------------------------------------------------------------------------------------------
 public:
 	CEdit m_EdbName;
 	CEdit m_EdbResidence;
 	CString m_szCityName;
 	CString m_szTownResidence;
 
-	BOOL OnInitDialog() override;
 
 private:
 	CString m_initialCityName;
 	CString m_initialTownResidence;
+//Member functions-------------------------------------------------------------------------------------------
 	BOOL ValidateData();
+	BOOL OnInitDialog() override;
+
 };
