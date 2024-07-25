@@ -1,6 +1,6 @@
 #pragma once
 #include "CitiesTable.h"
-class CCitiesData : public CCitiesTable
+class CCitiesData
 {/// Methods ----------------------------------------------------------------------------
 public:
     /// <summary>Loads up all cities from the table </summary>
@@ -30,5 +30,7 @@ public:
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     BOOL DeleteWhereID(const long lID);
+private:
+    CCitiesTable oCityTable;
 };
 

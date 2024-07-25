@@ -1,23 +1,21 @@
 #include "pch.h"
 #include "CitiesData.h"
 BOOL CCitiesData::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray){
-    return CCitiesTable::SelectAll(oCitiesArray);
+    return  oCityTable.SelectAll(oCitiesArray);
 }
 
 BOOL CCitiesData::SelectWhereID(const long lID, CITIES& recCity) {
-    return CCitiesTable::SelectWhereID(lID, recCity);
+    return oCityTable.SelectWhereID(lID, recCity);
 }
-
 
 BOOL CCitiesData::UpdateWhereID(const long lID, CITIES& recCity){
-    return CCitiesTable::UpdateWhereID(lID, recCity);
+    return  oCityTable.UpdateWhereID(lID, recCity);
 }
 
-
 BOOL CCitiesData::InsertCity(CITIES& recCity) {
-    return CCitiesTable::InsertCity(recCity);
+    return  oCityTable.InsertCity(recCity);
 }
 
 BOOL CCitiesData::DeleteWhereID(const long lID) {
-    return CCitiesTable::DeleteWhereID(lID);
+    return  oCityTable.DeleteWhereID(lID);
 }

@@ -54,7 +54,7 @@ private:
 
     /// <param name="oCitiesArray">array to add cities to</param>
     /// <returns>TRUE if succesful/FALSE if not</returns>
-    BOOL CCitiesTable::AddRecord(CAutoMemoryArray<CITIES>& oCitiesArray);
+    BOOL AddRecord(CAutoMemoryArray<CITIES>& oCitiesArray);
     /// Members ----------------------------------------------------------------------------
 private:
     CDBConnection m_oConnection; 
