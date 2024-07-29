@@ -1,13 +1,17 @@
 #include "pch.h"
 #include "DBconnection.h"
 CDBConnection::CDBConnection() {
-    InitializeConnection();
+    m_oDBPropSet = SetDBProperties();
+    m_oUpdatePropSet = UpdateDbPropSet();
+    OpenConnection();
+    OpenSession();
 }
 
 CDBConnection::~CDBConnection() {
-    CloseSessionAndDataSource();
+    m_oSession.Close();
+    m_oDataSource.Close();
 }
-CDBPropSet CDBConnection::ConnectToSQLServer() {
+CDBPropSet CDBConnection::SetDBProperties() {
 
     CDBPropSet oDBPropSet(DBPROPSET_DBINIT);
     oDBPropSet.AddProperty(DBPROP_INIT_DATASOURCE, _T("USER-28684S1KFL\\MSSQLSERVER01")); // SQL Server instance name
@@ -26,31 +30,57 @@ CDBPropSet CDBConnection::UpdateDbPropSet() {
     oUpdateDBPropSet.AddProperty(DBPROP_UPDATABILITY, DBPROPVAL_UP_CHANGE | DBPROPVAL_UP_INSERT | DBPROPVAL_UP_DELETE);
     return oUpdateDBPropSet;
 }
-
-BOOL CDBConnection::ViewSessionResult() {
-
-    if (!ConnectToSQLDB(m_oDataSource.Open(_T("SQLOLEDB.1"), &m_oDBPropSet))) {
+BOOL CDBConnection::OpenConnection() {
+    HRESULT oHresult=m_oDataSource.Open(_T("SQLOLEDB.1"), &m_oDBPropSet);
+    if (FAILED(oHresult))
+    {
         return FALSE;
     }
-    if (!OpenSession(m_oSession.Open(m_oDataSource))) {
-
-        m_oDataSource.Close();
-
-        return FALSE;
-    }
-    m_oUpdatePropSet = UpdateDbPropSet();
     return TRUE;
 }
-void CDBConnection::InitializeConnection()
-{
-    m_oDBPropSet = ConnectToSQLServer();
+BOOL CDBConnection::OpenSession() {
+    HRESULT oHresult= m_oSession.Open(m_oDataSource);
+    if (FAILED(oHresult))
+    {
+        return FALSE;
+    }
+    return TRUE;
 
 }
+BOOL CDBConnection::ViewSessionResult() {
+
+    BOOL bResultConnection=true;
+    if (!m_oDataSource.m_spInit) {
+        bResultConnection = OpenConnection();
+    }
+  
+    if (!bResultConnection) {
+        CString strError;
+        strError.Format(_T("Unable to connect to SQL Server database"));
+        AfxMessageBox(strError);
+
+        return FALSE;
+    }
+    if (!m_oSession.m_spOpenRowset) {
+            bResultConnection = OpenSession();
+        }
+
+    if (!bResultConnection) {
+        CStringW strError;
+        strError.Format(_T("Unable to open session."));
+        AfxMessageBox(strError);
+
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
 BOOL CDBConnection::IsActionSuccessful(const HRESULT& hResult) {
 
     if (hResult == S_OK)
         return TRUE;
-
+    
     //Return more accurate error info
     CString strError;
     switch (hResult) {
@@ -75,53 +105,6 @@ BOOL CDBConnection::IsActionSuccessful(const HRESULT& hResult) {
 
     return FALSE;
 }
-BOOL CDBConnection::UpdateData(const HRESULT& hResult, const long& lID) {
 
-    if (hResult == S_OK)
-        return TRUE;
 
-    //Return more accurate error info
-    CString strError;
-    switch (hResult) {
 
-    case DB_E_CONCURRENCYVIOLATION:
-        strError.Format(_T("Someone is working with this rowset currently"));
-        break;
-
-    default:
-        strError.Format(_T("Unable to update data"));
-        break;
-    }
-    AfxMessageBox(strError);
-    return FALSE;
-}
-BOOL CDBConnection::ConnectToSQLDB(const HRESULT& hResult) {
-
-    if (FAILED(hResult))
-    {
-        CString strError;
-        strError.Format(_T("Unable to connect to SQL Server database"));
-        AfxMessageBox(strError);
-
-        return FALSE;
-    }
-
-    return TRUE;
-}
-BOOL CDBConnection::OpenSession(const HRESULT& hResult) {
-
-    if (FAILED(hResult))
-    {
-        CStringW strError;
-        strError.Format(_T("Unable to open session."));
-        AfxMessageBox(strError);
-
-        return FALSE;
-    }
-
-    return TRUE;
-}
-void CDBConnection::CloseSessionAndDataSource() {
-    m_oSession.Close();
-    m_oDataSource.Close();
-}

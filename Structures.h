@@ -76,20 +76,36 @@ template<class TYPE>
 class CAutoMemoryArray : public CTypedPtrArray<CPtrArray, TYPE*>
 {
 public:
-	virtual ~CAutoMemoryArray()
-	{
-		RemoveAllAndDelete();
-	}
+    CAutoMemoryArray() = default;
+
+    CAutoMemoryArray(const CAutoMemoryArray& other)
+    {
+        CopyFrom(other);
+    }
+
+    virtual ~CAutoMemoryArray()
+    {
+        ClearArray();
+    }
+
 private:
-	void RemoveAllAndDelete()
-	{
-		
-		for (int i = 0; i < GetSize(); ++i)
-		{
-			void *p= GetAt(i);
-			delete GetAt(i);
-			p = NULL;
-		}
-		RemoveAll();
-	}
+    void ClearArray()
+    {
+        for (int i = 0; i < this->GetCount(); ++i)
+        {
+            delete this->GetAt(i);
+        }
+        this->RemoveAll();
+    }
+
+    void CopyFrom(const CAutoMemoryArray& other)
+    {
+        for (int i = 0; i < other.GetCount(); ++i)
+        {
+            TYPE* pNewElem = other.GetAt(i);
+            this->Add(pNewElem);
+        }
+    }
 };
+
+typedef CAutoMemoryArray<CITIES> CCitiesArray;

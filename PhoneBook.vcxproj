@@ -183,13 +183,14 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CCitiesDlg.h" />
+    <ClInclude Include="CitiesDlg.h" />
     <ClInclude Include="CitiesAccessor.h" />
     <ClInclude Include="CitiesData.h" />
     <ClInclude Include="CitiesTable.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="CitiesDocument.h" />
     <ClInclude Include="CitiesView.h" />
+    <ClInclude Include="ITable.h" />
     <ClInclude Include="DBconnection.h" />
     <ClInclude Include="DBConnectionSingleton.h" />
     <ClInclude Include="framework.h" />
@@ -204,7 +205,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CCitiesDlg.cpp" />
+    <ClCompile Include="CitiesDlg.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="CitiesData.cpp" />
     <ClCompile Include="CitiesDocument.cpp" />

@@ -4,35 +4,34 @@
 class CDBConnection {
 
 public:
-    /// Methods -----------------------------------------------------------------
-    ~CDBConnection();
+    // Constructor / Destructor
+    // ------------------------------------------------------------------------------------------------------
     CDBConnection();
-    void InitializeConnection();
+    virtual ~CDBConnection();
+
+    // Methods ----------------------------------------------------------------------------------------------
+public:
     /// <summary>Determine if query is successful</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
     BOOL IsActionSuccessful(const HRESULT& hResult);
 
-    void CloseSessionAndDataSource();
-
     /// <summary>Update Data in the table</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
-    BOOL UpdateData(const HRESULT& hResult, const long& lID);
     BOOL ViewSessionResult();
 
+
+ 
 private:
     /// <returns>Database connection to the server</returns>
-    CDBPropSet ConnectToSQLServer();
+    CDBPropSet SetDBProperties();
 
     /// <returns>Rowset properties</returns>
     CDBPropSet UpdateDbPropSet();
 
     /// <param name="hResult">hresult code to determine action </param>
     /// <returns>TRUE if successful/FALSE if not</returns>
-    BOOL ConnectToSQLDB(const HRESULT& hResult);
-
-    /// <param name="hResult">hresult code to determine action </param>
-    /// <returns>TRUE if successful/FALSE if not</returns>
-    BOOL OpenSession(const HRESULT& hResult);
+    BOOL OpenSession();
+    BOOL OpenConnection();
 
 
     /// Getters & Setters

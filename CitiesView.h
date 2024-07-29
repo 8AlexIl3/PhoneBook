@@ -14,13 +14,37 @@ class CCitiesView : public CListView
 {
 protected: // create from serialization only
 	DECLARE_DYNCREATE(CCitiesView)
+	DECLARE_MESSAGE_MAP()
 
-///Members----------------------------------------------------------------------------------------------------
-private:
-	/// <summary> List control associated with the document upon initialization</summary>
-	CListCtrl& m_oListCtrl;
-	CCitiesDocument* m_pDoc;
-///Member functions-------------------------------------------------------------------------------------------
+	//Constructors and destructors-------------------------------------------------------------------------------------------
+public:
+	CCitiesView() noexcept;
+	virtual ~CCitiesView();
+
+
+// Implementation
+
+#ifdef _DEBUG
+	virtual void AssertValid() const;
+	virtual void Dump(CDumpContext& dc) const;
+#endif
+
+	//MFC message handlers
+protected:
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnInsertCity();
+	afx_msg void OnRefresh();
+
+	//Overrides---------------------------------------------------------------------------------------------------
+public:
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+protected:
+	virtual void OnInitialUpdate() override; // called first time after construct
+
+	//Methods ---------------------------------------------------------------------------------------------------------------
 private:
 	CCitiesDocument* GetDocument() const;
 	/// <summary> Called by pressing insert</summary>
@@ -34,36 +58,15 @@ private:
 	/// <summary> Show all cities currently in the document</summary>
 	void DisplayData();
 	///<returns>Index of the users cursel on the list control</returns>
-	long GetCurselView();
+	long GetTableRowIndex();
 
-// Operations
-public:
-	CCitiesView() noexcept;
-// Overrides
-public:
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-protected:
-	virtual void OnInitialUpdate(); // called first time after construct
+	///Members----------------------------------------------------------------------------------------------------
+private:
+	/// <summary> List control associated with the document upon initialization</summary>
+	CListCtrl& m_oListCtrl;
+	/// <summary> Pointer to current document</summary>
+	CCitiesDocument* m_pDoc;
 
-
-// Implementation
-public:
-	virtual ~CCitiesView();
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-
-// Generated message map functions
-protected:
-	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-	afx_msg void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnInsertCity();
-	afx_msg void OnRefresh();
-
-	DECLARE_MESSAGE_MAP()
 };
 
 #ifndef _DEBUG  // debug version in CitiesView.cpp

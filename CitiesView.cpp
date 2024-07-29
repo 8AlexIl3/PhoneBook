@@ -2,7 +2,7 @@
 #include "CitiesDocument.h"
 #include "CitiesView.h"
 #include "PhoneBook.h"
-#include "CCitiesDlg.h"
+#include "CitiesDlg.h"
 //CitiesView.cpp
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -52,7 +52,6 @@ void CCitiesView::OnInitialUpdate()
 
 }
 void CCitiesView::OnRefresh() {
-    m_pDoc->LoadCities();
     m_oListCtrl.DeleteAllItems();
     DisplayData();
 }
@@ -70,14 +69,14 @@ void CCitiesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 
 void CCitiesView::DisplayData() {
 
-    for (int indexer(0); indexer < m_pDoc->m_oCitiesArray.GetSize(); ++indexer)
+    for (long lIndexer(0); lIndexer < m_pDoc->GetCityArray().GetCount(); ++lIndexer)
     {
-        CITIES* pCity = m_pDoc->m_oCitiesArray.GetAt(indexer);
+        CITIES* pCity = m_pDoc->GetCityArray().GetAt(lIndexer);
         CString strID;
         strID.Format(_T("%ld"), pCity->lID);
-        m_oListCtrl.InsertItem(indexer, strID);
-        m_oListCtrl.SetItemText(indexer, CITY_COLUMN, pCity->szCityName);
-        m_oListCtrl.SetItemText(indexer, RESIDENCE_COLUMN, pCity->szTownResidence);
+        m_oListCtrl.InsertItem(lIndexer, strID);
+        m_oListCtrl.SetItemText(lIndexer, CITY_COLUMN, pCity->szCityName);
+        m_oListCtrl.SetItemText(lIndexer, RESIDENCE_COLUMN, pCity->szTownResidence);
     }
 }
 void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -85,7 +84,7 @@ void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     bool bUpToDate(true);
     switch (nChar) {
     case VK_RETURN:
-        SelectCity();
+        bUpToDate=SelectCity();
         break;
     case VK_DELETE:
         bUpToDate = DeleteCity();
@@ -97,6 +96,7 @@ void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
         bUpToDate = UpdateCity();
         break;
     default:
+        bUpToDate = false;
         break;
     }
     //If actions in the switch fail update the view to most recent version
@@ -106,7 +106,7 @@ void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     CListView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
-long CCitiesView::GetCurselView() {
+long CCitiesView::GetTableRowIndex() {
     POSITION pos = m_oListCtrl.GetFirstSelectedItemPosition();
     if (!pos)
         return INDEX_NOT_FOUND;
@@ -119,7 +119,7 @@ long CCitiesView::GetCurselView() {
 }
 BOOL CCitiesView::DeleteCity(){
 
-    long lIndexer = GetCurselView();
+    long lIndexer = GetTableRowIndex();
 
     if (lIndexer==INDEX_NOT_FOUND)
         return FALSE;
@@ -142,9 +142,8 @@ BOOL CCitiesView::DeleteCity(){
 
     return TRUE;
 }
-//Display additionial info
 BOOL CCitiesView::SelectCity() {
-    long lIndexer = GetCurselView();
+    long lIndexer = GetTableRowIndex();
 
     if (lIndexer == INDEX_NOT_FOUND)
         return FALSE;
@@ -181,7 +180,7 @@ BOOL CCitiesView::SelectCity() {
 }
 BOOL CCitiesView::UpdateCity()
 {
-    long lIndexer = GetCurselView();
+    long lIndexer = GetTableRowIndex();
 
     if (lIndexer == INDEX_NOT_FOUND)
         return FALSE;
@@ -195,15 +194,15 @@ BOOL CCitiesView::UpdateCity()
 
 
     //Initialize the dialog edit controls with values from the selected city
-    CCitiesDlg oCityUpdateDialog(nullptr, oCityUpdater.szCityName, oCityUpdater.szTownResidence);
+    CCitiesDlg oCityDialog(oCityUpdater);
 
-    if (oCityUpdateDialog.DoModal() == IDCANCEL) {
+    if (oCityDialog.DoModal() == IDCANCEL) {
         return FALSE;
     }
 
     //Copy the data
-    _tcscpy_s(oCityUpdater.szCityName, oCityUpdateDialog.m_szCityName);
-    _tcscpy_s(oCityUpdater.szTownResidence, oCityUpdateDialog.m_szTownResidence);
+    _tcscpy_s(oCityUpdater.szCityName, oCityDialog.GetCityName());
+    _tcscpy_s(oCityUpdater.szTownResidence, oCityDialog.GetTownResidence());
 
     if (!m_pDoc->UpdateCity(oCityUpdater)) {
         return FALSE;
@@ -218,9 +217,9 @@ BOOL CCitiesView::InsertCity() {
         return FALSE;
     }
 
-    CCitiesDlg oCityInsertDialog;
+    CCitiesDlg oCityDialog;
 
-    if (oCityInsertDialog.DoModal() == IDCANCEL) {
+    if (oCityDialog.DoModal() == IDCANCEL) {
         return FALSE;
     }
 
@@ -228,13 +227,13 @@ BOOL CCitiesView::InsertCity() {
 
     //Copy the data
 
-    _tcscpy_s(oInsertCity.szCityName, oCityInsertDialog.m_szCityName);
-    _tcscpy_s(oInsertCity.szTownResidence, oCityInsertDialog.m_szTownResidence);
+    _tcscpy_s(oInsertCity.szCityName, oCityDialog.GetCityName());
+    _tcscpy_s(oInsertCity.szTownResidence, oCityDialog.GetTownResidence());
 
     if (!m_pDoc->InsertCity(oInsertCity)) {
-        
         return FALSE;
     }
+    
     return TRUE;
 }
 

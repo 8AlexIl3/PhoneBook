@@ -63,13 +63,16 @@
     <ClInclude Include="PhoneTypesAccessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CCitiesDlg.h">
+    <ClInclude Include="CitiesDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CitiesData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DBConnectionSingleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ITable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,7 +101,7 @@
     <ClCompile Include="DBconnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CCitiesDlg.cpp">
+    <ClCompile Include="CitiesDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CitiesData.cpp">

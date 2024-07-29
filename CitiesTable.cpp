@@ -2,12 +2,18 @@
 #include "CitiesTable.h"
 #include "DBconnectionSingleton.h"
 
-BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
+CCitiesTable::CCitiesTable():
+    m_oConnection(CDBConnectionSingleton::GetInstance())
+{
+}
+
+BOOL CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
 {
     //Connect to server->database->open session
     if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
     }
+
     //Set query
     CString oStrQuery(_T("SELECT * FROM CITIES"));
     HRESULT oHresult;
@@ -16,7 +22,6 @@ BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
     //If query is not successful
     if (!m_oConnection.IsActionSuccessful(oHresult))
     {
-        m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
@@ -24,8 +29,6 @@ BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
     //If there is no data in the table
     if (!m_oConnection.IsActionSuccessful(oHresult))
     {
-        m_oConnection.CloseSessionAndDataSource();
-
         return FALSE;
     }
     //add all cities to the array
@@ -33,13 +36,14 @@ BOOL CCitiesTable::SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray)
     {
         AddRecord(oCitiesArray);
     } while (MoveNext()==S_OK);
-    
+
     Close();
-    m_oConnection.CloseSessionAndDataSource();
+
     return TRUE;
 }
 
 BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
+
     if (!m_oConnection.ViewSessionResult()){
         return FALSE;
     }
@@ -51,19 +55,17 @@ BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
     //If query is NOT sucessful 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
-        m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
     //If record is NOT present in the table
     if (!GetRecord(lID)) {
-        m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
     recCity = m_recCity;
+
     Close();
-    m_oConnection.CloseSessionAndDataSource();
 
     return TRUE;
 }
@@ -75,6 +77,11 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
         return FALSE;
     }
     HRESULT oHresult;
+
+    oHresult=m_oConnection.GetSession().StartTransaction();
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
+        return FALSE;
+    }
     CString strQuery;
     strQuery.Format(_T("SELECT * FROM CITIES WITH (UPDLOCK) WHERE ID = %d"), lID);
 
@@ -82,24 +89,22 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 
     //If query is successful
     if (!m_oConnection.IsActionSuccessful(oHresult) ) {
-
-        m_oConnection.CloseSessionAndDataSource();
-
+        m_oConnection.GetSession().Abort();
         return FALSE;
     }
     //if record exists in table
     if (!GetRecord(lID)) {
+        m_oConnection.GetSession().Abort();
         Close();
-        m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
 
     //record is NOT up to date
     if (recCity.lUpdateCounter != m_recCity.lUpdateCounter) {
+        m_oConnection.GetSession().Abort();
         AfxMessageBox(_T("Update counter mismatch,please refresh"));
         Close();
-        m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
@@ -109,20 +114,25 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 
    //Set new data
     oHresult = SetData(ACCESSOR_1);
-    if (!m_oConnection.UpdateData(oHresult,lID)) {
-        Close();
-        m_oConnection.CloseSessionAndDataSource();
+    if (FAILED(oHresult)) {
+        m_oConnection.GetSession().Abort();
 
+        CString strError;
+        if(oHresult== DB_E_CONCURRENCYVIOLATION)
+            strError.Format(_T("Someone is working with this rowset currently"));
+        else
+            strError.Format(_T("Unable to update data"));
+        AfxMessageBox(strError);
         return FALSE;
     }
+    m_oConnection.GetSession().Commit();
     Close();
-    m_oConnection.CloseSessionAndDataSource();
 
     return TRUE;
 }
 
 
-BOOL CCitiesTable::InsertCity(CITIES& recCity) {
+BOOL CCitiesTable::InsertRecord(CITIES& recCity) {
     // Connect to server -> database -> open session
     if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
@@ -130,27 +140,22 @@ BOOL CCitiesTable::InsertCity(CITIES& recCity) {
     HRESULT oHresult;
     CString strQuery;
     strQuery.Format(_T("SELECT * FROM CITIES WHERE 1=0"));
-
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
-        m_oConnection.CloseSessionAndDataSource();
         Close();
         return FALSE;
     }
-
+   
     // Initialize record with the provided data
     m_recCity = recCity;
     // Insert new record
     oHresult = Insert(ACCESSOR_1);
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
-        m_oConnection.CloseSessionAndDataSource();
-
         return FALSE;
     }
     
     Close();
-    m_oConnection.CloseSessionAndDataSource();
 
     return TRUE;
 }
@@ -168,17 +173,15 @@ BOOL CCitiesTable::DeleteWhereID(const long lID) {
     oHresult = Open(m_oConnection.GetSession(), strQuery,&m_oConnection.GetUpdatePropSet());
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
-        m_oConnection.CloseSessionAndDataSource();
         Close();
 
         return FALSE;
     }
-
+    
     oHresult = MoveFirst();
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
-        m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
@@ -187,13 +190,11 @@ BOOL CCitiesTable::DeleteWhereID(const long lID) {
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
-        m_oConnection.CloseSessionAndDataSource();
 
         return FALSE;
     }
 
     Close();
-    m_oConnection.CloseSessionAndDataSource();
 
     return TRUE;
 }
@@ -222,19 +223,19 @@ BOOL CCitiesTable::GetRecord(const long lID) {
     return FALSE;
 
 }
-BOOL CCitiesTable::AddRecord(CAutoMemoryArray<CITIES>& oCitiesArray) {
+BOOL CCitiesTable::AddRecord(CCitiesArray& oCitiesArray) {
     CITIES* pCity = new CITIES(m_recCity);
 
-    if (pCity) {//If memory is allocated
-        oCitiesArray.Add(pCity);
-        return TRUE;
+    if (!pCity) {//If memory is NOT allocated
+        CString strError;
+        strError.Format(_T("ID: %d, City: %s, Town Residence: %s was NOT added"),
+            m_recCity.lID,
+            m_recCity.szCityName,
+            m_recCity.szTownResidence);
+        AfxMessageBox(strError);
+        return FALSE;
+   
     }
-    //If memory is NOT allocated
-    CString strError;
-    strError.Format(_T("ID: %d, City: %s, Town Residence: %s was NOT added"),
-        m_recCity.lID,
-        m_recCity.szCityName,
-        m_recCity.szTownResidence);
-    AfxMessageBox(strError);
-    return FALSE;
+    oCitiesArray.Add(pCity);
+    return TRUE;
 }

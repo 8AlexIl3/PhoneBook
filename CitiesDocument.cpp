@@ -19,6 +19,11 @@ CITIES& CCitiesDocument::GetCity(long lIndexer)
     
 }
 
+const CCitiesArray& CCitiesDocument::GetCityArray()
+{
+    return m_oCitiesArray;
+}
+
 BOOL CCitiesDocument::OnNewDocument()
 {
     static int numberDoc=1;
@@ -63,8 +68,8 @@ BOOL CCitiesDocument::LoadCities()
 }
 void CCitiesDocument::ClearArray()
 {
-    for (int indexer = 0; indexer < m_oCitiesArray.GetSize(); indexer++) {
-        delete m_oCitiesArray.GetAt(indexer);
+    for (int lIndexer = 0; lIndexer < m_oCitiesArray.GetCount(); lIndexer++) {
+        delete m_oCitiesArray.GetAt(lIndexer);
     }
     m_oCitiesArray.RemoveAll();
 }
@@ -81,7 +86,7 @@ BOOL CCitiesDocument::InsertCity(CITIES& oCity)
     m_oCitiesArray.Add(pCity);
 
     LoadCities();
-
+            
     return TRUE;
 }
 BOOL CCitiesDocument::DeleteCity(const long lID, const long lrowIndexer)

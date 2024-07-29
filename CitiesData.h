@@ -3,10 +3,12 @@
 class CCitiesData
 {/// Methods ----------------------------------------------------------------------------
 public:
+    CCitiesData() {
+    }
     /// <summary>Loads up all cities from the table </summary>
     /// <param name="oCitiesArray">Cities that will be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    BOOL SelectAll(CAutoMemoryArray<CITIES>& oCitiesArray);
+    BOOL SelectAll(CCitiesArray& oCitiesArray);
 
     /// <summary>Get a city structure by its' id </summary>
     /// <param name="lID">ID to be searched for</param>
@@ -30,7 +32,5 @@ public:
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     BOOL DeleteWhereID(const long lID);
-private:
-    CCitiesTable oCityTable;
 };
 

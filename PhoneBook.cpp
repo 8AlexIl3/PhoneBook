@@ -12,7 +12,7 @@
 #include "CitiesDocument.h"
 #include "CitiesView.h"
 #include "CitiesTable.h"
-#include "CCitiesDlg.h"
+#include "CitiesDlg.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif

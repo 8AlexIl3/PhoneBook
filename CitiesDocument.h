@@ -1,18 +1,22 @@
 #include "CitiesData.h"
-
+#include "Structures.h"
 class CCitiesDocument : public CDocument
 {
-protected:
-    CCitiesDocument() noexcept;
-    DECLARE_DYNCREATE(CCitiesDocument)
-///Members----------------------------------------------------------------------------------------------------
 public:
-    // Array to hold city records
-    CAutoMemoryArray<CITIES> m_oCitiesArray;
+    CCitiesDocument() noexcept;
+    virtual ~CCitiesDocument();
+protected:
+    DECLARE_DYNCREATE(CCitiesDocument)
+    DECLARE_MESSAGE_MAP()
+
+///Members----------------------------------------------------------------------------------------------------
 private:
     //Data object to call functions from the data class
     CCitiesData oCitiesData;
-///Member functions-------------------------------------------------------------------------------------------
+    // Array to hold city records
+    CCitiesArray m_oCitiesArray;
+
+///Methods-------------------------------------------------------------------------------------------
 public:
     BOOL InsertCity(CITIES& oCity);
     BOOL DeleteCity(const long lID, const long lrowIndexer);
@@ -20,22 +24,21 @@ public:
     BOOL SelectCity(const long lID, CITIES& oCity);
     BOOL LoadCities();
     CITIES& GetCity(long lIndexer);
+    const CCitiesArray& GetCityArray();
 private:
     void ClearArray();
     // Overrides
 public:
     void SetTitle(LPCTSTR lpszTitle) override;
-    virtual BOOL OnNewDocument();
-    virtual void Serialize(CArchive& ar);
+    virtual BOOL OnNewDocument() override;
+    virtual void Serialize(CArchive& ar) override;
 
     // Implementation
 public:
-    virtual ~CCitiesDocument();
 #ifdef _DEBUG
     virtual void AssertValid() const;
     virtual void Dump(CDumpContext& dc) const;
 #endif
 
 protected:
-    DECLARE_MESSAGE_MAP()
 };
