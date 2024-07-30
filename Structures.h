@@ -78,6 +78,7 @@ class CAutoMemoryArray : public CTypedPtrArray<CPtrArray, TYPE*>
 public:
     CAutoMemoryArray() = default;
 
+	//Copy constructor for memory
     CAutoMemoryArray(const CAutoMemoryArray& other)
     {
         CopyFrom(other);
@@ -91,18 +92,18 @@ public:
 private:
     void ClearArray()
     {
-        for (int i = 0; i < this->GetCount(); ++i)
+        for (long lIndexer(0); (INT_PTR) lIndexer < this->GetCount(); ++lIndexer)
         {
-            delete this->GetAt(i);
+            delete this->GetAt(lIndexer);
         }
         this->RemoveAll();
     }
 
     void CopyFrom(const CAutoMemoryArray& other)
     {
-        for (int i = 0; i < other.GetCount(); ++i)
+        for (long lIndexer(0); (INT_PTR) lIndexer < other.GetCount(); ++lIndexer)
         {
-            TYPE* pNewElem = other.GetAt(i);
+            TYPE* pNewElem = other.GetAt(lIndexer);
             this->Add(pNewElem);
         }
     }

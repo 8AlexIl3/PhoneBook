@@ -3,27 +3,39 @@
 #include "afxdialogex.h"
 #include "CitiesDlg.h"
 #include "CitiesData.h"
+#include <regex> 
 
-#include <regex> //included because of edit control value
-
-// CCitiesDlg dialog
+/////////////////////////////////////////////////////////////////////////////
+// CCitiesDlg
 
 IMPLEMENT_DYNAMIC(CCitiesDlg, CDialogEx)
+
+BEGIN_MESSAGE_MAP(CCitiesDlg, CDialogEx)
+END_MESSAGE_MAP()
+
+
+// Constructor / Destructor
+// ----------------
 
 CCitiesDlg::CCitiesDlg(CWnd* pParent)
 	: CDialogEx(IDD_DLG_CITIES, pParent)
 {
 }
-CCitiesDlg::CCitiesDlg(const CITIES & oCity, CWnd * pParent)
+
+CCitiesDlg::CCitiesDlg(const CITIES & oCities, CWnd * pParent)
 	: CDialogEx(IDD_DLG_CITIES, pParent),
-	m_initialCityName(oCity.szCityName),
-	m_initialTownResidence(oCity.szTownResidence)
+	m_initialCityName(oCities.szCityName),
+	m_initialTownResidence(oCities.szTownResidence)
 {
 }
 
 CCitiesDlg::~CCitiesDlg()
 {
 }
+
+
+//MFC Overrides
+// ----------------
 
 void CCitiesDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -32,10 +44,8 @@ void CCitiesDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDB_CITIES_RESIDENCE, m_EdbResidence);
 }
 
-BEGIN_MESSAGE_MAP(CCitiesDlg, CDialogEx)
-END_MESSAGE_MAP()
-
-void CCitiesDlg::OnOK() {
+void CCitiesDlg::OnOK()
+{
 	UpdateData(TRUE);
 
 	m_EdbName.GetWindowTextW(m_szCityName);
@@ -59,28 +69,11 @@ BOOL CCitiesDlg::OnInitDialog()
 	return TRUE;
 }
 
-void CCitiesDlg::Capitalize(CString& oString)
-{
-	//Capitilize first letter
-	if (oString.GetAt(0) > L'Я') {
-		oString.SetAt(0, oString.GetAt(0) - 0x20);
-	}
-	//LowerCase all others
-	for (int lIndexer(1); lIndexer < oString.GetLength(); lIndexer++) {
-		if (oString.GetAt(lIndexer) < L'а') {
-			oString.SetAt(lIndexer, oString.GetAt(lIndexer) + 0x20);
-		}
-	}
-}
-const CString& CCitiesDlg::GetCityName()
-{
-	return m_szCityName;
-}
-const CString& CCitiesDlg::GetTownResidence()
-{
-	return m_szTownResidence;
-}
-BOOL CCitiesDlg::ValidateData() {
+
+//Methods
+// ----------------
+
+bool CCitiesDlg::ValidateData() {
 	CArray<CString> oErrors;
 	std::wstring oPatternChecker;
 
@@ -91,28 +84,32 @@ BOOL CCitiesDlg::ValidateData() {
 
 	oPatternChecker = m_szCityName.GetString();
 	if (m_szCityName.IsEmpty()) {
-		oErrors.Add(L"Грешка: въведете град");
+		EMPTY_CITY_FIELD;
 	}
 	else if (!std::regex_match(oPatternChecker, oPattern)) {
-		oErrors.Add(CITY_BULGARIAN_TEXT_ERROR);
+		USE_CITY_FIELD_WITH_BULGARIAN_TEXT;
 	}
 	Capitalize(m_szCityName);
 
 	m_szTownResidence.Trim();
+
 	oPatternChecker = m_szTownResidence.GetString();
+
 	if (m_szTownResidence.IsEmpty()) {
-		oErrors.Add(L"Грешка: въведете област");
+		EMPTY_RESIDENCE_FIELD;
 	}
 	else if (!std::regex_match(oPatternChecker, oPattern)) {
-		oErrors.Add(L"Грешка: въведете полето на областта с бълграски текст");
+		USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT;
 	}
 	else if (m_szCityName == m_initialCityName &&
 		m_szTownResidence == m_initialTownResidence) {
-		oErrors.Add(L"Грешка: полетата за корекция са еднакви с първоначалните. Въвдете различни имена");
+		SAME_TEXT_AS_INITIAL;
 	}
+
 	Capitalize(m_szTownResidence);
+
 	if (!oErrors.IsEmpty()) {
-		for (int lIndexer(0); lIndexer < oErrors.GetCount(); lIndexer++) {
+		for (long lIndexer(0); (INT_PTR)lIndexer < oErrors.GetCount(); lIndexer++) {
 			AfxMessageBox(oErrors.GetAt(lIndexer), MB_OK | MB_ICONEXCLAMATION);
 		}
 
@@ -122,3 +119,29 @@ BOOL CCitiesDlg::ValidateData() {
 	return TRUE;
 
 }
+
+void CCitiesDlg::Capitalize(CString& oString)
+{
+	//Capitilize first letter
+	if (oString.GetAt(0) > L'Я') {
+		oString.SetAt(0, oString.GetAt(0) - 0x20);
+	}
+	//LowerCase all others
+	for (long lIndexer(1);(int) lIndexer < oString.GetLength(); lIndexer++) {
+		if (oString.GetAt(lIndexer) < L'а') {
+			oString.SetAt(lIndexer, oString.GetAt(lIndexer) + 0x20);
+		}
+	}
+}
+
+const CString& CCitiesDlg::GetCityName()
+{
+	return m_szCityName;
+}
+
+const CString& CCitiesDlg::GetTownResidence()
+{
+	return m_szTownResidence;
+}
+
+	

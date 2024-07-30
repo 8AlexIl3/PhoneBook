@@ -21,7 +21,6 @@ protected:
 
     BEGIN_ACCESSOR_MAP(CPhoneNumbersAccessor, ACCESSOR_COUNT)
         BEGIN_ACCESSOR(ACCESSOR_0, true)
-
         COLUMN_ENTRY(REC_ID, m_recPhoneNumber.lID)
         END_ACCESSOR()
 
@@ -31,5 +30,6 @@ protected:
         COLUMN_ENTRY(PHONE_TYPE_ID, m_recPhoneNumber.lPhoneTypeID)
         COLUMN_ENTRY(PHONE, m_recPhoneNumber.szPhone)
         END_ACCESSOR()
+
     END_ACCESSOR_MAP()
 };

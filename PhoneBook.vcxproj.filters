@@ -134,5 +134,8 @@
     <None Include="res\PhoneBook.rc2">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ITable.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

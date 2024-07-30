@@ -1,40 +1,67 @@
 #include "pch.h"
 #include "CitiesData.h"
-BOOL CCitiesData::SelectAll(CCitiesArray& oCitiesArray){
-    CCitiesTable oCityTable;
 
-    oCityTable.SelectAll(oCitiesArray);
+
+/////////////////////////////////////////////////////////////////////////////
+// CCitiesData
+
+// Constructor / Destructor
+// ----------------
+
+CCitiesData::CCitiesData()
+{
+}
+
+CCitiesData::~CCitiesData()
+{
+}
+
+
+// Methods
+// ----------------
+
+bool CCitiesData::SelectAll(CCitiesArray& oCitiesArray)
+{
+    CCitiesTable oCitiesTable;
+
+    oCitiesTable.SelectAll(oCitiesArray);
 
     return !oCitiesArray.IsEmpty();
 }
 
-BOOL CCitiesData::SelectWhereID(const long lID, CITIES& recCity) {
-    CCitiesTable oCityTable;
+bool CCitiesData::SelectWhereID(const long lID, CITIES& recCity)
+{
+    CCitiesTable oCitiesTable;
 
-    oCityTable.SelectWhereID(lID, recCity);
+    oCitiesTable.SelectWhereID(lID, recCity);
 
     return recCity.lID;
 }
 
-BOOL CCitiesData::UpdateWhereID(const long lID, CITIES& recCity){
-    CCitiesTable oCityTable;
+bool CCitiesData::UpdateWhereID(const long lID, CITIES& recCity)
+{
+    CCitiesTable oCitiesTable;
 
-    CITIES oInitalCity=recCity;
+    CITIES oCity=recCity;
 
-    oCityTable.UpdateWhereID(lID, recCity);
+    oCitiesTable.UpdateWhereID(lID, recCity);
     //If recCity is updated to something else that we did NOT set
-    BOOL bCmpResult = _tcscmp(recCity.szCityName, oInitalCity.szCityName)
-        || _tcscmp(recCity.szTownResidence, oInitalCity.szTownResidence);
+    bool bCompareResult = _tcscmp(recCity.szCityName, oCity.szCityName)
+        || _tcscmp(recCity.szTownResidence, oCity.szTownResidence);
 
-    return !bCmpResult;
+    return !bCompareResult;
 }
 
-BOOL CCitiesData::InsertCity(CITIES& recCity) {
-    CCitiesTable oCityTable;
-    return  oCityTable.InsertRecord(recCity);
+bool CCitiesData::InsertCity(CITIES& recCity)
+{
+    CCitiesTable oCitiesTable;
+
+    return  oCitiesTable.InsertRecord(recCity);
 }
 
-BOOL CCitiesData::DeleteWhereID(const long lID) {
-    CCitiesTable oCityTable;
-    return oCityTable.DeleteWhereID(lID);
+bool CCitiesData::DeleteWhereID(const long lID)
+{
+    CCitiesTable oCitiesTable;
+
+    return oCitiesTable.DeleteWhereID(lID);
 }

@@ -1,35 +1,28 @@
-
-// CitiesView.h : interface of the CCitiesView class
-//
 #pragma once
-#define ID_COLUMN			0
-#define CITY_COLUMN			1
-#define RESIDENCE_COLUMN	2
 
-#define DEFAULT_COLUMN_WIDTH 100
 
-#define INDEX_NOT_FOUND -1
+/////////////////////////////////////////////////////////////////////////////
+// CCitiesView
 
 class CCitiesView : public CListView
 {
-protected: // create from serialization only
+
+// Macros
+// ----------------
 	DECLARE_DYNCREATE(CCitiesView)
 	DECLARE_MESSAGE_MAP()
 
-	//Constructors and destructors-------------------------------------------------------------------------------------------
+
+// Constructor / Destructor
+// ----------------
 public:
 	CCitiesView() noexcept;
 	virtual ~CCitiesView();
 
 
-// Implementation
+//MFC message handlers
+// ----------------
 
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-
-	//MFC message handlers
 protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
@@ -38,35 +31,57 @@ protected:
 	afx_msg void OnInsertCity();
 	afx_msg void OnRefresh();
 
-	//Overrides---------------------------------------------------------------------------------------------------
-public:
+
+//MFC Overrides
+// ----------------
+private:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs) override;
-protected:
+
 	virtual void OnInitialUpdate() override; // called first time after construct
 
-	//Methods ---------------------------------------------------------------------------------------------------------------
+//Methods
+// ----------------
 private:
 	CCitiesDocument* GetDocument() const;
+
 	/// <summary> Called by pressing insert</summary>
-	BOOL InsertCity();
+	/// <returns>TRUE if successful/FALSE if NOT</returns>
+	bool InsertCity();
+
 	/// <summary> Called by pressing enter key while selected a city </summary>
-	BOOL SelectCity();
+	/// <returns>TRUE if successful/FALSE if NOT</returns>
+	bool SelectCity();
+
 	/// <summary> Called by pressing delete key while selected a city </summary>
-	BOOL DeleteCity();
+	/// <returns>TRUE if successful/FALSE if NOT</returns>
+	bool DeleteCity();
+
 	/// <summary> Called by pressing delete key while selected a city </summary>
-	BOOL UpdateCity();
+	/// <returns>TRUE if successful/FALSE if NOT</returns>
+	bool UpdateCity();
+
 	/// <summary> Show all cities currently in the document</summary>
+	/// <returns>TRUE if successful/FALSE if NOT</returns>
 	void DisplayData();
+
 	///<returns>Index of the users cursel on the list control</returns>
+	/// <returns>TRUE if successful/FALSE if NOT</returns>
 	long GetTableRowIndex();
 
-	///Members----------------------------------------------------------------------------------------------------
+
+//Members
+// ----------------
 private:
 	/// <summary> List control associated with the document upon initialization</summary>
 	CListCtrl& m_oListCtrl;
-	/// <summary> Pointer to current document</summary>
-	CCitiesDocument* m_pDoc;
 
+
+// Implementaion
+// ----------------
+#ifdef _DEBUG
+	virtual void AssertValid() const;
+	virtual void Dump(CDumpContext& dc) const;
+#endif
 };
 
 #ifndef _DEBUG  // debug version in CitiesView.cpp
@@ -74,3 +89,15 @@ inline CCitiesDocument* CCitiesView::GetDocument() const
    { return reinterpret_cast<CCitiesDocument*>(m_pDocument); }
 #endif
 
+#define ID_COLUMN			0
+#define CITY_COLUMN			1
+#define RESIDENCE_COLUMN	2
+
+#define DEFAULT_COLUMN_WIDTH 100
+
+#define INDEX_NOT_FOUND -1
+
+#define ЕRROR_FETCHING_DATA AfxMessageBox(L"Данните не могат да бъдат заредени\n")
+#define CITY_CANNOT_BE_SELECTED AfxMessageBox(L"Градът не може да бъде избран вмомента")
+#define CITY_CANNOT_BE_DELETED AfxMessageBox(L"Градът не може да бъде изтрит")
+#define CITY_NOT_IN_TABLE AfxMessageBox(L"Градът вече не съществува")

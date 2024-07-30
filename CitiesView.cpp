@@ -3,10 +3,9 @@
 #include "CitiesView.h"
 #include "PhoneBook.h"
 #include "CitiesDlg.h"
-//CitiesView.cpp
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// CCitiesView
 
 IMPLEMENT_DYNCREATE(CCitiesView, CListView)
 
@@ -21,14 +20,22 @@ BEGIN_MESSAGE_MAP(CCitiesView, CListView)
     ON_COMMAND(IDM_REFRESH_VIEW, &CCitiesView::OnRefresh)
 END_MESSAGE_MAP()
 
+
+// Constructor / Destructor
+// ----------------
+
 CCitiesView::CCitiesView() noexcept
-    : m_oListCtrl(GetListCtrl()),m_pDoc(nullptr)
+    : m_oListCtrl(GetListCtrl())
 {
 }
 
 CCitiesView::~CCitiesView()
 {
 }
+
+
+// MFC Overrides
+// ----------------
 
 BOOL CCitiesView::PreCreateWindow(CREATESTRUCT& cs)
 {
@@ -37,10 +44,7 @@ BOOL CCitiesView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CCitiesView::OnInitialUpdate()
 {
-
     CListView::OnInitialUpdate();
-
-    m_oListCtrl.DeleteAllItems();
 
     m_oListCtrl.ModifyStyle(0, LVS_REPORT| LVS_SINGLESEL);
     m_oListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
@@ -51,40 +55,33 @@ void CCitiesView::OnInitialUpdate()
     DisplayData();
 
 }
-void CCitiesView::OnRefresh() {
-    m_oListCtrl.DeleteAllItems();
-    DisplayData();
-}
-void CCitiesView::OnInsertCity()
+
+
+// MFC message handlers
+// ----------------
+
+void CCitiesView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
-    InsertCity();
+    ClientToScreen(&point);
+    OnContextMenu(this, point);
+}
+
+void CCitiesView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
+{
+    theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 }
 
 void CCitiesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
-    m_pDoc = GetDocument();
-    m_oListCtrl.DeleteAllItems();
-    DisplayData();
+    OnRefresh();
 }
 
-void CCitiesView::DisplayData() {
-
-    for (long lIndexer(0); lIndexer < m_pDoc->GetCityArray().GetCount(); ++lIndexer)
-    {
-        CITIES* pCity = m_pDoc->GetCityArray().GetAt(lIndexer);
-        CString strID;
-        strID.Format(_T("%ld"), pCity->lID);
-        m_oListCtrl.InsertItem(lIndexer, strID);
-        m_oListCtrl.SetItemText(lIndexer, CITY_COLUMN, pCity->szCityName);
-        m_oListCtrl.SetItemText(lIndexer, RESIDENCE_COLUMN, pCity->szTownResidence);
-    }
-}
 void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     bool bUpToDate(true);
     switch (nChar) {
     case VK_RETURN:
-        bUpToDate=SelectCity();
+        bUpToDate = SelectCity();
         break;
     case VK_DELETE:
         bUpToDate = DeleteCity();
@@ -96,7 +93,6 @@ void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
         bUpToDate = UpdateCity();
         break;
     default:
-        bUpToDate = false;
         break;
     }
     //If actions in the switch fail update the view to most recent version
@@ -106,7 +102,193 @@ void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     CListView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
-long CCitiesView::GetTableRowIndex() {
+void CCitiesView::OnInsertCity()
+{
+    InsertCity();
+}
+
+void CCitiesView::OnRefresh() {
+    CCitiesDocument* pCitiesDocument = GetDocument();
+    pCitiesDocument->LoadCities();
+    DisplayData();
+}
+
+
+// Methods
+// ----------------
+
+CCitiesDocument* CCitiesView::GetDocument() const
+{
+    ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CCitiesDocument)));
+    return (CCitiesDocument*)m_pDocument;
+}
+
+bool CCitiesView::InsertCity()
+{
+    CCitiesDocument* pCitiesDocument = GetDocument();
+
+    if (!pCitiesDocument) {
+        ЕRROR_FETCHING_DATA;
+        return FALSE;
+    }
+
+    CCitiesDlg oCitiesDialog;
+
+    if (oCitiesDialog.DoModal() == IDCANCEL) {
+        return FALSE;
+    }
+
+    CITIES oCities;
+
+    //Copy the data
+
+    _tcscpy_s(oCities.szCityName, oCitiesDialog.GetCityName());
+    _tcscpy_s(oCities.szTownResidence, oCitiesDialog.GetTownResidence());
+
+    if (!pCitiesDocument->InsertCity(oCities)) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+bool CCitiesView::SelectCity()
+{
+    CCitiesDocument* pCitiesDocument = GetDocument();
+
+    long lIndexer = GetTableRowIndex();
+
+    if (lIndexer == INDEX_NOT_FOUND)
+        return FALSE;
+
+    if (!pCitiesDocument) {
+        ЕRROR_FETCHING_DATA;
+        return FALSE;
+    }
+    //Get ID from the selected row
+
+    CITIES oCities;
+
+    long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
+
+    if (!lCityID) {
+        CITY_CANNOT_BE_SELECTED;
+        return FALSE;
+    }
+    if (!pCitiesDocument->SelectCity(lCityID, oCities)) {
+        CITY_CANNOT_BE_SELECTED;
+        return FALSE;
+    }
+    CString strCity;
+
+    //Print City
+    strCity.Format(L"Населено място: %s,Област: %s, ID: %d, Брояч: %d",
+        oCities.szCityName,
+        oCities.szTownResidence,
+        oCities.lID,
+        oCities.lUpdateCounter);
+    AfxMessageBox(strCity);
+
+    return TRUE;
+}
+
+bool CCitiesView::DeleteCity()
+{
+    CCitiesDocument* pCitiesDocument = GetDocument();
+
+    long lIndexer = GetTableRowIndex();
+
+    if (lIndexer == INDEX_NOT_FOUND)
+        return FALSE;
+
+    if (!pCitiesDocument) {
+        ЕRROR_FETCHING_DATA;
+        return FALSE;
+    }
+    //Get ID from the selected row
+    long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
+
+    if (!lCityID) {
+        CITY_CANNOT_BE_SELECTED;
+        return FALSE;
+    }
+    else if (!pCitiesDocument->DeleteCity(lCityID, lIndexer)) {
+        CITY_CANNOT_BE_DELETED;
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+bool CCitiesView::UpdateCity()
+{
+    CCitiesDocument* pCitiesDocument = GetDocument();
+
+    long lIndexer = GetTableRowIndex();
+
+    if (lIndexer == INDEX_NOT_FOUND)
+        return FALSE;
+
+    if (!pCitiesDocument) {
+        ЕRROR_FETCHING_DATA;
+        return FALSE;
+    }
+    long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
+
+    //Dummy reference ->It is later used as logical link to update cities
+    CITIES& oCities = *pCitiesDocument->GetCityArray().GetAt(lIndexer);
+
+    //If city is still in view but no longer in table
+    if (!pCitiesDocument->SelectCity(lCityID, oCities)) {
+        CITY_NOT_IN_TABLE;
+        return FALSE;
+    }
+
+    //Initialize the dialog edit controls with values from the selected city
+    CCitiesDlg oCitiesDialog(oCities);
+
+    if (oCitiesDialog.DoModal() == IDCANCEL) {
+        return FALSE;
+    }
+
+    //Copy the data
+    _tcscpy_s(oCities.szCityName, oCitiesDialog.GetCityName());
+    _tcscpy_s(oCities.szTownResidence, oCitiesDialog.GetTownResidence());
+
+    if (!pCitiesDocument->UpdateCity(lCityID,oCities)) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+void CCitiesView::DisplayData()
+{
+    CCitiesDocument* pCitiesDocument = GetDocument();
+
+    if (!pCitiesDocument) {
+        ЕRROR_FETCHING_DATA;
+        return;
+    }
+
+    m_oListCtrl.DeleteAllItems();
+
+    for (long lIndexer(0);(INT_PTR)lIndexer < pCitiesDocument->GetCityArray().GetCount(); ++lIndexer)
+    {
+        CITIES* pCities = pCitiesDocument->GetCityArray().GetAt(lIndexer);
+        if (pCities!=nullptr) {
+            CString strID;
+            strID.Format(_T("%ld"), pCities->lID);
+            m_oListCtrl.InsertItem(lIndexer, strID);
+            m_oListCtrl.SetItemText(lIndexer, CITY_COLUMN, pCities->szCityName);
+            m_oListCtrl.SetItemText(lIndexer, RESIDENCE_COLUMN, pCities->szTownResidence);
+            m_oListCtrl.SetItemData(lIndexer, pCities->lID);
+        }
+    }
+}
+
+long CCitiesView::GetTableRowIndex()
+{
     POSITION pos = m_oListCtrl.GetFirstSelectedItemPosition();
     if (!pos)
         return INDEX_NOT_FOUND;
@@ -117,139 +299,11 @@ long CCitiesView::GetTableRowIndex() {
 
     return lIndexer;
 }
-BOOL CCitiesView::DeleteCity(){
-
-    long lIndexer = GetTableRowIndex();
-
-    if (lIndexer==INDEX_NOT_FOUND)
-        return FALSE;
-    
-    if (!m_pDoc) {
-        AfxMessageBox(L"Не може да бъде извлечен документ");
-        return FALSE;
-    }
-    //Get ID from the selected row
-    long lCityID = m_pDoc->GetCity(lIndexer).lID;
-
-    if (!lCityID) {
-        AfxMessageBox(L"Грешка: Градът с ID не трябва да съществува");
-        return FALSE;
-    }
-    else if (!m_pDoc->DeleteCity(lCityID, lIndexer)) {
-        AfxMessageBox(L"Грешка: Градът не може да бъде изтрит");
-        return FALSE;
-    }
-
-    return TRUE;
-}
-BOOL CCitiesView::SelectCity() {
-    long lIndexer = GetTableRowIndex();
-
-    if (lIndexer == INDEX_NOT_FOUND)
-        return FALSE;
-
-    if (!m_pDoc) {
-        AfxMessageBox(L"Не може да бъде извлечен документ");
-        return FALSE;
-    }
-    //Get ID from the selected row
-
-    CITIES oSelectedCity;
-
-    long lCityID = m_pDoc->GetCity(lIndexer).lID;
-
-    if (!lCityID) {
-        AfxMessageBox(L"Грешка: Невалидно избиране на град");
-        return FALSE;
-    }
-    if (!m_pDoc->SelectCity(lCityID, oSelectedCity)) {
-        AfxMessageBox(L"Грешка: Не може да бъде избран град");
-        return FALSE;
-    }
-    CString strCity;
-
-    //Print City
-        strCity.Format(L"Населено място: %s,Област: %s, ID: %d, Брояч: %d",
-        oSelectedCity.szCityName,
-        oSelectedCity.szTownResidence,
-        oSelectedCity.lID,
-        oSelectedCity.lUpdateCounter);
-        AfxMessageBox(strCity);
-
-    return TRUE;
-}
-BOOL CCitiesView::UpdateCity()
-{
-    long lIndexer = GetTableRowIndex();
-
-    if (lIndexer == INDEX_NOT_FOUND)
-        return FALSE;
-
-    if (!m_pDoc) {
-        AfxMessageBox(L"Не може да бъде извлечен документ");
-        return FALSE;
-    }
-
-    CITIES& oCityUpdater = m_pDoc->GetCity(lIndexer);
 
 
-    //Initialize the dialog edit controls with values from the selected city
-    CCitiesDlg oCityDialog(oCityUpdater);
+// Implementaion
+// ----------------
 
-    if (oCityDialog.DoModal() == IDCANCEL) {
-        return FALSE;
-    }
-
-    //Copy the data
-    _tcscpy_s(oCityUpdater.szCityName, oCityDialog.GetCityName());
-    _tcscpy_s(oCityUpdater.szTownResidence, oCityDialog.GetTownResidence());
-
-    if (!m_pDoc->UpdateCity(oCityUpdater)) {
-        return FALSE;
-    }
-
-    return TRUE;
-}
-BOOL CCitiesView::InsertCity() {
-
-    if (!m_pDoc) {
-        AfxMessageBox(L"Unable to fetch data.\n");
-        return FALSE;
-    }
-
-    CCitiesDlg oCityDialog;
-
-    if (oCityDialog.DoModal() == IDCANCEL) {
-        return FALSE;
-    }
-
-    CITIES oInsertCity;
-
-    //Copy the data
-
-    _tcscpy_s(oInsertCity.szCityName, oCityDialog.GetCityName());
-    _tcscpy_s(oInsertCity.szTownResidence, oCityDialog.GetTownResidence());
-
-    if (!m_pDoc->InsertCity(oInsertCity)) {
-        return FALSE;
-    }
-    
-    return TRUE;
-}
-
-
-void CCitiesView::OnRButtonUp(UINT /* nFlags */, CPoint point)
-{
-    ClientToScreen(&point);
-    OnContextMenu(this, point);
-}
-
-void CCitiesView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
-{
-   theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
-}
-
-#ifdef _DEBUG
 void CCitiesView::AssertValid() const
 {
     CListView::AssertValid();
@@ -260,9 +314,4 @@ void CCitiesView::Dump(CDumpContext& dc) const
     CListView::Dump(dc);
 }
 
-CCitiesDocument* CCitiesView::GetDocument() const
-{
-    ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CCitiesDocument)));
-    return (CCitiesDocument*)m_pDocument;
-}
-#endif //_DEBUG
+

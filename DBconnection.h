@@ -1,60 +1,70 @@
 #pragma once
+
+
+/////////////////////////////////////////////////////////////////////////////
+// CDBConnection
+
 #include <atldbcli.h>
 #include <atlstr.h> 
-class CDBConnection {
 
+class CDBConnection
+{
+
+// Constructor / Destructor
+// ----------------
 public:
-    // Constructor / Destructor
-    // ------------------------------------------------------------------------------------------------------
     CDBConnection();
     virtual ~CDBConnection();
 
-    // Methods ----------------------------------------------------------------------------------------------
+
+// Methods
+// ----------------
 public:
+    CDBPropSet GetPropSet();
+
+    CDBPropSet GetUpdatePropSet();
+
+    CDataSource GetDataSource();
+
+    CSession GetSession();
+
     /// <summary>Determine if query is successful</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
-    BOOL IsActionSuccessful(const HRESULT& hResult);
+    bool IsActionSuccessful(const HRESULT& hResult);
 
     /// <summary>Update Data in the table</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
-    BOOL ViewSessionResult();
+    bool ViewSessionResult();
 
-
- 
 private:
     /// <returns>Database connection to the server</returns>
     CDBPropSet SetDBProperties();
 
     /// <returns>Rowset properties</returns>
-    CDBPropSet UpdateDbPropSet();
+    CDBPropSet UpdateDBPropSet();
+    
+    /// <summary>Initilizes Session</summary>
+    /// <returns>TRUE if succesful/FALSE if not</returns>
+    bool OpenSession();
 
-    /// <param name="hResult">hresult code to determine action </param>
-    /// <returns>TRUE if successful/FALSE if not</returns>
-    BOOL OpenSession();
-    BOOL OpenConnection();
+    /// <summary>Initilizes Connection</summary>
+    /// <returns>TRUE if succesful/FALSE if not</returns>
+    bool OpenConnection();
 
 
-    /// Getters & Setters
-public:
-    CDBPropSet GetPropSet() {
-        return m_oDBPropSet;
-    }
-    CDBPropSet GetUpdatePropSet() {
-        return m_oUpdatePropSet;
-    }
-    CDataSource GetDataSource() {
-        return m_oDataSource;
-    }
-    CSession GetSession() {
-        return m_oSession;
-    }
-
+// Members
+// ----------------
 private:
-    /// Members -----------------------------------------------------------------
     CDBPropSet m_oUpdatePropSet;
     CDBPropSet m_oDBPropSet;
     CDataSource m_oDataSource;
     CSession m_oSession;
 };
 
+
+#define OBJECT_CURRENTLY_IN_USE strError.Format(_T("Обектът не може да бъде изтрит,защото се използва вмомента"))
+#define OBJECT_NOT_FOUND strError.Format(_T("Обектът не беше намерен"))
+#define QUERY_UNSUCCESSFUL strError.Format(_T("Заявката е неуспешна"))
+#define SERVER_CONNECTION_ERROR strError.Format(_T("Не може да се създаде връзка към сървъра"))
+#define SESSION_CREATE_ERROR strError.Format(_T("Не може да се създаде сесия"))
 

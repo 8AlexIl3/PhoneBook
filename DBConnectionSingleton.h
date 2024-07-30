@@ -1,5 +1,8 @@
-// DBConnectionSingleton.h
 #pragma once
+
+/////////////////////////////////////////////////////////////////////////////
+// DBConnectionSingleton
+
 #include "DBConnection.h"
 
 class CDBConnectionSingleton {
@@ -8,7 +11,6 @@ public:
         static CDBConnection instance;
         return instance;
     }
-
 private:
     CDBConnectionSingleton() = default;
     ~CDBConnectionSingleton() = default;

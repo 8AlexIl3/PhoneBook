@@ -16,6 +16,7 @@
 #define LAST_NAME       6
 #define EGN             7
 #define ADDRESS         8
+
 class CPersonsAccessor
 {
 protected:
@@ -23,7 +24,6 @@ protected:
 
     BEGIN_ACCESSOR_MAP(CPersonsAccessor, ACCESSOR_COUNT)
         BEGIN_ACCESSOR(ACCESSOR_0, true)
-
         COLUMN_ENTRY(REC_ID, m_recPerson.lID)
         END_ACCESSOR()
 
@@ -35,7 +35,7 @@ protected:
         COLUMN_ENTRY(LAST_NAME, m_recPerson.szLastName)
         COLUMN_ENTRY(EGN, m_recPerson.szEGN)
         COLUMN_ENTRY(ADDRESS, m_recPerson.szAddress)
- 
         END_ACCESSOR()
+
     END_ACCESSOR_MAP()
 };

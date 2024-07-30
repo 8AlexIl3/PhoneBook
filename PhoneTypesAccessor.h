@@ -18,7 +18,6 @@ protected:
 
     BEGIN_ACCESSOR_MAP(CPhoneTypesAccessor, ACCESSOR_COUNT)
         BEGIN_ACCESSOR(ACCESSOR_0, true)
-
         COLUMN_ENTRY(REC_ID, m_recPhoneType.lID)
         END_ACCESSOR()
 

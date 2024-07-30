@@ -11,6 +11,7 @@
 #define UPDATE_COUNTER  2
 #define CITY_NAME       3
 #define TOWN_RESIDENCE  4
+
 class CCitiesAccessor
 {
 protected:
@@ -18,7 +19,6 @@ protected:
 
     BEGIN_ACCESSOR_MAP(CCitiesAccessor, ACCESSOR_COUNT)
         BEGIN_ACCESSOR(ACCESSOR_0, true)
-
             COLUMN_ENTRY(REC_ID, m_recCity.lID)
         END_ACCESSOR()
        
@@ -26,7 +26,6 @@ protected:
             COLUMN_ENTRY(UPDATE_COUNTER, m_recCity.lUpdateCounter)
             COLUMN_ENTRY(CITY_NAME, m_recCity.szCityName)
             COLUMN_ENTRY(TOWN_RESIDENCE, m_recCity.szTownResidence)
-
         END_ACCESSOR()
     END_ACCESSOR_MAP()
 };

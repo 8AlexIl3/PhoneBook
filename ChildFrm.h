@@ -20,7 +20,6 @@ public:
 
 // Overrides
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-
 // Implementation
 public:
 	virtual ~CChildFrame();

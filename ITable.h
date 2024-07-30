@@ -1,18 +1,28 @@
-// CTable.h
 #pragma once
 
+
+/////////////////////////////////////////////////////////////////////////////
+// ITable.h
+
 template <typename RecordType>
-class ITable {
+class ITable
+{
+
+// Constructor / Destructor
+// ----------------
 public:
-    virtual ~ITable() {}
+    ITable();
+    virtual ~ITable();
 
-    virtual BOOL SelectAll(CAutoMemoryArray<RecordType>& oArray) = 0;
-    virtual BOOL SelectWhereID(const long lID, RecordType& rec) = 0;
-    virtual BOOL UpdateWhereID(const long lID, RecordType& rec) = 0;
-    virtual BOOL InsertRecord(RecordType& rec) = 0;
-    virtual BOOL DeleteWhereID(const long lID) = 0;
 
+// Methods
+// ----------------
 protected:
-    virtual BOOL GetRecord(const long lID) = 0;
-    virtual BOOL AddRecord(CAutoMemoryArray<RecordType>& oArray) = 0;
+    virtual bool SelectAll(CAutoMemoryArray<RecordType>& oArray) = 0;
+    virtual bool SelectWhereID(const long lID, RecordType& rec) = 0;
+    virtual bool UpdateWhereID(const long lID, RecordType& rec) = 0;
+    virtual bool InsertRecord(RecordType& rec) = 0;
+    virtual bool DeleteWhereID(const long lID) = 0;
 };
+#include "ITable.inl"
+

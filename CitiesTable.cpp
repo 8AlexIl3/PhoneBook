@@ -2,12 +2,27 @@
 #include "CitiesTable.h"
 #include "DBconnectionSingleton.h"
 
+
+/////////////////////////////////////////////////////////////////////////////
+// CCitiesTable
+
+// Constructor / Destructor
+// ----------------
+
 CCitiesTable::CCitiesTable():
     m_oConnection(CDBConnectionSingleton::GetInstance())
 {
 }
 
-BOOL CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
+CCitiesTable::~CCitiesTable()
+{
+}
+
+
+//Overrides
+// ----------------
+
+bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
 {
     //Connect to server->database->open session
     if (!m_oConnection.ViewSessionResult()) {
@@ -34,7 +49,21 @@ BOOL CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
     //add all cities to the array
     do
     {
-        AddRecord(oCitiesArray);
+        CITIES* pCities = new CITIES(m_recCity);
+
+        if (!pCities) {//If memory is NOT allocated
+            CString strError;
+            strError.Format(_T("ID: %d, City: %s, Town Residence: %s was NOT added"),
+                m_recCity.lID,
+                m_recCity.szCityName,
+                m_recCity.szTownResidence);
+            AfxMessageBox(strError);
+
+            continue;
+
+        }
+        oCitiesArray.Add(pCities);
+
     } while (MoveNext()==S_OK);
 
     Close();
@@ -42,7 +71,7 @@ BOOL CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
     return TRUE;
 }
 
-BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
+bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
     if (!m_oConnection.ViewSessionResult()){
         return FALSE;
@@ -58,8 +87,16 @@ BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
         return FALSE;
     }
-    //If record is NOT present in the table
-    if (!GetRecord(lID)) {
+    oHresult = MoveFirst();
+
+    if (FAILED(oHresult)) {
+        CString oStrError;
+        SELECT_ID_FAIL;
+
+        AfxMessageBox(oStrError);
+
+        m_oConnection.GetSession().Abort();
+        Close();
 
         return FALSE;
     }
@@ -70,8 +107,7 @@ BOOL CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
     return TRUE;
 }
 
-
-BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
+bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 {
     if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
@@ -90,10 +126,16 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     //If query is successful
     if (!m_oConnection.IsActionSuccessful(oHresult) ) {
         m_oConnection.GetSession().Abort();
+
         return FALSE;
     }
-    //if record exists in table
-    if (!GetRecord(lID)) {
+    oHresult = MoveFirst();
+
+    if (FAILED(oHresult)) {
+        CString oStrError;
+        SELECT_ID_FAIL;
+        AfxMessageBox(oStrError);
+
         m_oConnection.GetSession().Abort();
         Close();
 
@@ -103,7 +145,7 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     //record is NOT up to date
     if (recCity.lUpdateCounter != m_recCity.lUpdateCounter) {
         m_oConnection.GetSession().Abort();
-        AfxMessageBox(_T("Update counter mismatch,please refresh"));
+        UPDATE_COUNTER_MISMATCH;
         Close();
 
         return FALSE;
@@ -118,10 +160,10 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
         m_oConnection.GetSession().Abort();
 
         CString strError;
-        if(oHresult== DB_E_CONCURRENCYVIOLATION)
-            strError.Format(_T("Someone is working with this rowset currently"));
+        if (oHresult == DB_E_CONCURRENCYVIOLATION)
+            CONCURRENCY_VIOLATION;
         else
-            strError.Format(_T("Unable to update data"));
+            DATA_UPDATE_FAIL;
         AfxMessageBox(strError);
         return FALSE;
     }
@@ -131,15 +173,14 @@ BOOL CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     return TRUE;
 }
 
-
-BOOL CCitiesTable::InsertRecord(CITIES& recCity) {
+bool CCitiesTable::InsertRecord(CITIES& recCity) {
     // Connect to server -> database -> open session
     if (!m_oConnection.ViewSessionResult()) {
         return FALSE;
     }
     HRESULT oHresult;
     CString strQuery;
-    strQuery.Format(_T("SELECT * FROM CITIES WHERE 1=0"));
+    strQuery.Format(_T("SELECT TOP(0) * FROM CITIES"));
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
@@ -154,13 +195,19 @@ BOOL CCitiesTable::InsertRecord(CITIES& recCity) {
         Close();
         return FALSE;
     }
-    
+    oHresult = MoveFirst();
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
+        Close();
+        return FALSE;
+    }
+    //To get The insert city's ID
+    recCity = m_recCity;
     Close();
 
     return TRUE;
 }
 
-BOOL CCitiesTable::DeleteWhereID(const long lID) {
+bool CCitiesTable::DeleteWhereID(const long lID) {
     
     //Connect to server->database->open session
     if (!m_oConnection.ViewSessionResult()) {
@@ -196,46 +243,5 @@ BOOL CCitiesTable::DeleteWhereID(const long lID) {
 
     Close();
 
-    return TRUE;
-}
-
-
-BOOL CCitiesTable::GetRecord(const long lID) {
-    HRESULT oHresult=MoveFirst();
-    if (oHresult == S_OK)
-        return TRUE;
-
-    CString oStrError;
-
-    switch (oHresult) {
-
-    case DB_S_ENDOFROWSET:
-        oStrError.Format(_T("ID: %d, was NOT found"), lID);
-        break;
-
-    default:
-        oStrError.Format(_T("Unexpected Error"));
-        break;
-
-    }
-    AfxMessageBox(oStrError);
-
-    return FALSE;
-
-}
-BOOL CCitiesTable::AddRecord(CCitiesArray& oCitiesArray) {
-    CITIES* pCity = new CITIES(m_recCity);
-
-    if (!pCity) {//If memory is NOT allocated
-        CString strError;
-        strError.Format(_T("ID: %d, City: %s, Town Residence: %s was NOT added"),
-            m_recCity.lID,
-            m_recCity.szCityName,
-            m_recCity.szTownResidence);
-        AfxMessageBox(strError);
-        return FALSE;
-   
-    }
-    oCitiesArray.Add(pCity);
     return TRUE;
 }
