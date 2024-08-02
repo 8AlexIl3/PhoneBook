@@ -88,6 +88,15 @@ public:
     {
         ClearArray();
     }
+	CAutoMemoryArray& operator=(const CAutoMemoryArray& other)
+	{
+		if (this != &other)
+		{
+			ClearArray();
+			CopyFrom(other);
+		}
+		return *this;
+	}
 
 private:
     void ClearArray()

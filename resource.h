@@ -60,7 +60,6 @@
 #define IDC_BTN_DELETE_NUMBER           1021
 #define IDC_STT_PHONE_NUMBER            1021
 #define IDC_STT_PHONE_TYPE              1022
-#define IDC_COMBO1                      1023
 #define IDC_CMB_PHONE_TYPE              1023
 #define ID_FILE_SELECTWHEREID           32781
 #define ID_FILE_UPDATEWHEREID           32782

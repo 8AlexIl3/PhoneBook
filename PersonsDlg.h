@@ -9,9 +9,10 @@ class CPersonsDlg : public CDialogEx
 	DECLARE_DYNAMIC(CPersonsDlg)
 
 public:
-	CPersonsDlg(CWnd* pParent = nullptr);   // standard constructor
+	CPersonsDlg(CWnd* pParent = nullptr);
+	/// <param name="oCities">City to fill the fields if redaction is needed</param>
+	CPersonsDlg(CPerson& oPerson, CWnd* pParent = nullptr);
 	virtual ~CPersonsDlg();
-
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DLG_PERSONS };
@@ -28,4 +29,8 @@ private:
 	CEdit m_EdbLastName;
 	CEdit m_EdbFirstName;
 	CListCtrl m_LscPhoneNumbers;
+	CComboBox m_CmbCities;
+
+	CPerson m_oPerson;
+	CPerson* m_pPerson;
 };

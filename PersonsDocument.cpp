@@ -62,7 +62,7 @@ void CPersonsDocument::SetTitle(LPCTSTR lpszTitle)
 
 //Methods
 // ----------------
-
+#if 0
 bool CPersonsDocument::InsertPerson(PERSONS& oPersons)
 {
     CPersonsData oPersonsData;
@@ -89,7 +89,7 @@ bool CPersonsDocument::DeletePerson(const long lID, const long lrowIndexer)
     if (!oPersonsData.DeleteWhereID(lID))
         return FALSE;
 
-    PERSONS* pPersons = m_oPersonsArray.GetAt(lrowIndexer);
+    CPerson* pPersons = m_oPersonsArray.GetAt(lrowIndexer);
     if (!pPersons) {
         return FALSE;
     }
@@ -102,7 +102,7 @@ bool CPersonsDocument::DeletePerson(const long lID, const long lrowIndexer)
     return TRUE;
 }
 
-bool CPersonsDocument::UpdatePerson(const long lID, PERSONS& oPersons)
+bool CPersonsDocument::UpdatePerson(const long lID, CPerson& oPersons)
 {
     CPersonsData oPersonsData;
 
@@ -113,8 +113,9 @@ bool CPersonsDocument::UpdatePerson(const long lID, PERSONS& oPersons)
 
     return TRUE;
 }
+#endif
 
-bool CPersonsDocument::SelectPerson(const long lID, PERSONS& oPersons)
+bool CPersonsDocument::SelectPerson(const long lID, CPerson& oPersons)
 {
     CPersonsData oPersonsData;
 
@@ -135,7 +136,7 @@ bool CPersonsDocument::LoadPersons()
     return TRUE;
 }
 
-const CPersonsArray& CPersonsDocument::GetPersonArray()
+const CPersonArray& CPersonsDocument::GetPersonArray()
 {
     return m_oPersonsArray;
 }

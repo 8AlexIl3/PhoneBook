@@ -38,19 +38,19 @@ public:
     /// <param name="lID">id to update</param>
     /// <param name="oPersons">Object that will update</param>
     /// <returns>true if successful, false otherwise</returns>
-    bool UpdatePerson(const long lID, PERSONS& oPersons);
+    bool UpdatePerson(const long lID, CPerson& oPersons);
 
     /// <param name="lID">id to select</param>
     /// <param name="oPersons">Object that will get initilized</param>
     /// <returns>true if successful, false otherwise</returns>
-    bool SelectPerson(const long lID, PERSONS& oPersons);
+    bool SelectPerson(const long lID, CPerson& oPersons);
 
     /// <summary>Get all persons from table</summary>
     /// <returns>true if successful, false otherwise</returns>
     bool LoadPersons();
 
     /// <summary>Getter for m_oCitiesArray</summary>
-    const CPersonsArray& GetPersonArray();
+    const CPersonArray& GetPersonArray();
 private:
     void ClearArray();
 
@@ -67,7 +67,7 @@ public:
     // ----------------
 private:
     // Array to hold person records
-    CPersonsArray m_oPersonsArray;
+    CPersonArray m_oPersonsArray;
 
 
     // Implementation

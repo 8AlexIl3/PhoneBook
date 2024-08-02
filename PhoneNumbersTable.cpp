@@ -126,6 +126,7 @@ bool CPhoneNumbersTable::SelectMultipleWhereID(const long lID, CPhoneNumbersArra
     //If there is no data in the table
     if (!m_oConnection.IsActionSuccessful(oHresult))
     {
+        Close();
         return FALSE;
     }
     //add all phone numbers to the array

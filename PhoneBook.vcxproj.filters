@@ -179,11 +179,11 @@
     <ClCompile Include="PersonsView.cpp">
       <Filter>Source Files\Persons</Filter>
     </ClCompile>
-    <ClCompile Include="PersonsDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PhoneTypesData.cpp">
       <Filter>Source Files\PhoneTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="PersonsDlg.cpp">
+      <Filter>Source Files\Persons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

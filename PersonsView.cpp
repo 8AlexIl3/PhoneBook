@@ -84,7 +84,7 @@ void CPersonsView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
         bUpToDate = SelectPerson();
         break;
     case VK_DELETE:
-        bUpToDate = DeletePerson();
+        //bUpToDate = DeletePerson();
         break;
     case VK_INSERT:
         bUpToDate = InsertPerson();
@@ -147,7 +147,7 @@ bool CPersonsView::SelectPerson()
     }
     //Get ID from the selected row
 
-    PERSONS oPersons;
+    CPerson oPersons;
 
     long lPersonID = (long)m_oListCtrl.GetItemData(lIndexer);
 
@@ -163,13 +163,13 @@ bool CPersonsView::SelectPerson()
 
     //Print Person
     strPerson.Format(L" ID: % d, Ѕро€ч : % d",
-        oPersons.lID,
-        oPersons.lUpdateCounter);
+        oPersons.m_oRecPerson.lID,
+        oPersons.m_oRecPerson.lUpdateCounter);
     AfxMessageBox(strPerson);
 
     return TRUE;
 }
-
+#if 0
 bool CPersonsView::DeletePerson()
 {
     CPersonsDocument* pPersonsDocument = GetDocument();
@@ -197,6 +197,7 @@ bool CPersonsView::DeletePerson()
 
     return TRUE;
 }
+#endif
 
 bool CPersonsView::UpdatePerson()
 {
@@ -219,14 +220,14 @@ void CPersonsView::DisplayData()
 
     for (long lIndexer(0); (INT_PTR)lIndexer < pPersonsDocument->GetPersonArray().GetCount(); ++lIndexer)
     {
-        PERSONS* pPersons = pPersonsDocument->GetPersonArray().GetAt(lIndexer);
+        CPerson* pPersons = pPersonsDocument->GetPersonArray().GetAt(lIndexer);
         if (pPersons != nullptr) {
             CString strID;
-            strID.Format(_T("%ld"), pPersons->lID);
+            strID.Format(_T("%ld"), pPersons->GetPerson().lID);
             m_oListCtrl.InsertItem(lIndexer, strID);
-            m_oListCtrl.SetItemText(lIndexer, PERSON_COLUMN, pPersons->szFirstName);
-            m_oListCtrl.SetItemText(lIndexer, ADDRESS_COLUMN, pPersons->szAddress);
-            m_oListCtrl.SetItemData(lIndexer, pPersons->lID);
+            m_oListCtrl.SetItemText(lIndexer, PERSON_COLUMN, pPersons->GetPerson().szFirstName);
+            m_oListCtrl.SetItemText(lIndexer, ADDRESS_COLUMN, pPersons->GetPerson().szAddress);
+            m_oListCtrl.SetItemData(lIndexer, pPersons->GetPerson().lID);
         }
     }
 }

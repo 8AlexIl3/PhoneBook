@@ -1,6 +1,15 @@
 #include "pch.h"
 #include "Person.h"
 
+CPerson::CPerson()
+{
+}
+
+CPerson::CPerson(PERSONS oPerson):m_oRecPerson(oPerson)
+{
+    
+}
+
 // Constructor
 CPerson::CPerson(PERSONS oPerson, CPhoneNumbersArray oPhoneNumbersArray)
     : m_oRecPerson(oPerson),
