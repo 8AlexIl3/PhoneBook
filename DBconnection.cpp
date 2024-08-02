@@ -57,19 +57,19 @@ bool CDBConnection::IsActionSuccessful(const HRESULT& hResult)
     switch (hResult) {
 
     case DB_E_INTEGRITYVIOLATION:
-        OBJECT_CURRENTLY_IN_USE;
+        strError=OBJECT_CURRENTLY_IN_USE;
         break;
 
     case DB_E_ERRORSOCCURRED:
-        OBJECT_CURRENTLY_IN_USE;
+        strError=OBJECT_CURRENTLY_IN_USE;
         break;
 
     case DB_S_ENDOFROWSET:
-        OBJECT_NOT_FOUND;
+        strError=OBJECT_NOT_FOUND;
         break;
 
     default:
-        QUERY_UNSUCCESSFUL;
+        strError=QUERY_UNSUCCESSFUL;
         break;
     }
     AfxMessageBox(strError);
@@ -77,7 +77,7 @@ bool CDBConnection::IsActionSuccessful(const HRESULT& hResult)
     return FALSE;
 }
 
-bool CDBConnection::ViewSessionResult()
+bool CDBConnection::CheckValidSession()
 {
 
     bool bResultConnection(true);
@@ -88,7 +88,7 @@ bool CDBConnection::ViewSessionResult()
 
     if (!bResultConnection) {
         CString strError;
-        SERVER_CONNECTION_ERROR;
+        strError=SERVER_CONNECTION_ERROR;
         AfxMessageBox(strError);
         return FALSE;
     }
@@ -99,7 +99,7 @@ bool CDBConnection::ViewSessionResult()
 
     if (!bResultConnection) {
         CStringW strError;
-        SESSION_CREATE_ERROR;
+        strError=SESSION_CREATE_ERROR;
         AfxMessageBox(strError);
 
         return FALSE;

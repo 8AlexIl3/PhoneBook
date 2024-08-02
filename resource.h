@@ -33,12 +33,35 @@
 #define IDS_EDIT_MENU                   306
 #define IDR_MENU1                       310
 #define IDD_DLG_CITIES                  312
+#define IDD_DLG_PERSONS                 313
+#define IDD_DLG_PHONE_NUMBERS           314
 #define ID_SHOW_CITIES                  330
 #define IDC_LSC_CITIES                  1000
 #define IDC_EDB_CITIES_NAME             1001
 #define IDC_EDB_CITIES_RESIDENCE        1002
 #define IDC_STT_CITIES_NAME             1003
 #define IDC_STT_CITIES_RESIDENCE        1004
+#define IDC_CMB_CITIES                  1004
+#define IDC_STT_CITIES                  1007
+#define IDC_EDB_FIRST_NAME              1008
+#define IDC_EDB_SURNAME                 1009
+#define IDC_EDB_LAST_NAME               1010
+#define IDC_EDB_EGN                     1011
+#define IDC_EDB_ADDRESS                 1012
+#define IDC_STT_FIRST_NAME              1013
+#define IDC_STT_SURNAME                 1014
+#define IDC_STT_LAST_NAME               1015
+#define IDC_STT_EGN                     1016
+#define IDC_STT_ADDRESS                 1017
+#define IDC_LSC_PHONE_NUMBERS           1018
+#define IDC_BTN_ADD_NUMBER              1019
+#define IDC_BTN_UPDATE_NUMBER           1020
+#define IDC_EDB_PHONE_NUMBER            1020
+#define IDC_BTN_DELETE_NUMBER           1021
+#define IDC_STT_PHONE_NUMBER            1021
+#define IDC_STT_PHONE_TYPE              1022
+#define IDC_COMBO1                      1023
+#define IDC_CMB_PHONE_TYPE              1023
 #define ID_FILE_SELECTWHEREID           32781
 #define ID_FILE_UPDATEWHEREID           32782
 #define ID_FILE_INSERT                  32783
@@ -65,7 +88,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32800
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

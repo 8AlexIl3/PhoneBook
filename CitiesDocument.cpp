@@ -142,7 +142,7 @@ const CCitiesArray& CCitiesDocument::GetCityArray()
 
 void CCitiesDocument::ClearArray()
 {
-    for (long lIndexer = 0; (INT_PTR)lIndexer < m_oCitiesArray.GetCount(); lIndexer++) {
+    for (INT_PTR lIndexer = 0; lIndexer < m_oCitiesArray.GetCount(); lIndexer++) {
         delete m_oCitiesArray.GetAt(lIndexer);
     }
     m_oCitiesArray.RemoveAll();

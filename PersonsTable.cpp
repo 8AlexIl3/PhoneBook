@@ -1,20 +1,20 @@
 #include "pch.h"
-#include "CitiesTable.h"
+#include "PersonsTable.h"
 #include "DBconnectionSingleton.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CCitiesTable
+// CPersonsTable
 
 // Constructor / Destructor
 // ----------------
 
-CCitiesTable::CCitiesTable():
+CPersonsTable::CPersonsTable() :
     m_oConnection(CDBConnectionSingleton::GetInstance())
 {
 }
 
-CCitiesTable::~CCitiesTable()
+CPersonsTable::~CPersonsTable()
 {
 }
 
@@ -22,7 +22,7 @@ CCitiesTable::~CCitiesTable()
 //Overrides
 // ----------------
 
-bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
+bool CPersonsTable::SelectAll(CPersonsArray& oPersonsArray)
 {
     //Connect to server->database->open session
     if (!m_oConnection.CheckValidSession()) {
@@ -30,7 +30,7 @@ bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
     }
 
     //Set query
-    CString oStrQuery(_T("SELECT * FROM CITIES WTIH (NOLOCK)"));
+    CString oStrQuery(_T("SELECT * FROM PERSONS  WTIH (NOLOCK)"));
     HRESULT oHresult;
 
     oHresult = Open(m_oConnection.GetSession(), oStrQuery);
@@ -46,38 +46,35 @@ bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
     {
         return FALSE;
     }
-    //add all cities to the array
+    //add all Persons to the array
     do
     {
-        CITIES* pCities = new CITIES(m_recCity);
+        PERSONS* pPersons = new PERSONS(m_recPerson);
 
-        if (!pCities) {//If memory is NOT allocated
+        if (!pPersons) {//If memory is NOT allocated
             CString strError;
-            strError.Format(_T("ID: %d, City: %s, Town Residence: %s was NOT added"),
-                m_recCity.lID,
-                m_recCity.szCityName,
-                m_recCity.szTownResidence);
+            strError.Format(_T("Неуспешно добавяне на човек"));
             AfxMessageBox(strError);
 
             continue;
 
         }
-        oCitiesArray.Add(pCities);
+        oPersonsArray.Add(pPersons);
 
-    } while (MoveNext()==S_OK);
+    } while (MoveNext() == S_OK);
 
     Close();
 
     return TRUE;
 }
 
-bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
+bool CPersonsTable::SelectWhereID(const long lID, PERSONS& recPerson) {
 
-    if (!m_oConnection.CheckValidSession()){
+    if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     CString strQuery;
-    strQuery.Format( _T("SELECT * FROM CITIES WITH (NOLOCK) WHERE ID = %d"), lID);
+    strQuery.Format(_T("SELECT * FROM PERSONS  WTIH (NOLOCK) WHERE ID = %d"), lID);
     HRESULT oHresult;
 
     oHresult = Open(m_oConnection.GetSession(), strQuery);
@@ -91,7 +88,8 @@ bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
     if (FAILED(oHresult)) {
         CString oStrError;
-        SELECT_ID_FAIL;
+
+        oStrError.Format((SELECT_ID_FAIL), lID);
 
         AfxMessageBox(oStrError);
 
@@ -100,31 +98,31 @@ bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
         return FALSE;
     }
-    recCity = m_recCity;
+    recPerson = m_recPerson;
 
     Close();
 
     return TRUE;
 }
 
-bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
+bool CPersonsTable::UpdateWhereID(const long lID, PERSONS& recPerson)
 {
     if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     HRESULT oHresult;
 
-    oHresult=m_oConnection.GetSession().StartTransaction();
+    oHresult = m_oConnection.GetSession().StartTransaction();
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         return FALSE;
     }
     CString strQuery;
-    strQuery.Format(_T("SELECT * FROM CITIES WITH (UPDLOCK) WHERE ID = %d"), lID);
+    strQuery.Format(_T("SELECT * FROM PERSONS WITH (UPDLOCK) WHERE ID = %d"), lID);
 
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
     //If query is successful
-    if (!m_oConnection.IsActionSuccessful(oHresult) ) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         m_oConnection.GetSession().Abort();
 
         return FALSE;
@@ -133,7 +131,7 @@ bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 
     if (FAILED(oHresult)) {
         CString oStrError;
-        SELECT_ID_FAIL;
+        oStrError.Format((SELECT_ID_FAIL),lID);
         AfxMessageBox(oStrError);
 
         m_oConnection.GetSession().Abort();
@@ -143,7 +141,7 @@ bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     }
 
     //record is NOT up to date
-    if (recCity.lUpdateCounter != m_recCity.lUpdateCounter) {
+    if (recPerson.lUpdateCounter != m_recPerson.lUpdateCounter) {
         m_oConnection.GetSession().Abort();
         AfxMessageBox(UPDATE_COUNTER_MISMATCH);
         Close();
@@ -151,10 +149,10 @@ bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
         return FALSE;
     }
     //ensure this record is up to date in the future
-    ++recCity.lUpdateCounter;
-    m_recCity = recCity;
+    ++recPerson.lUpdateCounter;
+    m_recPerson = recPerson;
 
-   //Set new data
+    //Set new data
     oHresult = SetData(ACCESSOR_1);
     if (FAILED(oHresult)) {
         m_oConnection.GetSession().Abort();
@@ -173,22 +171,22 @@ bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     return TRUE;
 }
 
-bool CCitiesTable::InsertRecord(CITIES& recCity) {
+bool CPersonsTable::InsertRecord(PERSONS& recPerson) {
     // Connect to server -> database -> open session
     if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     HRESULT oHresult;
     CString strQuery;
-    strQuery.Format(_T("SELECT TOP(0) * FROM CITIES"));
+    strQuery.Format(_T("SELECT TOP(0) * FROM PERSONS"));
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
         return FALSE;
     }
-   
+
     // Initialize record with the provided data
-    m_recCity = recCity;
+    m_recPerson = recPerson;
     // Insert new record
     oHresult = Insert(ACCESSOR_1);
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
@@ -200,31 +198,31 @@ bool CCitiesTable::InsertRecord(CITIES& recCity) {
         Close();
         return FALSE;
     }
-    //To get The insert city's ID
-    recCity = m_recCity;
+    //To get The inserted Person's ID
+    recPerson = m_recPerson;
     Close();
 
     return TRUE;
 }
 
-bool CCitiesTable::DeleteWhereID(const long lID) {
-    
+bool CPersonsTable::DeleteWhereID(const long lID) {
+
     //Connect to server->database->open session
     if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     HRESULT oHresult;
     CString strQuery;
-    strQuery.Format(_T("SELECT * FROM CITIES WHERE ID = %d"), lID);
+    strQuery.Format(_T("SELECT * FROM PERSONS WHERE ID = %d"), lID);
 
-    oHresult = Open(m_oConnection.GetSession(), strQuery,&m_oConnection.GetUpdatePropSet());
+    oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
 
         return FALSE;
     }
-    
+
     oHresult = MoveFirst();
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {

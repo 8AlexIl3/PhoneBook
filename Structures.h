@@ -110,3 +110,6 @@ private:
 };
 
 typedef CAutoMemoryArray<CITIES> CCitiesArray;
+typedef CAutoMemoryArray<PERSONS> CPersonsArray;
+typedef CAutoMemoryArray<PHONE_TYPES> CPhoneTypesArray;
+typedef CAutoMemoryArray<PHONE_NUMBERS> CPhoneNumbersArray;

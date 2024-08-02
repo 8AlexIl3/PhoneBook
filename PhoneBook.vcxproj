@@ -190,6 +190,7 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="CitiesDocument.h" />
     <ClInclude Include="CitiesView.h" />
+    <ClInclude Include="Person.h" />
     <ClInclude Include="ITable.h" />
     <ClInclude Include="DBconnection.h" />
     <ClInclude Include="DBConnectionSingleton.h" />
@@ -197,8 +198,16 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PersonsAccessor.h" />
+    <ClInclude Include="PersonsData.h" />
+    <ClInclude Include="PersonsDlg.h" />
+    <ClInclude Include="PersonsDocument.h" />
+    <ClInclude Include="PersonsTable.h" />
+    <ClInclude Include="PersonsView.h" />
     <ClInclude Include="PhoneBook.h" />
+    <ClInclude Include="PhoneNumbersTable.h" />
     <ClInclude Include="PhoneNumbersAccessor.h" />
+    <ClInclude Include="PhoneTypesData.h" />
+    <ClInclude Include="PhoneTypesTable.h" />
     <ClInclude Include="PhoneTypesAccessor.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Structures.h" />
@@ -210,6 +219,7 @@
     <ClCompile Include="CitiesData.cpp" />
     <ClCompile Include="CitiesDocument.cpp" />
     <ClCompile Include="CitiesView.cpp" />
+    <ClCompile Include="Person.cpp" />
     <ClCompile Include="DBconnection.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="CitiesTable.cpp" />
@@ -219,7 +229,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PersonsData.cpp" />
+    <ClCompile Include="PersonsDlg.cpp" />
+    <ClCompile Include="PersonsDocument.cpp" />
+    <ClCompile Include="PersonsTable.cpp" />
+    <ClCompile Include="PersonsView.cpp" />
     <ClCompile Include="PhoneBook.cpp" />
+    <ClCompile Include="PhoneNumbersTable.cpp" />
+    <ClCompile Include="PhoneTypesData.cpp" />
+    <ClCompile Include="PhoneTypesTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhoneBook.rc" />
@@ -232,7 +250,6 @@
     <Image Include="res\userimages.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ITable.inl" />
     <None Include="res\PhoneBook.rc2" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

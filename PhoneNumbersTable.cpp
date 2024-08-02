@@ -1,20 +1,20 @@
 #include "pch.h"
-#include "CitiesTable.h"
+#include "PhoneNumbersTable.h"
 #include "DBconnectionSingleton.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CCitiesTable
+// CPhoneNumbersTable
 
 // Constructor / Destructor
 // ----------------
 
-CCitiesTable::CCitiesTable():
+CPhoneNumbersTable::CPhoneNumbersTable() :
     m_oConnection(CDBConnectionSingleton::GetInstance())
 {
 }
 
-CCitiesTable::~CCitiesTable()
+CPhoneNumbersTable::~CPhoneNumbersTable()
 {
 }
 
@@ -22,7 +22,7 @@ CCitiesTable::~CCitiesTable()
 //Overrides
 // ----------------
 
-bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
+bool CPhoneNumbersTable::SelectAll(CPhoneNumbersArray& oPhoneNumbersArray)
 {
     //Connect to server->database->open session
     if (!m_oConnection.CheckValidSession()) {
@@ -30,7 +30,7 @@ bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
     }
 
     //Set query
-    CString oStrQuery(_T("SELECT * FROM CITIES WTIH (NOLOCK)"));
+    CString oStrQuery(_T("SELECT * FROM PHONE_NUMBERS  WTIH (NOLOCK)"));
     HRESULT oHresult;
 
     oHresult = Open(m_oConnection.GetSession(), oStrQuery);
@@ -46,38 +46,35 @@ bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
     {
         return FALSE;
     }
-    //add all cities to the array
+    //add all phone numbers to the array
     do
     {
-        CITIES* pCities = new CITIES(m_recCity);
+        PHONE_NUMBERS* pPhoneNumbers = new PHONE_NUMBERS(m_recPhoneNumber);
 
-        if (!pCities) {//If memory is NOT allocated
+        if (!pPhoneNumbers) {//If memory is NOT allocated
             CString strError;
-            strError.Format(_T("ID: %d, City: %s, Town Residence: %s was NOT added"),
-                m_recCity.lID,
-                m_recCity.szCityName,
-                m_recCity.szTownResidence);
+            strError.Format(_T("Неуспешно добавяне на телефонен номер"));
             AfxMessageBox(strError);
 
             continue;
 
         }
-        oCitiesArray.Add(pCities);
+        oPhoneNumbersArray.Add(pPhoneNumbers);
 
-    } while (MoveNext()==S_OK);
+    } while (MoveNext() == S_OK);
 
     Close();
 
     return TRUE;
 }
 
-bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
+bool CPhoneNumbersTable::SelectWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber) {
 
-    if (!m_oConnection.CheckValidSession()){
+    if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     CString strQuery;
-    strQuery.Format( _T("SELECT * FROM CITIES WITH (NOLOCK) WHERE ID = %d"), lID);
+    strQuery.Format(_T("SELECT * FROM PHONE_NUMBERS  WTIH (NOLOCK) WHERE ID = %d"), lID);
     HRESULT oHresult;
 
     oHresult = Open(m_oConnection.GetSession(), strQuery);
@@ -91,7 +88,7 @@ bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
     if (FAILED(oHresult)) {
         CString oStrError;
-        SELECT_ID_FAIL;
+        oStrError.Format(SELECT_ID_FAIL);
 
         AfxMessageBox(oStrError);
 
@@ -100,31 +97,77 @@ bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity) {
 
         return FALSE;
     }
-    recCity = m_recCity;
+    recPhoneNumber = m_recPhoneNumber;
 
     Close();
 
     return TRUE;
 }
 
-bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
+bool CPhoneNumbersTable::SelectMultipleWhereID(const long lID, CPhoneNumbersArray& oPhoneNumbersArray)
+{
+    //Connect to server->database->open session
+    if (!m_oConnection.CheckValidSession()) {
+        return FALSE;
+    }
+
+    //Set query
+    CString oStrQuery;
+    HRESULT oHresult;
+    oStrQuery.Format(_T("SELECT * FROM PHONE_NUMBERS WTIH (NOLOCK) WHERE PERSON_ID = %d"), lID);
+    oHresult = Open(m_oConnection.GetSession(), oStrQuery);
+    //If query is not successful
+    if (!m_oConnection.IsActionSuccessful(oHresult))
+    {
+
+        return FALSE;
+    }
+    oHresult = MoveFirst();
+    //If there is no data in the table
+    if (!m_oConnection.IsActionSuccessful(oHresult))
+    {
+        return FALSE;
+    }
+    //add all phone numbers to the array
+    do
+    {
+        PHONE_NUMBERS* pPhoneNumbers = new PHONE_NUMBERS(m_recPhoneNumber);
+
+        if (!pPhoneNumbers) {//If memory is NOT allocated
+            CString strError;
+            strError.Format(_T("Неуспешно добавяне на телефонен номер"));
+            AfxMessageBox(strError);
+
+            continue;
+
+        }
+        oPhoneNumbersArray.Add(pPhoneNumbers);
+
+    } while (MoveNext() == S_OK);
+
+    Close();
+
+    return TRUE;
+}
+
+bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber)
 {
     if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     HRESULT oHresult;
 
-    oHresult=m_oConnection.GetSession().StartTransaction();
+    oHresult = m_oConnection.GetSession().StartTransaction();
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         return FALSE;
     }
     CString strQuery;
-    strQuery.Format(_T("SELECT * FROM CITIES WITH (UPDLOCK) WHERE ID = %d"), lID);
+    strQuery.Format(_T("SELECT * FROM PHONE_NUMBERS WITH (UPDLOCK) WHERE ID = %d"), lID);
 
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
     //If query is successful
-    if (!m_oConnection.IsActionSuccessful(oHresult) ) {
+    if (!m_oConnection.IsActionSuccessful(oHresult)) {
         m_oConnection.GetSession().Abort();
 
         return FALSE;
@@ -143,7 +186,7 @@ bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     }
 
     //record is NOT up to date
-    if (recCity.lUpdateCounter != m_recCity.lUpdateCounter) {
+    if (recPhoneNumber.lUpdateCounter != m_recPhoneNumber.lUpdateCounter) {
         m_oConnection.GetSession().Abort();
         AfxMessageBox(UPDATE_COUNTER_MISMATCH);
         Close();
@@ -151,10 +194,10 @@ bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
         return FALSE;
     }
     //ensure this record is up to date in the future
-    ++recCity.lUpdateCounter;
-    m_recCity = recCity;
+    ++recPhoneNumber.lUpdateCounter;
+    m_recPhoneNumber = recPhoneNumber;
 
-   //Set new data
+    //Set new data
     oHresult = SetData(ACCESSOR_1);
     if (FAILED(oHresult)) {
         m_oConnection.GetSession().Abort();
@@ -173,22 +216,22 @@ bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
     return TRUE;
 }
 
-bool CCitiesTable::InsertRecord(CITIES& recCity) {
+bool CPhoneNumbersTable::InsertRecord(PHONE_NUMBERS& recPhoneNumber) {
     // Connect to server -> database -> open session
     if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     HRESULT oHresult;
     CString strQuery;
-    strQuery.Format(_T("SELECT TOP(0) * FROM CITIES"));
+    strQuery.Format(_T("SELECT TOP(0) * FROM PHONE_NUMBERS"));
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
         return FALSE;
     }
-   
+
     // Initialize record with the provided data
-    m_recCity = recCity;
+    m_recPhoneNumber = recPhoneNumber;
     // Insert new record
     oHresult = Insert(ACCESSOR_1);
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
@@ -200,31 +243,31 @@ bool CCitiesTable::InsertRecord(CITIES& recCity) {
         Close();
         return FALSE;
     }
-    //To get The insert city's ID
-    recCity = m_recCity;
+    //To get The inserted phone number's ID
+    recPhoneNumber = m_recPhoneNumber;
     Close();
 
     return TRUE;
 }
 
-bool CCitiesTable::DeleteWhereID(const long lID) {
-    
+bool CPhoneNumbersTable::DeleteWhereID(const long lID) {
+
     //Connect to server->database->open session
     if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
     HRESULT oHresult;
     CString strQuery;
-    strQuery.Format(_T("SELECT * FROM CITIES WHERE ID = %d"), lID);
+    strQuery.Format(_T("SELECT * FROM PHONE_NUMBERS  WHERE ID = %d"), lID);
 
-    oHresult = Open(m_oConnection.GetSession(), strQuery,&m_oConnection.GetUpdatePropSet());
+    oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
         Close();
 
         return FALSE;
     }
-    
+
     oHresult = MoveFirst();
 
     if (!m_oConnection.IsActionSuccessful(oHresult)) {

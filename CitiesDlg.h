@@ -30,7 +30,7 @@ private:
 public:
 	CCitiesDlg(CWnd* pParent = nullptr);
 	/// <param name="oCities">City to fill the fields if redaction is needed</param>
-	CCitiesDlg(const CITIES& oCities, CWnd* pParent = nullptr);
+	CCitiesDlg(CITIES& oCities, CWnd* pParent = nullptr);
 	virtual ~CCitiesDlg();
 
 
@@ -51,11 +51,9 @@ private:
 	/// <summary> Reformat the string </summary>
 	void Capitalize(CString& oString);
 public:
-	/// <summary>Getter for CityName </summary>
-	const CString& GetCityName();
-	/// <summary>Getter for TownResidence </summary>
-	const CString& GetTownResidence();
 
+
+	CITIES* GetCity();
 
 // Members
 // ----------------
@@ -65,19 +63,15 @@ private:
 	/// <summary> Edit box for TownResidence </summary>
 	CEdit m_EdbResidence;
 	/// <summary> String for cityName </summary>
-	CString m_szCityName;
-	/// <summary> String for TownResidence </summary>
-	CString m_szTownResidence;
+	CITIES* m_pCities;
 	/// <summary> Checks to see if info is updated </summary>
-	CString m_initialCityName;
-	/// <summary> Checks to see if info is updated </summary>
-	CString m_initialTownResidence;
+	CITIES m_oCities;
 };
 
 
 #define CITY_FIELD_SIZE 32
-#define USE_CITY_FIELD_WITH_BULGARIAN_TEXT  oErrors.Add(L"въведете полето на града с бълграски текст")
-#define EMPTY_CITY_FIELD oErrors.Add(L"въведете град");
-#define USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT oErrors.Add(L"въведете полето на областта с бълграски текст");
-#define EMPTY_RESIDENCE_FIELD oErrors.Add(L"въведете област");
-#define SAME_TEXT_AS_INITIAL oErrors.Add(L"Сменете текста в някое от полетата");
+#define USE_CITY_FIELD_WITH_BULGARIAN_TEXT L"въведете полето на града с бълграски текст"
+#define EMPTY_CITY_FIELD L"въведете град"
+#define USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT L"въведете полето на областта с бълграски текст"
+#define EMPTY_RESIDENCE_FIELD L"въведете област"
+#define SAME_TEXT_AS_INITIAL L"Сменете текста в някое от полетата"

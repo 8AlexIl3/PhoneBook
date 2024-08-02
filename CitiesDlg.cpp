@@ -20,12 +20,13 @@ END_MESSAGE_MAP()
 CCitiesDlg::CCitiesDlg(CWnd* pParent)
 	: CDialogEx(IDD_DLG_CITIES, pParent)
 {
+	m_pCities = &m_oCities;
 }
 
-CCitiesDlg::CCitiesDlg(const CITIES & oCities, CWnd * pParent)
+CCitiesDlg::CCitiesDlg(CITIES & oCities, CWnd * pParent)
 	: CDialogEx(IDD_DLG_CITIES, pParent),
-	m_initialCityName(oCities.szCityName),
-	m_initialTownResidence(oCities.szTownResidence)
+	m_pCities(&oCities),
+	m_oCities(oCities)
 {
 }
 
@@ -48,8 +49,7 @@ void CCitiesDlg::OnOK()
 {
 	UpdateData(TRUE);
 
-	m_EdbName.GetWindowTextW(m_szCityName);
-	m_EdbResidence.GetWindowTextW(m_szTownResidence);
+	
 	if (!ValidateData()) {
 		return;
 	}
@@ -62,8 +62,8 @@ BOOL CCitiesDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	m_EdbResidence.SetLimitText(CITY_FIELD_SIZE);
 	m_EdbName.SetLimitText(CITY_FIELD_SIZE);
-	m_EdbName.SetWindowTextW(m_initialCityName);
-	m_EdbResidence.SetWindowTextW(m_initialTownResidence);
+	m_EdbName.SetWindowTextW(m_oCities.szCityName);
+	m_EdbResidence.SetWindowTextW(m_oCities.szTownResidence);
 	UpdateData(TRUE);
 
 	return TRUE;
@@ -76,37 +76,43 @@ BOOL CCitiesDlg::OnInitDialog()
 bool CCitiesDlg::ValidateData() {
 	CArray<CString> oErrors;
 	std::wstring oPatternChecker;
-
+	CString strNameGetter;
+	CString strResidenceGetter;
+	m_EdbName.GetWindowTextW(strNameGetter);
 	//oPattern that allows only bulgarian and whitespaces
 	std::wregex oPattern(L"^[\\u0410-\\u044F\\s]+$");
 
-	m_szCityName.Trim();
+	strNameGetter.Trim();
 
-	oPatternChecker = m_szCityName.GetString();
-	if (m_szCityName.IsEmpty()) {
-		EMPTY_CITY_FIELD;
+	oPatternChecker = strNameGetter.GetString();
+	if (strNameGetter.IsEmpty()) {
+		oErrors.Add(EMPTY_CITY_FIELD);
 	}
 	else if (!std::regex_match(oPatternChecker, oPattern)) {
-		USE_CITY_FIELD_WITH_BULGARIAN_TEXT;
+		oErrors.Add(USE_CITY_FIELD_WITH_BULGARIAN_TEXT);
 	}
-	Capitalize(m_szCityName);
 
-	m_szTownResidence.Trim();
+	Capitalize(strNameGetter);
 
-	oPatternChecker = m_szTownResidence.GetString();
+	m_EdbResidence.GetWindowTextW(strResidenceGetter);
 
-	if (m_szTownResidence.IsEmpty()) {
-		EMPTY_RESIDENCE_FIELD;
+	strResidenceGetter.Trim();
+
+	oPatternChecker = strResidenceGetter.GetString();
+
+	if (strResidenceGetter.IsEmpty()) {
+		oErrors.Add(EMPTY_RESIDENCE_FIELD);
 	}
 	else if (!std::regex_match(oPatternChecker, oPattern)) {
-		USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT;
+		oErrors.Add(USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT);
 	}
-	else if (m_szCityName == m_initialCityName &&
-		m_szTownResidence == m_initialTownResidence) {
-		SAME_TEXT_AS_INITIAL;
+	else if (!(_tcscmp(strNameGetter, m_oCities.szCityName)||
+		_tcscmp(strResidenceGetter, m_oCities.szTownResidence)
+		)) {
+		oErrors.Add(SAME_TEXT_AS_INITIAL);
 	}
 
-	Capitalize(m_szTownResidence);
+	Capitalize(strResidenceGetter);
 
 	if (!oErrors.IsEmpty()) {
 		for (long lIndexer(0); (INT_PTR)lIndexer < oErrors.GetCount(); lIndexer++) {
@@ -115,6 +121,8 @@ bool CCitiesDlg::ValidateData() {
 
 		return FALSE;
 	}
+	_tcscpy_s(m_pCities->szCityName, strNameGetter);
+	_tcscpy_s(m_pCities->szTownResidence, strResidenceGetter);
 
 	return TRUE;
 
@@ -134,14 +142,11 @@ void CCitiesDlg::Capitalize(CString& oString)
 	}
 }
 
-const CString& CCitiesDlg::GetCityName()
+ CITIES* CCitiesDlg::GetCity()
 {
-	return m_szCityName;
+	return m_pCities;
 }
 
-const CString& CCitiesDlg::GetTownResidence()
-{
-	return m_szTownResidence;
-}
+
 
 	

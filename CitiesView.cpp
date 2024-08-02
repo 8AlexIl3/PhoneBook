@@ -128,7 +128,7 @@ bool CCitiesView::InsertCity()
     CCitiesDocument* pCitiesDocument = GetDocument();
 
     if (!pCitiesDocument) {
-        ÅRROR_FETCHING_DATA;
+        AfxMessageBox(ÅRROR_FETCHING_CITY);
         return FALSE;
     }
 
@@ -138,12 +138,9 @@ bool CCitiesView::InsertCity()
         return FALSE;
     }
 
-    CITIES oCities;
+    CITIES& oCities=*oCitiesDialog.GetCity();
 
     //Copy the data
-
-    _tcscpy_s(oCities.szCityName, oCitiesDialog.GetCityName());
-    _tcscpy_s(oCities.szTownResidence, oCitiesDialog.GetTownResidence());
 
     if (!pCitiesDocument->InsertCity(oCities)) {
         return FALSE;
@@ -156,13 +153,13 @@ bool CCitiesView::SelectCity()
 {
     CCitiesDocument* pCitiesDocument = GetDocument();
 
-    long lIndexer = GetTableRowIndex();
+    long lIndexer = GetRowIndex();
 
     if (lIndexer == INDEX_NOT_FOUND)
         return FALSE;
 
     if (!pCitiesDocument) {
-        ÅRROR_FETCHING_DATA;
+        AfxMessageBox(ÅRROR_FETCHING_CITY);
         return FALSE;
     }
     //Get ID from the selected row
@@ -172,11 +169,11 @@ bool CCitiesView::SelectCity()
     long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
 
     if (!lCityID) {
-        CITY_CANNOT_BE_SELECTED;
+        AfxMessageBox(CITY_CANNOT_BE_SELECTED);
         return FALSE;
     }
     if (!pCitiesDocument->SelectCity(lCityID, oCities)) {
-        CITY_CANNOT_BE_SELECTED;
+        AfxMessageBox(CITY_CANNOT_BE_SELECTED);
         return FALSE;
     }
     CString strCity;
@@ -196,24 +193,24 @@ bool CCitiesView::DeleteCity()
 {
     CCitiesDocument* pCitiesDocument = GetDocument();
 
-    long lIndexer = GetTableRowIndex();
+    long lIndexer = GetRowIndex();
 
     if (lIndexer == INDEX_NOT_FOUND)
         return FALSE;
 
     if (!pCitiesDocument) {
-        ÅRROR_FETCHING_DATA;
+        AfxMessageBox(ÅRROR_FETCHING_CITY);
         return FALSE;
     }
     //Get ID from the selected row
     long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
 
     if (!lCityID) {
-        CITY_CANNOT_BE_SELECTED;
+        AfxMessageBox(CITY_CANNOT_BE_SELECTED);
         return FALSE;
     }
     else if (!pCitiesDocument->DeleteCity(lCityID, lIndexer)) {
-        CITY_CANNOT_BE_DELETED;
+        AfxMessageBox(CITY_CANNOT_BE_DELETED);
         return FALSE;
     }
 
@@ -224,13 +221,13 @@ bool CCitiesView::UpdateCity()
 {
     CCitiesDocument* pCitiesDocument = GetDocument();
 
-    long lIndexer = GetTableRowIndex();
+    long lIndexer = GetRowIndex();
 
     if (lIndexer == INDEX_NOT_FOUND)
         return FALSE;
 
     if (!pCitiesDocument) {
-        ÅRROR_FETCHING_DATA;
+        AfxMessageBox(ÅRROR_FETCHING_CITY);
         return FALSE;
     }
     long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
@@ -240,7 +237,7 @@ bool CCitiesView::UpdateCity()
 
     //If city is still in view but no longer in table
     if (!pCitiesDocument->SelectCity(lCityID, oCities)) {
-        CITY_NOT_IN_TABLE;
+        AfxMessageBox(CITY_NOT_IN_TABLE);
         return FALSE;
     }
 
@@ -251,9 +248,7 @@ bool CCitiesView::UpdateCity()
         return FALSE;
     }
 
-    //Copy the data
-    _tcscpy_s(oCities.szCityName, oCitiesDialog.GetCityName());
-    _tcscpy_s(oCities.szTownResidence, oCitiesDialog.GetTownResidence());
+    oCities = *oCitiesDialog.GetCity();
 
     if (!pCitiesDocument->UpdateCity(lCityID,oCities)) {
         return FALSE;
@@ -267,7 +262,7 @@ void CCitiesView::DisplayData()
     CCitiesDocument* pCitiesDocument = GetDocument();
 
     if (!pCitiesDocument) {
-        ÅRROR_FETCHING_DATA;
+        AfxMessageBox(ÅRROR_FETCHING_CITY);
         return;
     }
 
@@ -287,7 +282,7 @@ void CCitiesView::DisplayData()
     }
 }
 
-long CCitiesView::GetTableRowIndex()
+long CCitiesView::GetRowIndex()
 {
     POSITION pos = m_oListCtrl.GetFirstSelectedItemPosition();
     if (!pos)

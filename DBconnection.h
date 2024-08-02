@@ -34,7 +34,7 @@ public:
 
     /// <summary>Update Data in the table</summary>
     /// <returns>TRUE if succesful/FALSE if not</returns>
-    bool ViewSessionResult();
+    bool CheckValidSession();
 
 private:
     /// <returns>Database connection to the server</returns>
@@ -62,9 +62,9 @@ private:
 };
 
 
-#define OBJECT_CURRENTLY_IN_USE strError.Format(_T("Обектът не може да бъде изтрит,защото се използва вмомента"))
-#define OBJECT_NOT_FOUND strError.Format(_T("Обектът не беше намерен"))
-#define QUERY_UNSUCCESSFUL strError.Format(_T("Заявката е неуспешна"))
-#define SERVER_CONNECTION_ERROR strError.Format(_T("Не може да се създаде връзка към сървъра"))
-#define SESSION_CREATE_ERROR strError.Format(_T("Не може да се създаде сесия"))
+#define OBJECT_CURRENTLY_IN_USE L"Обектът не може да бъде изтрит,защото се използва вмомента"
+#define OBJECT_NOT_FOUND L"Обектът не беше намерен"
+#define QUERY_UNSUCCESSFUL L"Заявката е неуспешна"
+#define SERVER_CONNECTION_ERROR L"Не може да се създаде връзка към сървъра"
+#define SESSION_CREATE_ERROR L"Не може да се създаде сесия"
 

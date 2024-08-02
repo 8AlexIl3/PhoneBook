@@ -42,14 +42,7 @@ bool CCitiesData::UpdateWhereID(const long lID, CITIES& recCity)
 {
     CCitiesTable oCitiesTable;
 
-    CITIES oCity=recCity;
-
-    oCitiesTable.UpdateWhereID(lID, recCity);
-    //If recCity is updated to something else that we did NOT set
-    bool bCompareResult = _tcscmp(recCity.szCityName, oCity.szCityName)
-        || _tcscmp(recCity.szTownResidence, oCity.szTownResidence);
-
-    return !bCompareResult;
+    return oCitiesTable.UpdateWhereID(lID, recCity);
 }
 
 bool CCitiesData::InsertCity(CITIES& recCity)
