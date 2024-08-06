@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "Structures.h"
 #include <atldbcli.h>
 #define ACCESSOR_COUNT  2
@@ -28,7 +27,7 @@ protected:
         END_ACCESSOR()
 
         BEGIN_ACCESSOR(ACCESSOR_1, true)
-        COLUMN_ENTRY(REC_ID, m_recPerson.lCityID)
+        COLUMN_ENTRY(CITY_ID, m_recPerson.lCityID)
         COLUMN_ENTRY(UPDATE_COUNTER, m_recPerson.lUpdateCounter)
         COLUMN_ENTRY(FIRST_NAME, m_recPerson.szFirstName)
         COLUMN_ENTRY(SURNAME, m_recPerson.szSurname)

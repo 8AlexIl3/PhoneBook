@@ -30,7 +30,7 @@ bool CPhoneNumbersTable::SelectAll(CPhoneNumbersArray& oPhoneNumbersArray)
     }
 
     //Set query
-    CString oStrQuery(_T("SELECT * FROM PHONE_NUMBERS  WTIH (NOLOCK)"));
+    CString oStrQuery(_T("SELECT * FROM PHONE_NUMBERS WTIH (NOLOCK)"));
     HRESULT oHresult;
 
     oHresult = Open(m_oConnection.GetSession(), oStrQuery);
@@ -74,7 +74,7 @@ bool CPhoneNumbersTable::SelectWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
         return FALSE;
     }
     CString strQuery;
-    strQuery.Format(_T("SELECT * FROM PHONE_NUMBERS  WTIH (NOLOCK) WHERE ID = %d"), lID);
+    strQuery.Format(_T("SELECT * FROM PHONE_NUMBERS WTIH (NOLOCK) WHERE ID = %d"), lID);
     HRESULT oHresult;
 
     oHresult = Open(m_oConnection.GetSession(), strQuery);
@@ -88,7 +88,7 @@ bool CPhoneNumbersTable::SelectWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
 
     if (FAILED(oHresult)) {
         CString oStrError;
-        oStrError.Format(SELECT_ID_FAIL);
+        oStrError.Format(SELECT_ID_FAIL,lID);
 
         AfxMessageBox(oStrError);
 
@@ -157,11 +157,6 @@ bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
         return FALSE;
     }
     HRESULT oHresult;
-
-    oHresult = m_oConnection.GetSession().StartTransaction();
-    if (!m_oConnection.IsActionSuccessful(oHresult)) {
-        return FALSE;
-    }
     CString strQuery;
     strQuery.Format(_T("SELECT * FROM PHONE_NUMBERS WITH (UPDLOCK) WHERE ID = %d"), lID);
 
@@ -169,7 +164,6 @@ bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
 
     //If query is successful
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
-        m_oConnection.GetSession().Abort();
 
         return FALSE;
     }
@@ -180,7 +174,6 @@ bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
         SELECT_ID_FAIL;
         AfxMessageBox(oStrError);
 
-        m_oConnection.GetSession().Abort();
         Close();
 
         return FALSE;
@@ -188,7 +181,6 @@ bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
 
     //record is NOT up to date
     if (recPhoneNumber.lUpdateCounter != m_recPhoneNumber.lUpdateCounter) {
-        m_oConnection.GetSession().Abort();
         AfxMessageBox(UPDATE_COUNTER_MISMATCH);
         Close();
 
@@ -201,7 +193,6 @@ bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
     //Set new data
     oHresult = SetData(ACCESSOR_1);
     if (FAILED(oHresult)) {
-        m_oConnection.GetSession().Abort();
 
         CString strError;
         if (oHresult == DB_E_CONCURRENCYVIOLATION)
@@ -211,7 +202,6 @@ bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNu
         AfxMessageBox(strError);
         return FALSE;
     }
-    m_oConnection.GetSession().Commit();
     Close();
 
     return TRUE;

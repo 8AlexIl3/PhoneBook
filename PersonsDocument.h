@@ -5,6 +5,8 @@
 // CPersonsDocument
 
 #include "PersonsData.h"
+#include "CitiesData.h"
+#include "PhoneTypesData.h"
 #include "Structures.h"
 #include "Person.h"
 class CPersonsDocument : public CDocument
@@ -28,12 +30,13 @@ public:
 public:
     /// <param name="oPersons">City to be inserted(its counter will be updated(so its not const)</param>
     /// <returns>true if successful, false otherwise</returns>
-    bool InsertPerson(PERSONS& oPersons);
+    bool InsertPerson(CPerson& oPersons);
 
     /// <param name="lID">id to delete</param>
     /// <param name="lrowIndexer">index from listctrl</param>
     /// <returns>true if successful, false otherwise</returns>
     bool DeletePerson(const long lID, const long lrowIndexer);
+
 
     /// <param name="lID">id to update</param>
     /// <param name="oPersons">Object that will update</param>
@@ -49,10 +52,18 @@ public:
     /// <returns>true if successful, false otherwise</returns>
     bool LoadPersons();
 
+    bool LoadCities();
+
+    bool LoadPhoneTypes();
+
     /// <summary>Getter for m_oCitiesArray</summary>
-    const CPersonArray& GetPersonArray();
+    CPersonArray& GetPersonArray();
+    CCitiesArray& GetCitiesArray();
+    CPhoneTypesArray& GetPhoneTypesArray();
 private:
-    void ClearArray();
+    void ClearPersonsArray();
+    void ClearCitiesArray();
+    void ClearPhoneTypesArray();
 
 
     // Overrides
@@ -68,7 +79,10 @@ public:
 private:
     // Array to hold person records
     CPersonArray m_oPersonsArray;
-
+    CCitiesArray m_oCitiesArray;
+    CPhoneTypesArray m_oPhoneTypesArray;
+public:
+    CMap<long, long, CString, CString> cityIDtoString;
 
     // Implementation
     // ----------------

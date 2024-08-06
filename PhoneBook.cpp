@@ -113,27 +113,6 @@ BOOL CPhoneBookApp::InitInstance()
 		return FALSE;
 	AddDocTemplate(pPersonsTemplate);
 
-	/*
-	CMultiDocTemplate* pCitiesTemplate;
-	pCitiesTemplate = new CMultiDocTemplate(IDR_PhoneBookTYPE,
-		RUNTIME_CLASS(CCitiesDocument),
-		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
-		RUNTIME_CLASS(CCitiesView));
-	if (!pCitiesTemplate)
-		return FALSE;
-
-	AddDocTemplate(pCitiesTemplate);
-
-	CMultiDocTemplate* pPhoneTypesTemplate;
-	pPhoneTypesTemplate = new CMultiDocTemplate(IDR_PhoneBookTYPE,
-		RUNTIME_CLASS(CCitiesDocument),
-		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
-		RUNTIME_CLASS(CCitiesView));
-	if (!pPhoneTypesTemplate)
-		return FALSE;
-
-	AddDocTemplate(pPhoneTypesTemplate);
-	*/
 
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;

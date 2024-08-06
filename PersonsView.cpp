@@ -2,7 +2,7 @@
 #include "PersonsDocument.h"
 #include "PersonsView.h"
 #include "PhoneBook.h"
-
+#include "PersonsDlg.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPersonsView
@@ -48,8 +48,9 @@ void CPersonsView::OnInitialUpdate()
 
     m_oListCtrl.ModifyStyle(0, LVS_REPORT | LVS_SINGLESEL);
     m_oListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-    m_oListCtrl.InsertColumn(ID_COLUMN, _T("ID"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
-    m_oListCtrl.InsertColumn(PERSON_COLUMN, _T("Име"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(FIRST_NAME_COLUMN, _T("Име"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(LAST_NAME_COLUMN, _T("Фамилия"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(CITY_ID_COLUMN, _T("Град(ID)"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
     m_oListCtrl.InsertColumn(ADDRESS_COLUMN, _T("Адрес"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
 
     DisplayData();
@@ -84,7 +85,7 @@ void CPersonsView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
         bUpToDate = SelectPerson();
         break;
     case VK_DELETE:
-        //bUpToDate = DeletePerson();
+        bUpToDate = DeletePerson();
         break;
     case VK_INSERT:
         bUpToDate = InsertPerson();
@@ -109,6 +110,7 @@ void CPersonsView::OnInsertPerson()
 
 void CPersonsView::OnRefresh() {
     CPersonsDocument* pPersonsDocument = GetDocument();
+    pPersonsDocument->LoadCities();
     pPersonsDocument->LoadPersons();
     DisplayData();
 }
@@ -127,7 +129,26 @@ bool CPersonsView::InsertPerson()
 {
     CPersonsDocument* pPersonsDocument = GetDocument();
 
+    if (!pPersonsDocument) {
+        return FALSE;
+    }
+
     
+    pPersonsDocument->LoadCities();
+    pPersonsDocument->LoadPhoneTypes();
+
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
+        &pPersonsDocument->GetPhoneTypesArray());
+
+    if (oPersonsDialog.DoModal() == IDCANCEL) {
+        return FALSE;
+    }
+
+    //Copy the data
+
+    if (!pPersonsDocument->InsertPerson(oPersonsDialog.GetPerson())) {
+        return FALSE;
+    }
    
     return TRUE;
 }
@@ -169,7 +190,6 @@ bool CPersonsView::SelectPerson()
 
     return TRUE;
 }
-#if 0
 bool CPersonsView::DeletePerson()
 {
     CPersonsDocument* pPersonsDocument = GetDocument();
@@ -190,20 +210,53 @@ bool CPersonsView::DeletePerson()
         AfxMessageBox(PERSON_CANNOT_BE_SELECTED);
         return FALSE;
     }
-    else if (!pPersonsDocument->DeletePerson(lPersonID, lIndexer)) {
+    if (AfxMessageBox(L"Потвърдете изтриването", MB_OKCANCEL)==IDCANCEL) {
+        return FALSE;
+    }
+    if (!pPersonsDocument->DeletePerson(lPersonID, lIndexer)) {
         AfxMessageBox(PERSON_CANNOT_BE_DELETED);
         return FALSE;
     }
 
     return TRUE;
 }
-#endif
 
 bool CPersonsView::UpdatePerson()
 {
     CPersonsDocument* pPersonsDocument = GetDocument();
 
+    long lIndexer = GetRowIndex();
 
+    if (lIndexer == INDEX_NOT_FOUND)
+        return FALSE;
+
+    if (!pPersonsDocument) {
+        return FALSE;
+    }
+    long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
+
+    CPerson& pPerson =  *pPersonsDocument->GetPersonArray().GetAt(lIndexer);
+   
+    if (!pPersonsDocument->SelectPerson(lCityID, pPerson)) {
+        return FALSE;
+    }
+
+    pPersonsDocument->LoadCities();
+    pPersonsDocument->LoadPhoneTypes();
+
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
+        &pPersonsDocument->GetPhoneTypesArray(), &pPerson);
+
+    if (oPersonsDialog.DoModal() == IDCANCEL) {
+        return FALSE;
+    }
+
+    //Copy the data
+
+    if (!pPersonsDocument->UpdatePerson(pPerson.m_oRecPerson.lID, oPersonsDialog.GetPerson())) {
+        return FALSE;
+    }
+    
     return TRUE;
 }
 
@@ -222,10 +275,11 @@ void CPersonsView::DisplayData()
     {
         CPerson* pPersons = pPersonsDocument->GetPersonArray().GetAt(lIndexer);
         if (pPersons != nullptr) {
-            CString strID;
-            strID.Format(_T("%ld"), pPersons->GetPerson().lID);
-            m_oListCtrl.InsertItem(lIndexer, strID);
-            m_oListCtrl.SetItemText(lIndexer, PERSON_COLUMN, pPersons->GetPerson().szFirstName);
+            m_oListCtrl.InsertItem(lIndexer, pPersons->GetPerson().szFirstName);
+            m_oListCtrl.SetItemText(lIndexer, LAST_NAME_COLUMN, pPersons->GetPerson().szLastName);
+            CString TEMP;
+            pPersonsDocument->cityIDtoString.Lookup(pPersons->GetPerson().lCityID,TEMP);
+            m_oListCtrl.SetItemText(lIndexer, CITY_ID_COLUMN, TEMP);
             m_oListCtrl.SetItemText(lIndexer, ADDRESS_COLUMN, pPersons->GetPerson().szAddress);
             m_oListCtrl.SetItemData(lIndexer, pPersons->GetPerson().lID);
         }

@@ -20,6 +20,7 @@ CPersonsDocument::CPersonsDocument()
 
 CPersonsDocument::~CPersonsDocument()
 {
+    cityIDtoString.RemoveAll();
 }
 
 // MFC Overrides
@@ -33,9 +34,6 @@ BOOL CPersonsDocument::OnNewDocument()
     CString strName;
     strName.Format(L"Persons Document %d", numberDoc++);
     SetTitle(strName);
-
-    if (!LoadPersons())
-        return FALSE;
 
     return TRUE;
 }
@@ -62,15 +60,14 @@ void CPersonsDocument::SetTitle(LPCTSTR lpszTitle)
 
 //Methods
 // ----------------
-#if 0
-bool CPersonsDocument::InsertPerson(PERSONS& oPersons)
+bool CPersonsDocument::InsertPerson(CPerson& oPersons)
 {
     CPersonsData oPersonsData;
 
     if (!oPersonsData.InsertPerson(oPersons))
         return FALSE;
 
-    PERSONS* pPersons = new PERSONS(oPersons);
+    CPerson* pPersons = new CPerson(oPersons);
     if (!pPersons) {
         return FALSE;
     }
@@ -102,18 +99,49 @@ bool CPersonsDocument::DeletePerson(const long lID, const long lrowIndexer)
     return TRUE;
 }
 
+bool CPersonsDocument::LoadCities()
+{
+    CCitiesData oCitiesData;
+    ClearCitiesArray();
+    if (!oCitiesData.SelectAll(m_oCitiesArray))
+        return FALSE;
+    for (INT_PTR nIndexer(0); nIndexer < m_oCitiesArray.GetCount(); nIndexer++) {
+        cityIDtoString.SetAt(m_oCitiesArray.GetAt(nIndexer)->lID,
+        m_oCitiesArray.GetAt(nIndexer)->szCityName);
+    }
+    return TRUE;
+}
+bool CPersonsDocument::LoadPhoneTypes()
+{
+    CPhoneTypesData oPhoneTypesData;
+    ClearPhoneTypesArray();
+    if (!oPhoneTypesData.SelectAll(m_oPhoneTypesArray))
+        return FALSE;
+
+    return TRUE;
+}
+bool CPersonsDocument::LoadPersons()
+{
+    CPersonsData oPersonsData;
+
+    ClearPersonsArray();
+    if (!oPersonsData.SelectAll(m_oPersonsArray))
+        return FALSE;
+
+    return TRUE;
+}
+
 bool CPersonsDocument::UpdatePerson(const long lID, CPerson& oPersons)
 {
     CPersonsData oPersonsData;
 
     if (!oPersonsData.UpdateWhereID(lID, oPersons))
         return FALSE;
-
+    
     UpdateAllViews(NULL);
 
     return TRUE;
 }
-#endif
 
 bool CPersonsDocument::SelectPerson(const long lID, CPerson& oPersons)
 {
@@ -125,23 +153,23 @@ bool CPersonsDocument::SelectPerson(const long lID, CPerson& oPersons)
     return TRUE;
 }
 
-bool CPersonsDocument::LoadPersons()
-{
-    CPersonsData oPersonsData;
 
-    ClearArray();
-    if (!oPersonsData.SelectAll(m_oPersonsArray))
-        return FALSE;
-
-    return TRUE;
-}
-
-const CPersonArray& CPersonsDocument::GetPersonArray()
+CPersonArray& CPersonsDocument::GetPersonArray()
 {
     return m_oPersonsArray;
 }
 
-void CPersonsDocument::ClearArray()
+CCitiesArray& CPersonsDocument::GetCitiesArray()
+{
+    return m_oCitiesArray;
+}
+
+CPhoneTypesArray& CPersonsDocument::GetPhoneTypesArray()
+{
+    return m_oPhoneTypesArray;
+}
+
+void CPersonsDocument::ClearPersonsArray()
 {
     for (long lIndexer = 0; (INT_PTR)lIndexer < m_oPersonsArray.GetCount(); lIndexer++) {
         delete m_oPersonsArray.GetAt(lIndexer);
@@ -149,6 +177,20 @@ void CPersonsDocument::ClearArray()
     m_oPersonsArray.RemoveAll();
 }
 
+void CPersonsDocument::ClearCitiesArray()
+{
+    for (long lIndexer = 0; (INT_PTR)lIndexer < m_oCitiesArray.GetCount(); lIndexer++) {
+        delete m_oCitiesArray.GetAt(lIndexer);
+    }
+    m_oCitiesArray.RemoveAll();
+}
+void CPersonsDocument::ClearPhoneTypesArray()
+{
+    for (long lIndexer = 0; (INT_PTR)lIndexer < m_oPhoneTypesArray.GetCount(); lIndexer++) {
+        delete m_oPhoneTypesArray.GetAt(lIndexer);
+    }
+    m_oPhoneTypesArray.RemoveAll();
+}
 
 // Implementation
 // ----------------

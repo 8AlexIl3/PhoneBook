@@ -92,9 +92,10 @@ inline CPersonsDocument* CPersonsView::GetDocument() const
 }
 #endif
 
-#define ID_COLUMN			0
-#define PERSON_COLUMN		1
-#define ADDRESS_COLUMN		2
+#define FIRST_NAME_COLUMN 0
+#define LAST_NAME_COLUMN 1
+#define CITY_ID_COLUMN 2
+#define ADDRESS_COLUMN 3
 
 #define DEFAULT_COLUMN_WIDTH 100
 

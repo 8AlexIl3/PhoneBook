@@ -19,8 +19,8 @@ public:
 // Methods
 // ----------------
 public:
-    /// <summary>Loads up all cities from the table </summary>
-    /// <param name="oCitiesArray">Cities that will be added</param>
+    /// <summary>Loads up all Persons from the table </summary>
+    /// <param name="oPersonsArray">persons that will be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool SelectAll(CPersonArray& oPersonsArray);
 
@@ -33,7 +33,7 @@ public:
 
     /// <summary>Update a row from the database with new values from recperson</summary>
     /// <param name="lID">ID to be matched from recperson to ensure it is the correct one</param>
-    /// <param name="recperson">Cities will get its update counter incremented</param>
+    /// <param name="recperson">person will get its update counter incremented</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool UpdateWhereID(const long lID, CPerson& recPerson);
 

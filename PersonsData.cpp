@@ -34,7 +34,9 @@ bool CPersonsData::SelectAll(CPersonArray& oPersonArray)
     for (INT_PTR nIndexer(0); nIndexer < oPersonsArray.GetCount(); nIndexer++) {
 
         pPerson = new CPerson(*oPersonsArray.GetAt(nIndexer));
-
+        if (!pPerson) {
+            continue;
+        }
         oPhoneNumbersTable.SelectMultipleWhereID
         (pPerson->m_oRecPerson.lID, pPerson->m_oPhoneNumbersArray);
 
@@ -61,7 +63,7 @@ bool CPersonsData::SelectWhereID(const long lID, CPerson& recPerson)
 
     return true;
 }
-#if 0
+
 bool CPersonsData::UpdateWhereID(const long lID, CPerson& recPerson)
 {
     CPersonsTable oPersonsTable;
@@ -70,11 +72,38 @@ bool CPersonsData::UpdateWhereID(const long lID, CPerson& recPerson)
     if (m_oConnection.GetSession().StartTransaction() != S_OK) {
         return FALSE;
     }
-    if (oPersonsTable.UpdateWhereID(lID, recPerson)) {
+    
+    if (!oPersonsTable.UpdateWhereID(lID, recPerson.m_oRecPerson)) {
         m_oConnection.GetSession().Abort();
         return FALSE;
     }
 
+    for (INT_PTR nIndexer(0); nIndexer < recPerson.m_oPhoneNumbersArray.GetCount(); nIndexer++) {
+
+        if (recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID == 0) {
+
+            recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lPersonID = recPerson.m_oRecPerson.lID;
+
+            if (!oPhoneNumbersTable.InsertRecord(*recPerson.m_oPhoneNumbersArray.GetAt(nIndexer))) {
+                m_oConnection.GetSession().Abort();
+                return FALSE;
+            }
+        }
+        else if (!_tcscmp(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->szPhone,EMPTY_NUMBER)) {
+
+            if (!oPhoneNumbersTable.DeleteWhereID(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID)) {
+                m_oConnection.GetSession().Abort();
+                return FALSE;
+            }
+        }
+        else {
+            if (!oPhoneNumbersTable.UpdateWhereID(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID,
+                *recPerson.m_oPhoneNumbersArray.GetAt(nIndexer))) {
+                m_oConnection.GetSession().Abort();
+                return FALSE;
+            }
+        }
+    }
 
     if (m_oConnection.GetSession().Commit() != S_OK) {
         return FALSE;
@@ -83,18 +112,76 @@ bool CPersonsData::UpdateWhereID(const long lID, CPerson& recPerson)
     return TRUE;
 }
 
+
 bool CPersonsData::DeleteWhereID(const long lID)
 {
+    if (m_oConnection.GetSession().StartTransaction() != S_OK) {
+        return FALSE;
+    }
     CPersonsTable oPersonsTable;
+    CPhoneNumbersTable oPhoneNumbersTable;
+    CPhoneNumbersArray oPhoneNubmersArray;
+    PERSONS oPersons;
 
-    return oPersonsTable.DeleteWhereID(lID);
+    if (!oPersonsTable.SelectWhereID(lID, oPersons)) {
+        m_oConnection.GetSession().Abort();
+        return FALSE;
+    }
+
+    if (!oPhoneNumbersTable.SelectMultipleWhereID(oPersons.lID, oPhoneNubmersArray)) {
+        m_oConnection.GetSession().Abort();
+        return FALSE;
+    }
+
+    for (INT_PTR nIndexer(0); nIndexer < oPhoneNubmersArray.GetCount(); nIndexer++) {
+
+        long lID = oPhoneNubmersArray.GetAt(nIndexer)->lID;
+
+         if (!oPhoneNumbersTable.DeleteWhereID(lID)) {
+             m_oConnection.GetSession().Abort();
+             return FALSE;
+         }
+    }
+
+    if (!oPersonsTable.DeleteWhereID(lID)) {
+        m_oConnection.GetSession().Abort();
+        return FALSE;
+    }
+
+    if (m_oConnection.GetSession().Commit() != S_OK) {
+        return FALSE;
+    }
+    return TRUE;
 }
 bool CPersonsData::InsertPerson(CPerson& recPerson)
 {
+    if (m_oConnection.GetSession().StartTransaction() != S_OK) {
+        return FALSE;
+    }
     CPersonsTable oPersonsTable;
+    CPhoneNumbersTable oPhoneNumbersTable;
 
-    return  oPersonsTable.InsertRecord(recPerson);
+    if (!oPersonsTable.InsertRecord(recPerson.m_oRecPerson)) {
+        m_oConnection.GetSession().Abort();
+        return FALSE;
+    }
+
+    for (INT_PTR nIndexer(0); nIndexer < recPerson.m_oPhoneNumbersArray.GetCount(); nIndexer++) {
+        recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lPersonID = recPerson.m_oRecPerson.lID;
+        //phoneNumber is about to be inserted
+        if (recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID == 0) {
+
+            if (!oPhoneNumbersTable.InsertRecord(*recPerson.m_oPhoneNumbersArray.GetAt(nIndexer))) {
+                m_oConnection.GetSession().Abort();
+                return FALSE;
+            }
+        }
+    }
+    if (m_oConnection.GetSession().Commit() != S_OK) {
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
 
-#endif

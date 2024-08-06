@@ -40,7 +40,7 @@ private:
 	void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 	void OnOK() override;
 	BOOL OnInitDialog() override;
-
+	
 
 // Methods
 // ----------------

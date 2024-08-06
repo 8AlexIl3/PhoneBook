@@ -126,6 +126,9 @@
     <ClInclude Include="PhoneTypesData.h">
       <Filter>Header Files\PhoneTypes</Filter>
     </ClInclude>
+    <ClInclude Include="PhoneNumbersDlg.h">
+      <Filter>Header Files\PhoneNumbers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhoneBook.cpp">
@@ -184,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="PersonsDlg.cpp">
       <Filter>Source Files\Persons</Filter>
+    </ClCompile>
+    <ClCompile Include="PhoneNumbersDlg.cpp">
+      <Filter>Source Files\PhoneNumbers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

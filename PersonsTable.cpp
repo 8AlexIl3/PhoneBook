@@ -110,20 +110,17 @@ bool CPersonsTable::UpdateWhereID(const long lID, PERSONS& recPerson)
     if (!m_oConnection.CheckValidSession()) {
         return FALSE;
     }
-    HRESULT oHresult;
 
-    oHresult = m_oConnection.GetSession().StartTransaction();
-    if (!m_oConnection.IsActionSuccessful(oHresult)) {
-        return FALSE;
-    }
     CString strQuery;
+
     strQuery.Format(_T("SELECT * FROM PERSONS WITH (UPDLOCK) WHERE ID = %d"), lID);
+
+    HRESULT oHresult;
 
     oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
     //If query is successful
     if (!m_oConnection.IsActionSuccessful(oHresult)) {
-        m_oConnection.GetSession().Abort();
 
         return FALSE;
     }
@@ -134,7 +131,6 @@ bool CPersonsTable::UpdateWhereID(const long lID, PERSONS& recPerson)
         oStrError.Format((SELECT_ID_FAIL),lID);
         AfxMessageBox(oStrError);
 
-        m_oConnection.GetSession().Abort();
         Close();
 
         return FALSE;
@@ -142,7 +138,6 @@ bool CPersonsTable::UpdateWhereID(const long lID, PERSONS& recPerson)
 
     //record is NOT up to date
     if (recPerson.lUpdateCounter != m_recPerson.lUpdateCounter) {
-        m_oConnection.GetSession().Abort();
         AfxMessageBox(UPDATE_COUNTER_MISMATCH);
         Close();
 
@@ -155,17 +150,16 @@ bool CPersonsTable::UpdateWhereID(const long lID, PERSONS& recPerson)
     //Set new data
     oHresult = SetData(ACCESSOR_1);
     if (FAILED(oHresult)) {
-        m_oConnection.GetSession().Abort();
 
         CString strError;
         if (oHresult == DB_E_CONCURRENCYVIOLATION)
             strError=CONCURRENCY_VIOLATION;
         else
             strError=DATA_UPDATE_FAIL;
+        Close();
         AfxMessageBox(strError);
         return FALSE;
     }
-    m_oConnection.GetSession().Commit();
     Close();
 
     return TRUE;
@@ -200,6 +194,7 @@ bool CPersonsTable::InsertRecord(PERSONS& recPerson) {
     }
     //To get The inserted Person's ID
     recPerson = m_recPerson;
+
     Close();
 
     return TRUE;
