@@ -16,7 +16,7 @@ CPhoneNumbersDlg::CPhoneNumbersDlg(CPhoneTypesArray* oPhoneTypeArray,PHONE_NUMBE
 	m_pPhoneNumbers(oPhoneNumbers),
 	m_pPhoneTypeArray(oPhoneTypeArray)
 {
-
+	m_bAllocatedNumber = false;
 }
 
 CPhoneNumbersDlg::~CPhoneNumbersDlg()
@@ -32,12 +32,14 @@ void CPhoneNumbersDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CMB_PHONE_TYPE, m_CmbPhoneType);
 }
 
-
+// Macros
+// ----------------
 BEGIN_MESSAGE_MAP(CPhoneNumbersDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
 // CPhoneNumbersDlg message handlers
+
 
 
 PHONE_NUMBERS& CPhoneNumbersDlg::GetNumber()
@@ -48,17 +50,21 @@ PHONE_NUMBERS& CPhoneNumbersDlg::GetNumber()
 BOOL CPhoneNumbersDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-	m_EdbPhoneNumber.SetLimitText(10);
-	m_EdbPhoneNumber.SetCueBanner(L"0987654321",1);
+	m_EdbPhoneNumber.SetLimitText(PHONE_NUMBER_LENGTH);
+	m_EdbPhoneNumber.SetCueBanner(L"Напр:0987654321",1);
+
+	if (m_pPhoneNumbers) {
+		m_EdbPhoneNumber.SetWindowTextW(m_pPhoneNumbers->szPhone);
+	}
 	for (INT_PTR nIndexer(0); nIndexer < m_pPhoneTypeArray->GetCount(); nIndexer++) {
 		PHONE_TYPES oPhoneTypes= *m_pPhoneTypeArray->GetAt(nIndexer);
 		m_CmbPhoneType.AddString(oPhoneTypes.szPhoneType);
 		m_CmbPhoneType.SetItemData((int)nIndexer, oPhoneTypes.lID);
 
-		if(m_pPhoneNumbers!=nullptr)
-
-		if (oPhoneTypes.lID == m_pPhoneNumbers->lPhoneTypeID) {
-			m_CmbPhoneType.SetCurSel((int)nIndexer);
+		if (m_pPhoneNumbers) {
+			if (oPhoneTypes.lID == m_pPhoneNumbers->lPhoneTypeID) {
+				m_CmbPhoneType.SetCurSel((int)nIndexer);
+			}
 		}
 	}
 
@@ -68,31 +74,56 @@ BOOL CPhoneNumbersDlg::OnInitDialog()
 
 void CPhoneNumbersDlg::OnOK()
 {
-	CString strPhoneNumber;	
-	m_EdbPhoneNumber.GetWindowTextW(strPhoneNumber);
-	if (strPhoneNumber.IsEmpty()) {
-		//prompt user to enter a phone number
+	if(!ValidateData())
 		return;
+	
+	CDialogEx::OnOK();
+}
+
+bool CPhoneNumbersDlg::ValidateData()
+{
+	CString strPhoneNumber;
+	m_EdbPhoneNumber.GetWindowTextW(strPhoneNumber);
+	if (strPhoneNumber.GetLength()<10) {
+		AfxMessageBox(L"Въведете номер от десет цифри");
+		return false;
 	}
-	int nIndexer=m_CmbPhoneType.GetCurSel();
+	int nIndexer = m_CmbPhoneType.GetCurSel();
 
 	if (nIndexer == CB_ERR) {
-		//prompt user to select a phone nubmer
-		return;
+		AfxMessageBox(L"Изберете план");
+		return false;
 	}
-	
+
 	//in case we are trying to write to null
 	//(happens when we call the constructor with nullptr)
-	bool bAllocated=false;
 	if (!m_pPhoneNumbers) {
 		m_pPhoneNumbers = new PHONE_NUMBERS;
-		bAllocated = true;
+		if (m_pPhoneNumbers) {
+			m_bAllocatedNumber = true;
+		}
+		else {
+			AfxMessageBox(L"Възникна грешка, опитайте по-късно");
+			return false;
+		}
 	}
+	
 	_tcscpy_s(m_pPhoneNumbers->szPhone, strPhoneNumber);
 	if (m_pPhoneNumbers->szPhone[0] != L'0') {
-		return;
+		AfxMessageBox(L"Номерът трябва да започва с нула");
+		return false;
 	}
+
 	m_pPhoneNumbers->lPhoneTypeID = (int)m_CmbPhoneType.GetItemData(nIndexer);
 
-	CDialogEx::OnOK();
+	return true;
+}
+
+void CPhoneNumbersDlg::OnCancel()
+{
+	if (m_bAllocatedNumber) {
+		delete m_pPhoneNumbers;
+	}
+
+	CDialogEx::OnCancel();
 }

@@ -93,7 +93,7 @@ inline CCitiesDocument* CCitiesView::GetDocument() const
 #define CITY_COLUMN			1
 #define RESIDENCE_COLUMN	2
 
-#define DEFAULT_COLUMN_WIDTH 100
+#define DEFAULT_COLUMN_WIDTH 150
 
 #define INDEX_NOT_FOUND -1
 

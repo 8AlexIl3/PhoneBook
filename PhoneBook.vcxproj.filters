@@ -173,9 +173,6 @@
     <ClCompile Include="PersonsData.cpp">
       <Filter>Source Files\Persons</Filter>
     </ClCompile>
-    <ClCompile Include="Person.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PersonsDocument.cpp">
       <Filter>Source Files\Persons</Filter>
     </ClCompile>
@@ -190,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="PhoneNumbersDlg.cpp">
       <Filter>Source Files\PhoneNumbers</Filter>
+    </ClCompile>
+    <ClCompile Include="Person.cpp">
+      <Filter>Source Files\Persons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

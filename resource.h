@@ -80,13 +80,21 @@
 #define IDM_EDIT_CITY                   32797
 #define ID_EDIT_REFRESH                 32798
 #define IDM_REFRESH_VIEW                32799
+#define IDM_INSERT_RECORD               32800
+#define ID_EDIT_32801                   32801
+#define ID_EDIT_32802                   32802
+#define ID_EDIT_32803                   32803
+#define ID_EDIT_32804                   32804
+#define IDM_DELETE                      32805
+#define IDM_DELETE_RECORD               32806
+#define IDM_EDIT_RECORD                 32807
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
-#define _APS_NEXT_COMMAND_VALUE         32800
+#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_COMMAND_VALUE         32808
 #define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

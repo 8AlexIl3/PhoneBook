@@ -8,15 +8,22 @@
 class CPersonsDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CPersonsDlg)
-	DECLARE_MESSAGE_MAP()
+		DECLARE_MESSAGE_MAP()
 
 public:
-	/// <param name="oCities">City to fill the fields if redaction is needed</param>
-	CPersonsDlg(CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypes, CPerson* pPerson = nullptr, CWnd* pParent = nullptr);
+	/// <summary>
+	/// Constructor
+	/// </summary>
+	/// <param name="oCitiesArray">Array of cities to be loaded</param>
+	/// <param name="pPhoneTypesArray">Array of phone types  </param>
+	/// <param name="pPerson">the person that will be edited/added</param>
+	/// <param name="pParent">parent window</param>
+	CPersonsDlg(CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypesArray, CPerson* pPerson = nullptr, CWnd* pParent = nullptr);
+
 	virtual ~CPersonsDlg();
 
-	
-// Dialog Data
+
+	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DLG_PERSONS };
 #endif
@@ -37,17 +44,47 @@ private:
 	CPhoneTypesArray* m_pPhoneTypes;
 	CPerson* m_pPerson;
 	CCitiesArray* m_pCitiesArray;
-
+	CMap<long, long, CString, CString> m_oPhoneTypeToString;
 	bool bAllocatedCity;
 
-	void onInsertNumber();
-	void onUpdateNumber();
-	void onDeleteNumber();
+	/// <summary>
+	/// Set Initial checkbox item list
+	/// </summary>
+	void SetCityComboboxItems();
+
+	afx_msg void onInsertNumber();
+	afx_msg void onUpdateNumber();
+	afx_msg void onDeleteNumber();
+
+	/// <summary>assign a string to the id of phonetypes</summary>
+	void MapPhoneTypeIDToString();
+	/// <summary>Checks all items in dialog to see if any changes are needed</summary>
+	/// <returns>true if no changes are needed, false otherwise</returns>
 	bool ValidateData();
+	/// <summary>Display the persons' phone numbers</summary>
 	void DisplayData();
+	
+	///<summary>Checks if the string is valid against the given pattern</summary>
+	///<returns>true if no string matches pattern, false otherwise</returns>
 	bool IsStringValid(const std::wregex& oPattern, CString& strArg);
-public:
-	virtual void OnOK();
-	CPerson& GetPerson();
+	/// <summary>Called upon pressing cancel </summary>
 	virtual void OnCancel();
+	/// <summary>Called upon pressing ok</summary>
+
+	virtual void OnOK();
+public:
+	void Capitalize(CString& oString);
+	/// <summary>Getter for person </summary>
+	/// <returns>a reference to the person object</returns>
+	CPerson& GetPerson();
 };
+#define INDEX_NOT_FOUND		-1
+
+#define PHONE_NUMBER_COLUMN 0
+#define PHONE_TYPE_COLUMN	1
+
+#define NAME_LENGTH			31
+#define ADDRESS_LENGTH		63
+#define EGN_LENGTH			10
+
+#define PX250				250

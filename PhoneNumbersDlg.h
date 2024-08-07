@@ -27,8 +27,13 @@ private:
 	PHONE_NUMBERS* m_pPhoneNumbers;
 	CEdit m_EdbPhoneNumber;
 	CComboBox m_CmbPhoneType;
+	bool m_bAllocatedNumber;
+	bool ValidateData();
 public:
 	PHONE_NUMBERS& GetNumber();
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
+	virtual void OnCancel();
 };
+
+#define PHONE_NUMBER_LENGTH 10

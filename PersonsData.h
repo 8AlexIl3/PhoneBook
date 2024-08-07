@@ -20,7 +20,7 @@ public:
 // ----------------
 public:
     /// <summary>Loads up all Persons from the table </summary>
-    /// <param name="oPersonsArray">persons that will be added</param>
+    /// <param name="oPersonsArray">person that will be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool SelectAll(CPersonArray& oPersonsArray);
 
@@ -42,7 +42,7 @@ public:
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool InsertPerson(CPerson& recPerson);
 
-    /// <summary>Delete a person by ID from table</summary>
+    /// <summary>Delete a person by ID (and his phonenumbers) from table</summary>
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool DeleteWhereID(const long lID);

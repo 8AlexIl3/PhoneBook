@@ -30,7 +30,7 @@ bool CPersonsData::SelectAll(CPersonArray& oPersonArray)
 
     CPerson* pPerson;
     oPersonsTable.SelectAll(oPersonsArray);
-    
+
     for (INT_PTR nIndexer(0); nIndexer < oPersonsArray.GetCount(); nIndexer++) {
 
         pPerson = new CPerson(*oPersonsArray.GetAt(nIndexer));
@@ -77,7 +77,7 @@ bool CPersonsData::UpdateWhereID(const long lID, CPerson& recPerson)
         m_oConnection.GetSession().Abort();
         return FALSE;
     }
-
+    
     for (INT_PTR nIndexer(0); nIndexer < recPerson.m_oPhoneNumbersArray.GetCount(); nIndexer++) {
 
         if (recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID == 0) {
@@ -89,20 +89,21 @@ bool CPersonsData::UpdateWhereID(const long lID, CPerson& recPerson)
                 return FALSE;
             }
         }
-        else if (!_tcscmp(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->szPhone,EMPTY_NUMBER)) {
 
+        if (!oPhoneNumbersTable.UpdateWhereID(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID,
+            *recPerson.m_oPhoneNumbersArray.GetAt(nIndexer))) {
+            m_oConnection.GetSession().Abort();
+            return FALSE;
+        }
+
+        if (!_tcscmp(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->szPhone,EMPTY_NUMBER)) {
             if (!oPhoneNumbersTable.DeleteWhereID(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID)) {
+
                 m_oConnection.GetSession().Abort();
                 return FALSE;
             }
         }
-        else {
-            if (!oPhoneNumbersTable.UpdateWhereID(recPerson.m_oPhoneNumbersArray.GetAt(nIndexer)->lID,
-                *recPerson.m_oPhoneNumbersArray.GetAt(nIndexer))) {
-                m_oConnection.GetSession().Abort();
-                return FALSE;
-            }
-        }
+        
     }
 
     if (m_oConnection.GetSession().Commit() != S_OK) {

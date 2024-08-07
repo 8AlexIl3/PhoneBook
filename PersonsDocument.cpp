@@ -20,7 +20,7 @@ CPersonsDocument::CPersonsDocument()
 
 CPersonsDocument::~CPersonsDocument()
 {
-    cityIDtoString.RemoveAll();
+    m_oCityIDtoString.RemoveAll();
 }
 
 // MFC Overrides
@@ -103,10 +103,14 @@ bool CPersonsDocument::LoadCities()
 {
     CCitiesData oCitiesData;
     ClearCitiesArray();
+
     if (!oCitiesData.SelectAll(m_oCitiesArray))
         return FALSE;
+
     for (INT_PTR nIndexer(0); nIndexer < m_oCitiesArray.GetCount(); nIndexer++) {
-        cityIDtoString.SetAt(m_oCitiesArray.GetAt(nIndexer)->lID,
+
+        m_oCityIDtoString.SetAt(m_oCitiesArray.GetAt(nIndexer)->lID,
+
         m_oCitiesArray.GetAt(nIndexer)->szCityName);
     }
     return TRUE;
@@ -115,6 +119,7 @@ bool CPersonsDocument::LoadPhoneTypes()
 {
     CPhoneTypesData oPhoneTypesData;
     ClearPhoneTypesArray();
+
     if (!oPhoneTypesData.SelectAll(m_oPhoneTypesArray))
         return FALSE;
 
@@ -167,6 +172,11 @@ CCitiesArray& CPersonsDocument::GetCitiesArray()
 CPhoneTypesArray& CPersonsDocument::GetPhoneTypesArray()
 {
     return m_oPhoneTypesArray;
+}
+
+CMap<long, long, CString, CString>& CPersonsDocument::GetStringCity()
+{
+    return m_oCityIDtoString;
 }
 
 void CPersonsDocument::ClearPersonsArray()

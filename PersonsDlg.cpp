@@ -18,21 +18,24 @@ BEGIN_MESSAGE_MAP(CPersonsDlg, CDialogEx)
 	ON_COMMAND(IDC_BTN_DELETE_NUMBER, &CPersonsDlg::onDeleteNumber)
 END_MESSAGE_MAP()
 
-CPersonsDlg::CPersonsDlg( CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypes,
+CPersonsDlg::CPersonsDlg( CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypesArray,
 	CPerson* pPerson /*nullptr*/, CWnd* pParent /*nullptr*/)
 	: CDialogEx(IDD_DLG_PERSONS, pParent),
 	m_pPerson(pPerson),
 	m_pCitiesArray(&oCitiesArray),
-	m_pPhoneTypes(pPhoneTypes)
+	m_pPhoneTypes(pPhoneTypesArray)
 	
 {
 	bAllocatedCity = false;
+	MapPhoneTypeIDToString();
 }
 
 CPersonsDlg::~CPersonsDlg()
 {
 	m_pCitiesArray = nullptr;
 	m_pPerson = nullptr;
+	m_pPhoneTypes = nullptr;
+	m_oPhoneTypeToString.RemoveAll();
 }
 
 bool CPersonsDlg::ValidateData()
@@ -56,25 +59,31 @@ bool CPersonsDlg::ValidateData()
 
 	if (!IsStringValid(oSymbolsOnly, strFirstName)) {
 		oErrors.Add(L"Въведете име на български");
-		return false;
 	}
+	Capitalize(strFirstName);
+
 	if(!IsStringValid(oSymbolsOnly, strSurname)) {
 		oErrors.Add(L"Въведете презиме на български");
-		return false;
 	}
+	Capitalize(strSurname);
+
 	if(!IsStringValid(oSymbolsOnly, strLastName)) {
 		oErrors.Add(L"Въведете фамилия на български");
-		return false;
 	}
+	Capitalize(strLastName);
+
 	if(!IsStringValid(oNumbersOnly, strEGN)) {
 		oErrors.Add(L"Въведете егн");
-		return false;
 	}
 	if(!IsStringValid(oPatternMixed, strAdress)) {
 		oErrors.Add(L"Въведете адрес на български");
-		return false;
 	}
 
+	int nCursel = m_CmbCities.GetCurSel();
+
+	if (nCursel == INDEX_NOT_FOUND) {
+		oErrors.Add(L"Изберете град");
+	}
 	if (!oErrors.IsEmpty()) {
 		for (long lIndexer(0); (INT_PTR)lIndexer < oErrors.GetCount(); lIndexer++) {
 			AfxMessageBox(oErrors.GetAt(lIndexer), MB_OK | MB_ICONEXCLAMATION);
@@ -83,13 +92,12 @@ bool CPersonsDlg::ValidateData()
 		return FALSE;
 	}
 
+	//Copy data 
 	_tcscpy_s(m_pPerson->m_oRecPerson.szAddress, strAdress);
 	_tcscpy_s(m_pPerson->m_oRecPerson.szEGN, strEGN);
 	_tcscpy_s(m_pPerson->m_oRecPerson.szLastName, strLastName);
 	_tcscpy_s(m_pPerson->m_oRecPerson.szSurname, strSurname);
 	_tcscpy_s(m_pPerson->m_oRecPerson.szFirstName, strFirstName);
-
-	int nCursel= m_CmbCities.GetCurSel();
 
 	long lCityID= (long) m_CmbCities.GetItemData(nCursel);
 	m_pPerson->m_oRecPerson.lCityID = lCityID;
@@ -99,15 +107,16 @@ bool CPersonsDlg::ValidateData()
 
 void CPersonsDlg::DisplayData()
 {
+	for (INT_PTR nIndexer(0); nIndexer < m_pPerson->m_oPhoneNumbersArray.GetCount(); nIndexer++) {
 
-	for (INT_PTR nIndexer(0); nIndexer < m_pPerson->m_oPhoneNumbersArray.GetCount(); ++nIndexer)
-	{
-		PHONE_NUMBERS oPhoneNumber = *m_pPerson->GetPhoneNumbers().GetAt(nIndexer);
-			CString strID;
-			strID.Format(_T("%ld"), oPhoneNumber.lPhoneTypeID);
-			m_LscPhoneNumbers.InsertItem((int)nIndexer, strID);
-			m_LscPhoneNumbers.SetItemText((int)nIndexer, 0, oPhoneNumber.szPhone);
-		
+		PHONE_NUMBERS oPhoneNumbers = *m_pPerson->m_oPhoneNumbersArray.GetAt(nIndexer);
+
+		m_LscPhoneNumbers.InsertItem((int)nIndexer, oPhoneNumbers.szPhone);
+
+		CString strTypeID;
+		m_oPhoneTypeToString.Lookup(oPhoneNumbers.lPhoneTypeID, strTypeID);
+		m_LscPhoneNumbers.SetItemText((int)nIndexer, PHONE_TYPE_COLUMN, strTypeID);
+
 	}
 }
 
@@ -124,7 +133,6 @@ bool CPersonsDlg::IsStringValid(const std::wregex& oPattern, CString& strArg)
 	if (!std::regex_match(oPatternChecker, oPattern)) {
 		return false;
 	}
-
 	return true;
 }
 
@@ -142,6 +150,8 @@ void CPersonsDlg::DoDataExchange(CDataExchange* pDX)
 
 // CPersonsDlg message handlers
 
+
+
 void CPersonsDlg::onInsertNumber()
 {
 	CPhoneNumbersDlg oPhoneNumbersdlg(m_pPhoneTypes);
@@ -157,10 +167,9 @@ void CPersonsDlg::onInsertNumber()
 
 	m_LscPhoneNumbers.InsertItem(nCount, oPhoneNumbers.szPhone);
 
-	CString strPhoneType;
-
-	strPhoneType.Format(L"%d", oPhoneNumbers.lPhoneTypeID);
-	m_LscPhoneNumbers.SetItemText(nCount, 1, strPhoneType);
+	CString strTypeID;
+	m_oPhoneTypeToString.Lookup(oPhoneNumbers.lPhoneTypeID, strTypeID);
+	m_LscPhoneNumbers.SetItemText(nCount, PHONE_TYPE_COLUMN, strTypeID);
 	
 	PHONE_NUMBERS* pPhoneNumbers = new PHONE_NUMBERS(oPhoneNumbers);
 
@@ -175,7 +184,7 @@ void CPersonsDlg::onUpdateNumber()
 		return;
 
 	int lIndexer = m_LscPhoneNumbers.GetNextSelectedItem(pos);
-	if (lIndexer == -1)
+	if (lIndexer == INDEX_NOT_FOUND)
 		return;
 
 	PHONE_NUMBERS* pPhoneNumbers= m_pPerson->
@@ -188,11 +197,11 @@ void CPersonsDlg::onUpdateNumber()
 
 	pPhoneNumbers = &oPhoneNumbersdlg.GetNumber();
 
-	m_LscPhoneNumbers.SetItemText(lIndexer, 0, pPhoneNumbers->szPhone);
+	m_LscPhoneNumbers.SetItemText(lIndexer, PHONE_NUMBER_COLUMN, pPhoneNumbers->szPhone);
 
-	CString strPhoneType;
-	strPhoneType.Format(_T("%d"), pPhoneNumbers->lPhoneTypeID);
-	m_LscPhoneNumbers.SetItemText(lIndexer, 1, strPhoneType);
+	CString strTypeID;
+	m_oPhoneTypeToString.Lookup(pPhoneNumbers->lPhoneTypeID, strTypeID);
+	m_LscPhoneNumbers.SetItemText(lIndexer, PHONE_TYPE_COLUMN, strTypeID);
 
 	m_LscPhoneNumbers.Update(lIndexer);
 
@@ -205,24 +214,33 @@ void CPersonsDlg::onDeleteNumber()
 		return;
 
 	int nIndexer = m_LscPhoneNumbers.GetNextSelectedItem(pos);
-	if (nIndexer == -1)
+	if (nIndexer == INDEX_NOT_FOUND)
 		return;
 
 	int nCount = m_LscPhoneNumbers.GetItemCount();
 	if (nCount == 1) {
-		AfxMessageBox(L"Трябва да има поне един телефон");
+		AfxMessageBox(L"Не може да се изтрие единствения останал номер");
+		AfxMessageBox(L"За да се изтрият всички телефонни номера, трябва да бъде изтрит човека",MB_ICONINFORMATION);
 		return;
 	}
 
 	CString strNumberToDelete = m_LscPhoneNumbers.GetItemText(nIndexer, 0);
 
 	for (long lIndexer(0); lIndexer < m_pPerson->m_oPhoneNumbersArray.GetCount(); lIndexer++) {
-		PHONE_NUMBERS A=*m_pPerson->m_oPhoneNumbersArray.GetAt(lIndexer);
+		PHONE_NUMBERS A = *m_pPerson->m_oPhoneNumbersArray.GetAt(lIndexer);
 		if (!_tcscmp(A.szPhone, strNumberToDelete)) {
 			_tcscpy_s(m_pPerson->m_oPhoneNumbersArray.GetAt(lIndexer)->szPhone,EMPTY_NUMBER);
 		}
 	}
 	m_LscPhoneNumbers.DeleteItem(nIndexer);
+}
+
+void CPersonsDlg::MapPhoneTypeIDToString()
+{
+	for (INT_PTR nIndexer(0); nIndexer < m_pPhoneTypes->GetCount(); nIndexer++) {
+		PHONE_TYPES oPhoneTypes = *m_pPhoneTypes->GetAt(nIndexer);
+		m_oPhoneTypeToString.SetAt(oPhoneTypes.lID, oPhoneTypes.szPhoneType);
+	}
 }
 
 void CPersonsDlg::OnOK()
@@ -237,6 +255,19 @@ void CPersonsDlg::OnOK()
 	CDialogEx::OnOK();
 }
 
+void CPersonsDlg::Capitalize(CString& oString)
+{
+	//Capitilize first letter
+	if (oString.GetAt(0) > L'Я') {
+		oString.SetAt(0, oString.GetAt(0) - 0x20);
+	}
+	//LowerCase all others
+	for (long lIndexer(1); (int)lIndexer < oString.GetLength(); lIndexer++) {
+		if (oString.GetAt(lIndexer) < L'а') {
+			oString.SetAt(lIndexer, oString.GetAt(lIndexer) + 0x20);
+		}
+	}
+}
 CPerson& CPersonsDlg::GetPerson()
 {
 	return *m_pPerson;
@@ -247,57 +278,60 @@ BOOL CPersonsDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	m_EdbAddress.SetLimitText(ADDRESS_LENGTH);
+	m_EdbSurname.SetLimitText(NAME_LENGTH);
+	m_EdbEGN.SetLimitText(EGN_LENGTH);
+	m_EdbLastName.SetLimitText(NAME_LENGTH);
+	m_EdbFirstName.SetLimitText(NAME_LENGTH);
+
+
 	m_LscPhoneNumbers.ModifyStyle(0, LVS_REPORT | LVS_SINGLESEL);
 	m_LscPhoneNumbers.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-	m_LscPhoneNumbers.InsertColumn(0, _T("Телефон"), LVCFMT_CENTER, 250);
-	m_LscPhoneNumbers.InsertColumn(1, _T("План"), LVCFMT_LEFT, 250);
+	m_LscPhoneNumbers.InsertColumn(PHONE_NUMBER_COLUMN, _T("Телефон"), LVCFMT_CENTER, PX250);
+	m_LscPhoneNumbers.InsertColumn(PHONE_TYPE_COLUMN, _T("План"), LVCFMT_LEFT, PX250);
 
 	if (!m_pPerson) {
 		bAllocatedCity = true;
 		m_pPerson = new CPerson;
 	}
 	if (!m_pPerson) {
+		bAllocatedCity = false;
 		AfxMessageBox(L"Не може да се зареди диалог за човек");
+		return false;
 	}
-		m_EdbAddress.SetWindowTextW(m_pPerson->m_oRecPerson.szAddress);
-		m_EdbSurname.SetWindowTextW(m_pPerson->m_oRecPerson.szSurname);
-		m_EdbEGN.SetWindowTextW(m_pPerson->m_oRecPerson.szEGN);
-		m_EdbLastName.SetWindowTextW(m_pPerson->m_oRecPerson.szLastName);
-		m_EdbFirstName.SetWindowTextW(m_pPerson->m_oRecPerson.szFirstName);
+	m_EdbAddress.SetWindowTextW(m_pPerson->m_oRecPerson.szAddress);
+	m_EdbSurname.SetWindowTextW(m_pPerson->m_oRecPerson.szSurname);
+	m_EdbEGN.SetWindowTextW(m_pPerson->m_oRecPerson.szEGN);
+	m_EdbLastName.SetWindowTextW(m_pPerson->m_oRecPerson.szLastName);
+	m_EdbFirstName.SetWindowTextW(m_pPerson->m_oRecPerson.szFirstName);
+	
+	SetCityComboboxItems();
+	
+	DisplayData();
 
-
-		for (INT_PTR nIndexer(0); nIndexer < m_pCitiesArray->GetCount(); nIndexer++) {
-
-			CITIES oCities = *m_pCitiesArray->GetAt(nIndexer);
-
-			CString strCityName = oCities.szCityName;
-			CString strResidenceName = oCities.szTownResidence;
-
-			CString strCityOption;
-			strCityOption.Format(L"%s (област %s)", strCityName, strResidenceName);
-			m_CmbCities.AddString(strCityOption);
-			m_CmbCities.SetItemData((int)nIndexer, oCities.lID);
-
-			if (oCities.lID == m_pPerson->m_oRecPerson.lCityID) {
-				m_CmbCities.SetCurSel((int)nIndexer);
-			}
-		}
-
-		for (INT_PTR nIndexer(0); nIndexer < m_pPerson->m_oPhoneNumbersArray.GetCount(); nIndexer++) {
-
-			PHONE_NUMBERS oPhoneNumbers = *m_pPerson->m_oPhoneNumbersArray.GetAt(nIndexer);
-
-			m_LscPhoneNumbers.InsertItem((int)nIndexer, oPhoneNumbers.szPhone);
-
-			CString strTypeID;
-			strTypeID.Format((L"%d"), oPhoneNumbers.lPhoneTypeID);
-			m_LscPhoneNumbers.SetItemText((int)nIndexer, 1, strTypeID);
-
-
-		}
 	return TRUE;
 }
+void CPersonsDlg::SetCityComboboxItems()
+{
+	for (INT_PTR nIndexer(0); nIndexer < m_pCitiesArray->GetCount(); nIndexer++) {
 
+		CITIES oCities = *m_pCitiesArray->GetAt(nIndexer);
+
+		CString strCityName = oCities.szCityName;
+		CString strResidenceName = oCities.szTownResidence;
+
+		CString strCityOption;
+		strCityOption.Format(L"%s (област %s)",
+			static_cast<const wchar_t*>(strCityName),
+			static_cast<const wchar_t*>(strResidenceName));
+		m_CmbCities.AddString(strCityOption);
+		m_CmbCities.SetItemData((int)nIndexer, oCities.lID);
+
+		if (oCities.lID == m_pPerson->m_oRecPerson.lCityID) {
+			m_CmbCities.SetCurSel((int)nIndexer);
+		}
+	}
+}
 
 void CPersonsDlg::OnCancel()
 {

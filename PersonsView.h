@@ -30,8 +30,10 @@ protected:
 	afx_msg void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnInsertPerson();
+	afx_msg void OnUpdatePerson();
+	afx_msg void OnDeletePerson();
 	afx_msg void OnRefresh();
-
+	afx_msg void OnLButtonDblClk(UINT nFlags,CPoint point);
 
 	//MFC Overrides
 	// ----------------
@@ -96,8 +98,9 @@ inline CPersonsDocument* CPersonsView::GetDocument() const
 #define LAST_NAME_COLUMN 1
 #define CITY_ID_COLUMN 2
 #define ADDRESS_COLUMN 3
+#define PRIMARY_PHONE_COLUMN 4
 
-#define DEFAULT_COLUMN_WIDTH 100
+#define DEFAULT_COLUMN_WIDTH 150
 
 #define INDEX_NOT_FOUND		-1
 

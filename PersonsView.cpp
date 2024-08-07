@@ -16,8 +16,11 @@ BEGIN_MESSAGE_MAP(CPersonsView, CListView)
     ON_WM_RBUTTONDOWN()
     ON_WM_UPDATEUISTATE()
     ON_WM_KEYDOWN()
-    ON_COMMAND(IDM_INSERT_CITY, &CPersonsView::OnInsertPerson)
+    ON_COMMAND(IDM_INSERT_RECORD, &CPersonsView::OnInsertPerson)
     ON_COMMAND(IDM_REFRESH_VIEW, &CPersonsView::OnRefresh)
+    ON_COMMAND(IDM_EDIT_RECORD, &CPersonsView::OnUpdatePerson)
+    ON_COMMAND(IDM_DELETE_RECORD, &CPersonsView::OnDeletePerson)
+
 END_MESSAGE_MAP()
 
 
@@ -48,13 +51,13 @@ void CPersonsView::OnInitialUpdate()
 
     m_oListCtrl.ModifyStyle(0, LVS_REPORT | LVS_SINGLESEL);
     m_oListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-    m_oListCtrl.InsertColumn(FIRST_NAME_COLUMN, _T("Име"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
-    m_oListCtrl.InsertColumn(LAST_NAME_COLUMN, _T("Фамилия"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
-    m_oListCtrl.InsertColumn(CITY_ID_COLUMN, _T("Град(ID)"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
-    m_oListCtrl.InsertColumn(ADDRESS_COLUMN, _T("Адрес"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(FIRST_NAME_COLUMN, _T("Име"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(LAST_NAME_COLUMN, _T("Фамилия"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(CITY_ID_COLUMN, _T("Град"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(ADDRESS_COLUMN, _T("Адрес"), LVCFMT_LEFT, 300);
+    m_oListCtrl.InsertColumn(PRIMARY_PHONE_COLUMN, _T("Главен телефон"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
 
     DisplayData();
-
 }
 
 
@@ -107,12 +110,25 @@ void CPersonsView::OnInsertPerson()
 {
     InsertPerson();
 }
+void CPersonsView::OnUpdatePerson()
+{
+    UpdatePerson();
+}
+void CPersonsView::OnDeletePerson()
+{
+    DeletePerson();
+}
 
 void CPersonsView::OnRefresh() {
     CPersonsDocument* pPersonsDocument = GetDocument();
     pPersonsDocument->LoadCities();
     pPersonsDocument->LoadPersons();
     DisplayData();
+}
+
+void CPersonsView::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+    UpdatePerson();
 }
 
 
@@ -133,7 +149,6 @@ bool CPersonsView::InsertPerson()
         return FALSE;
     }
 
-    
     pPersonsDocument->LoadCities();
     pPersonsDocument->LoadPhoneTypes();
 
@@ -235,7 +250,7 @@ bool CPersonsView::UpdatePerson()
     }
     long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
 
-    CPerson& pPerson =  *pPersonsDocument->GetPersonArray().GetAt(lIndexer);
+    CPerson& pPerson = *pPersonsDocument->GetPersonArray().GetAt(lIndexer);
    
     if (!pPersonsDocument->SelectPerson(lCityID, pPerson)) {
         return FALSE;
@@ -275,12 +290,17 @@ void CPersonsView::DisplayData()
     {
         CPerson* pPersons = pPersonsDocument->GetPersonArray().GetAt(lIndexer);
         if (pPersons != nullptr) {
-            m_oListCtrl.InsertItem(lIndexer, pPersons->GetPerson().szFirstName);
+            m_oListCtrl.InsertItem(lIndexer, L"");
+            m_oListCtrl.SetItemText(lIndexer, FIRST_NAME_COLUMN, pPersons->GetPerson().szFirstName);
             m_oListCtrl.SetItemText(lIndexer, LAST_NAME_COLUMN, pPersons->GetPerson().szLastName);
-            CString TEMP;
-            pPersonsDocument->cityIDtoString.Lookup(pPersons->GetPerson().lCityID,TEMP);
-            m_oListCtrl.SetItemText(lIndexer, CITY_ID_COLUMN, TEMP);
+
+            CString strCityID;
+            pPersonsDocument->GetStringCity().Lookup(pPersons->GetPerson().lCityID, strCityID);
+            m_oListCtrl.SetItemText(lIndexer, CITY_ID_COLUMN, strCityID);
+
             m_oListCtrl.SetItemText(lIndexer, ADDRESS_COLUMN, pPersons->GetPerson().szAddress);
+            m_oListCtrl.SetItemText(lIndexer, PRIMARY_PHONE_COLUMN, pPersons->m_oPhoneNumbersArray.GetAt(0)->szPhone);
+
             m_oListCtrl.SetItemData(lIndexer, pPersons->GetPerson().lID);
         }
     }

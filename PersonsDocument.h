@@ -15,11 +15,11 @@ class CPersonsDocument : public CDocument
     // Macros
     // ----------------
     DECLARE_DYNCREATE(CPersonsDocument)
-     DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 
 
-        // Constructor / Destructor
-        // ----------------
+    // Constructor / Destructor
+    // ----------------
 public:
     CPersonsDocument();
     virtual ~CPersonsDocument();
@@ -28,38 +28,49 @@ public:
     // Methods
     // ----------------
 public:
-    /// <param name="oPersons">City to be inserted(its counter will be updated(so its not const)</param>
+    /// <param name="oPersons">Person to be inserted(its counter will be updated(so its not const)</param>
     /// <returns>true if successful, false otherwise</returns>
     bool InsertPerson(CPerson& oPersons);
 
-    /// <param name="lID">id to delete</param>
+    /// <param name="lID">Id to delete</param>
     /// <param name="lrowIndexer">index from listctrl</param>
     /// <returns>true if successful, false otherwise</returns>
     bool DeletePerson(const long lID, const long lrowIndexer);
 
 
-    /// <param name="lID">id to update</param>
-    /// <param name="oPersons">Object that will update</param>
+    /// <param name="lID">Id to update</param>
+    /// <param name="oPersons">Person that will get updated</param>
     /// <returns>true if successful, false otherwise</returns>
     bool UpdatePerson(const long lID, CPerson& oPersons);
 
-    /// <param name="lID">id to select</param>
+    /// <param name="lID">Id to select</param>
     /// <param name="oPersons">Object that will get initilized</param>
     /// <returns>true if successful, false otherwise</returns>
     bool SelectPerson(const long lID, CPerson& oPersons);
 
-    /// <summary>Get all persons from table</summary>
+    /// <summary>Get all Persons from table</summary>
     /// <returns>true if successful, false otherwise</returns>
     bool LoadPersons();
 
+    /// <summary>Get all Cities from table</summary>
+    /// <returns>true if successful, false otherwise</returns>
     bool LoadCities();
 
+    /// <summary>Get all Phone types from table</summary>
+   /// <returns>true if successful, false otherwise</returns>
     bool LoadPhoneTypes();
 
-    /// <summary>Getter for m_oCitiesArray</summary>
+    /// <summary>Getter for personArray</summary>
     CPersonArray& GetPersonArray();
+
+    /// <summary>Getter for CitiesArray</summary>
     CCitiesArray& GetCitiesArray();
+
+    /// <summary>Getter for PhoneTypesArray</summary>
     CPhoneTypesArray& GetPhoneTypesArray();
+
+    CMap<long, long, CString, CString>&GetStringCity();
+
 private:
     void ClearPersonsArray();
     void ClearCitiesArray();
@@ -81,8 +92,7 @@ private:
     CPersonArray m_oPersonsArray;
     CCitiesArray m_oCitiesArray;
     CPhoneTypesArray m_oPhoneTypesArray;
-public:
-    CMap<long, long, CString, CString> cityIDtoString;
+    CMap<long, long, CString, CString> m_oCityIDtoString;
 
     // Implementation
     // ----------------

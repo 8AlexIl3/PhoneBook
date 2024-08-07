@@ -51,25 +51,19 @@ private:
 	/// <summary> Reformat the string </summary>
 	void Capitalize(CString& oString);
 public:
-
-
 	CITIES* GetCity();
 
 // Members
 // ----------------
 private:
-	/// <summary> Edit box for cityName </summary>
 	CEdit m_EdbName;
-	/// <summary> Edit box for TownResidence </summary>
 	CEdit m_EdbResidence;
-	/// <summary> String for cityName </summary>
 	CITIES* m_pCities;
-	/// <summary> Checks to see if info is updated </summary>
 	CITIES m_oCities;
 };
 
 
-#define CITY_FIELD_SIZE 32
+#define CITY_FIELD_SIZE 31
 #define USE_CITY_FIELD_WITH_BULGARIAN_TEXT L"въведете полето на града с бълграски текст"
 #define EMPTY_CITY_FIELD L"въведете град"
 #define USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT L"въведете полето на областта с бълграски текст"
