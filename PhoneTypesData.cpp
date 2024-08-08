@@ -29,27 +29,27 @@ bool CPhoneTypesData::SelectAll(CPhoneTypesArray& oPhoneTypesArray)
     return !oPhoneTypesArray.IsEmpty();
 }
 
-bool CPhoneTypesData::SelectWhereID(const long lID, PHONE_TYPES& recCity)
+bool CPhoneTypesData::SelectWhereID(const long lID, PHONE_TYPES& recPhoneNumber)
 {
     CPhoneTypesTable oPhoneTypesTable;
 
-    oPhoneTypesTable.SelectWhereID(lID, recCity);
+    oPhoneTypesTable.SelectWhereID(lID, recPhoneNumber);
 
-    return recCity.lID;
+    return recPhoneNumber.lID;
 }
 
-bool CPhoneTypesData::UpdateWhereID(const long lID, PHONE_TYPES& recCity)
+bool CPhoneTypesData::UpdateWhereID(const long lID, PHONE_TYPES& recPhoneNumber)
 {
     CPhoneTypesTable oPhoneTypesTable;
 
-    return oPhoneTypesTable.UpdateWhereID(lID, recCity);
+    return oPhoneTypesTable.UpdateWhereID(lID, recPhoneNumber);
 }
 
-bool CPhoneTypesData::InsertCity(PHONE_TYPES& recCity)
+bool CPhoneTypesData::InsertPhoneType(PHONE_TYPES& recPhoneNumber)
 {
     CPhoneTypesTable oPhoneTypesTable;
 
-    return  oPhoneTypesTable.InsertRecord(recCity);
+    return  oPhoneTypesTable.InsertRecord(recPhoneNumber);
 }
 
 bool CPhoneTypesData::DeleteWhereID(const long lID)

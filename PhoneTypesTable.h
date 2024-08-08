@@ -26,30 +26,30 @@ public:
     // Overrides
     // ----------------
 public:
-    /// <summary>Loads up all cities from the table </summary>
-    /// <param name="oCitiesArray">Cities that will be added</param>
+    /// <summary>Loads up all phoneNumbers from the table </summary>
+    /// <param name="ophoneNumbersArray">phoneNumbers that will be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool SelectAll(CPhoneTypesArray& oPhoneTypesArray) override;
 
-    /// <summary>Get a city structure by its' id </summary>
+    /// <summary>Get a phoneNumber structure by its' id </summary>
     /// <param name="lID">ID to be searched for</param>
-    /// <param name="recCity">Reference to the city that is searched (if not found
+    /// <param name="recphoneNumber">Reference to the phoneNumber that is searched (if not found
     /// remains empty)</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool SelectWhereID(const long lID, PHONE_TYPES& recPhoneType) override;
 
-    /// <summary>Update a row from the database with new values from recCity</summary>
-    /// <param name="lID">ID to be matched from recCity to ensure it is the correct one</param>
-    /// <param name="recCity">Cities will get its update counter incremented</param>
+    /// <summary>Update a row from the database with new values from recphoneNumber</summary>
+    /// <param name="lID">ID to be matched from recphoneNumber to ensure it is the correct one</param>
+    /// <param name="recphoneNumber">phoneNumbers will get its update counter incremented</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool UpdateWhereID(const long lID, PHONE_TYPES& recPhoneType) override;
 
     /// <summary>Insert a new row into the table</summary>
-    /// <param name="recCity">City to be added</param>
+    /// <param name="recphoneNumber">phoneNumber to be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool InsertRecord(PHONE_TYPES& recPhoneType) override;
 
-    /// <summary>Delete a city by ID from table</summary>
+    /// <summary>Delete a phoneNumber by ID from table</summary>
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool DeleteWhereID(const long lID) override;

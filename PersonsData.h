@@ -47,7 +47,8 @@ public:
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool DeleteWhereID(const long lID);
 
-
+private:
+    bool UpdatePersonData(CPerson& recPerson);
 // Members
 // ----------------
 private:

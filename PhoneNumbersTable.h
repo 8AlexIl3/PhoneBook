@@ -38,14 +38,6 @@ public:
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool SelectWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber) override;
 
-    /// <summary>Get a city structure by its' id </summary>
-    /// <param name="lID">ID to be searched for</param>
-    /// <param name="recCity">Reference to the city that is searched (if not found
-    /// remains empty)</param>
-    /// <returns>TRUE if successful/FALSE if NOT</returns>
-    bool SelectMultipleWhereID(const long lID, CPhoneNumbersArray& oPhoneNumbersArray);
-
-
     /// <summary>Update a row from the database with new values from recCity</summary>
     /// <param name="lID">ID to be matched from recCity to ensure it is the correct one</param>
     /// <param name="recCity">Cities will get its update counter incremented</param>
@@ -61,6 +53,17 @@ public:
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool DeleteWhereID(const long lID) override;
+
+
+    //Methods
+    // ----------------
+public:
+    /// <summary>Get a city structure by its' id </summary>
+    /// <param name="lID">ID to be searched for</param>
+    /// <param name="recCity">Reference to the city that is searched (if not found
+    /// remains empty)</param>
+    /// <returns>TRUE if successful/FALSE if NOT</returns>
+    bool SelectMultipleWhereID(const long lID, CPhoneNumbersArray& oPhoneNumbersArray);
 
 
     // Members

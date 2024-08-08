@@ -153,7 +153,7 @@ bool CPersonsView::InsertPerson()
     pPersonsDocument->LoadPhoneTypes();
 
     CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
-        &pPersonsDocument->GetPhoneTypesArray());
+        &pPersonsDocument->GetPhoneTypesArray(),true);
 
     if (oPersonsDialog.DoModal() == IDCANCEL) {
         return FALSE;
@@ -195,14 +195,15 @@ bool CPersonsView::SelectPerson()
         AfxMessageBox(PERSON_CANNOT_BE_SELECTED);
         return FALSE;
     }
-    CString strPerson;
+    
+    pPersonsDocument->LoadCities();
+    pPersonsDocument->LoadPhoneTypes();
 
-    //Print Person
-    strPerson.Format(L" ID: % d, Ѕро€ч : % d",
-        oPersons.m_oRecPerson.lID,
-        oPersons.m_oRecPerson.lUpdateCounter);
-    AfxMessageBox(strPerson);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
+        &pPersonsDocument->GetPhoneTypesArray(), false, &oPersons);
 
+    oPersonsDialog.DoModal();
+      
     return TRUE;
 }
 bool CPersonsView::DeletePerson()
@@ -250,9 +251,9 @@ bool CPersonsView::UpdatePerson()
     }
     long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
 
-    CPerson& pPerson = *pPersonsDocument->GetPersonArray().GetAt(lIndexer);
+    CPerson oPerson;
    
-    if (!pPersonsDocument->SelectPerson(lCityID, pPerson)) {
+    if (!pPersonsDocument->SelectPerson(lCityID, oPerson)) {
         return FALSE;
     }
 
@@ -260,7 +261,7 @@ bool CPersonsView::UpdatePerson()
     pPersonsDocument->LoadPhoneTypes();
 
     CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
-        &pPersonsDocument->GetPhoneTypesArray(), &pPerson);
+        &pPersonsDocument->GetPhoneTypesArray(),true, &oPerson);
 
     if (oPersonsDialog.DoModal() == IDCANCEL) {
         return FALSE;
@@ -268,7 +269,7 @@ bool CPersonsView::UpdatePerson()
 
     //Copy the data
 
-    if (!pPersonsDocument->UpdatePerson(pPerson.m_oRecPerson.lID, oPersonsDialog.GetPerson())) {
+    if (!pPersonsDocument->UpdatePerson(oPerson.m_oRecPerson.lID, oPersonsDialog.GetPerson())) {
         return FALSE;
     }
     

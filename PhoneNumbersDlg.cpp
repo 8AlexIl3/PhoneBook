@@ -40,8 +40,6 @@ END_MESSAGE_MAP()
 
 // CPhoneNumbersDlg message handlers
 
-
-
 PHONE_NUMBERS& CPhoneNumbersDlg::GetNumber()
 {
 	return *m_pPhoneNumbers;

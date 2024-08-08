@@ -29,6 +29,8 @@ protected:
 	afx_msg void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnInsertCity();
+	afx_msg void OnUpdateCity();
+	afx_msg void OnDeleteCity();
 	afx_msg void OnRefresh();
 
 

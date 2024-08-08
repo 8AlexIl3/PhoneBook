@@ -37,7 +37,6 @@ public:
     /// <returns>true if successful, false otherwise</returns>
     bool DeletePerson(const long lID, const long lrowIndexer);
 
-
     /// <param name="lID">Id to update</param>
     /// <param name="oPersons">Person that will get updated</param>
     /// <returns>true if successful, false otherwise</returns>
@@ -73,7 +72,9 @@ public:
 
 private:
     void ClearPersonsArray();
+
     void ClearCitiesArray();
+
     void ClearPhoneTypesArray();
 
 
@@ -81,8 +82,8 @@ private:
     // ----------------
 public:
     void SetTitle(LPCTSTR lpszTitle) override;
-    virtual BOOL OnNewDocument() override;
-    virtual void Serialize(CArchive& ar) override;
+    BOOL OnNewDocument() override;
+    void Serialize(CArchive& ar) override;
 
 
     // Members

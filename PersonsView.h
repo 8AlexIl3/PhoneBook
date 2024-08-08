@@ -14,8 +14,8 @@ class CPersonsView : public CListView
 		DECLARE_MESSAGE_MAP()
 
 
-		// Constructor / Destructor
-		// ----------------
+	// Constructor / Destructor
+	// ----------------
 public:
 	CPersonsView() noexcept;
 	virtual ~CPersonsView();

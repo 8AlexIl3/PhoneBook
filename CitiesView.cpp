@@ -18,6 +18,8 @@ BEGIN_MESSAGE_MAP(CCitiesView, CListView)
     ON_WM_KEYDOWN()
     ON_COMMAND(IDM_INSERT_RECORD, &CCitiesView::OnInsertCity)
     ON_COMMAND(IDM_REFRESH_VIEW, &CCitiesView::OnRefresh)
+    ON_COMMAND(IDM_EDIT_RECORD, &CCitiesView::OnUpdateCity)
+    ON_COMMAND(IDM_DELETE_RECORD, &CCitiesView::OnDeleteCity)
 END_MESSAGE_MAP()
 
 
@@ -105,6 +107,15 @@ void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CCitiesView::OnInsertCity()
 {
     InsertCity();
+}
+
+void CCitiesView::OnUpdateCity()
+{
+    UpdateCity();
+}
+void CCitiesView::OnDeleteCity()
+{
+    DeleteCity();
 }
 
 void CCitiesView::OnRefresh() {

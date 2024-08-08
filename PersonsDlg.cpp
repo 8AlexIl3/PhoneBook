@@ -19,14 +19,15 @@ BEGIN_MESSAGE_MAP(CPersonsDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 CPersonsDlg::CPersonsDlg( CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypesArray,
-	CPerson* pPerson /*nullptr*/, CWnd* pParent /*nullptr*/)
+	bool bEditPermission, CPerson* pPerson /*nullptr*/, CWnd* pParent /*nullptr*/)
 	: CDialogEx(IDD_DLG_PERSONS, pParent),
 	m_pPerson(pPerson),
 	m_pCitiesArray(&oCitiesArray),
-	m_pPhoneTypes(pPhoneTypesArray)
+	m_pPhoneTypes(pPhoneTypesArray),
+	m_bEditPermitted(bEditPermission)
 	
 {
-	bAllocatedCity = false;
+	m_bAllocatedPerson = false;
 	MapPhoneTypeIDToString();
 }
 
@@ -154,6 +155,9 @@ void CPersonsDlg::DoDataExchange(CDataExchange* pDX)
 
 void CPersonsDlg::onInsertNumber()
 {
+	if (!m_bEditPermitted) {
+		return;
+	}
 	CPhoneNumbersDlg oPhoneNumbersdlg(m_pPhoneTypes);
 
 	if (oPhoneNumbersdlg.DoModal() == IDCANCEL) {
@@ -179,16 +183,28 @@ void CPersonsDlg::onInsertNumber()
 
 void CPersonsDlg::onUpdateNumber()
 {
-	POSITION pos = m_LscPhoneNumbers.GetFirstSelectedItemPosition();
-	if (!pos)
+	if (!m_bEditPermitted) {
 		return;
-
-	int lIndexer = m_LscPhoneNumbers.GetNextSelectedItem(pos);
-	if (lIndexer == INDEX_NOT_FOUND)
+	}
+	int lIndexer = GetRowIndex();
+	if (lIndexer == INDEX_NOT_FOUND) {
+		AfxMessageBox(L"Изберете номер");
 		return;
+	}
+	CString strPhoneString= m_LscPhoneNumbers.GetItemText(lIndexer, PHONE_NUMBER_COLUMN);
 
-	PHONE_NUMBERS* pPhoneNumbers= m_pPerson->
-		m_oPhoneNumbersArray.GetAt((INT_PTR)lIndexer);
+	PHONE_NUMBERS* pPhoneNumbers=nullptr;
+
+	for (INT_PTR nIndexer(0); nIndexer < m_pPerson->m_oPhoneNumbersArray.GetCount(); nIndexer++) {
+		if (!_tcscmp(strPhoneString, m_pPerson->m_oPhoneNumbersArray.GetAt(nIndexer)->szPhone)) {
+			pPhoneNumbers= m_pPerson->m_oPhoneNumbersArray.GetAt(nIndexer);
+			break;
+		}
+	}
+	if (!pPhoneNumbers) {
+		AfxMessageBox(L"Грешка при редактиране, опитайте по-късно");
+		return;
+	}
 
 	CPhoneNumbersDlg oPhoneNumbersdlg(m_pPhoneTypes, pPhoneNumbers);
 	if (oPhoneNumbersdlg.DoModal() == IDCANCEL) {
@@ -206,17 +222,28 @@ void CPersonsDlg::onUpdateNumber()
 	m_LscPhoneNumbers.Update(lIndexer);
 
 }
-void CPersonsDlg::onDeleteNumber()
+long CPersonsDlg::GetRowIndex()
 {
-	
 	POSITION pos = m_LscPhoneNumbers.GetFirstSelectedItemPosition();
 	if (!pos)
-		return;
+		return INDEX_NOT_FOUND;
 
-	int nIndexer = m_LscPhoneNumbers.GetNextSelectedItem(pos);
-	if (nIndexer == INDEX_NOT_FOUND)
-		return;
+	int lIndexer = m_LscPhoneNumbers.GetNextSelectedItem(pos);
+	if (lIndexer == INDEX_NOT_FOUND)
+		return INDEX_NOT_FOUND;
 
+	return lIndexer;
+}
+void CPersonsDlg::onDeleteNumber()
+{
+	if (!m_bEditPermitted) {
+		return;
+	}
+	int nIndexer = GetRowIndex();
+	if (nIndexer == INDEX_NOT_FOUND) {
+		AfxMessageBox(L"Изберете номер");
+		return;
+	}
 	int nCount = m_LscPhoneNumbers.GetItemCount();
 	if (nCount == 1) {
 		AfxMessageBox(L"Не може да се изтрие единствения останал номер");
@@ -227,9 +254,10 @@ void CPersonsDlg::onDeleteNumber()
 	CString strNumberToDelete = m_LscPhoneNumbers.GetItemText(nIndexer, 0);
 
 	for (long lIndexer(0); lIndexer < m_pPerson->m_oPhoneNumbersArray.GetCount(); lIndexer++) {
-		PHONE_NUMBERS A = *m_pPerson->m_oPhoneNumbersArray.GetAt(lIndexer);
-		if (!_tcscmp(A.szPhone, strNumberToDelete)) {
+		PHONE_NUMBERS pPhoneNumbers = *m_pPerson->m_oPhoneNumbersArray.GetAt(lIndexer);
+		if (!_tcscmp(pPhoneNumbers.szPhone, strNumberToDelete)) {
 			_tcscpy_s(m_pPerson->m_oPhoneNumbersArray.GetAt(lIndexer)->szPhone,EMPTY_NUMBER);
+			break;
 		}
 	}
 	m_LscPhoneNumbers.DeleteItem(nIndexer);
@@ -278,6 +306,7 @@ BOOL CPersonsDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	
 	m_EdbAddress.SetLimitText(ADDRESS_LENGTH);
 	m_EdbSurname.SetLimitText(NAME_LENGTH);
 	m_EdbEGN.SetLimitText(EGN_LENGTH);
@@ -290,12 +319,23 @@ BOOL CPersonsDlg::OnInitDialog()
 	m_LscPhoneNumbers.InsertColumn(PHONE_NUMBER_COLUMN, _T("Телефон"), LVCFMT_CENTER, PX250);
 	m_LscPhoneNumbers.InsertColumn(PHONE_TYPE_COLUMN, _T("План"), LVCFMT_LEFT, PX250);
 
+	if (!m_bEditPermitted) {
+		m_EdbAddress.EnableWindow(false);
+		m_EdbSurname.EnableWindow(false);
+		m_EdbEGN.EnableWindow(false);
+		m_EdbLastName.EnableWindow(false);
+		m_EdbFirstName.EnableWindow(false);
+		m_CmbCities.EnableWindow(false);
+		m_LscPhoneNumbers.EnableWindow(false);
+		SetWindowText(L"Информация за човек (Преглед)");
+	}
+
 	if (!m_pPerson) {
-		bAllocatedCity = true;
+		m_bAllocatedPerson = true;
 		m_pPerson = new CPerson;
 	}
 	if (!m_pPerson) {
-		bAllocatedCity = false;
+		m_bAllocatedPerson = false;
 		AfxMessageBox(L"Не може да се зареди диалог за човек");
 		return false;
 	}
@@ -335,7 +375,7 @@ void CPersonsDlg::SetCityComboboxItems()
 
 void CPersonsDlg::OnCancel()
 {
-	if (bAllocatedCity) {
+	if (m_bAllocatedPerson) {
 		delete m_pPerson;
 	}
 	CDialogEx::OnCancel();

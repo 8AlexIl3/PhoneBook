@@ -1,39 +1,56 @@
 #pragma once
+
 #include "afxdialogex.h"
 #include "Structures.h"
 
 // CPhoneNumbersDlg dialog
-
 class CPhoneNumbersDlg : public CDialogEx
 {
-	DECLARE_DYNAMIC(CPhoneNumbersDlg)
+    // Macros
+    // ----------------
+    DECLARE_DYNAMIC(CPhoneNumbersDlg)
+    DECLARE_MESSAGE_MAP()
 
+    // Constructor / Destructor
+    // ----------------
 public:
-	CPhoneNumbersDlg(CPhoneTypesArray* oPhoneTypeArray, PHONE_NUMBERS* oPhoneNumbers=nullptr,CWnd* pParent = nullptr);   // standard constructor
-	virtual ~CPhoneNumbersDlg();
+    CPhoneNumbersDlg(CPhoneTypesArray* oPhoneTypeArray, PHONE_NUMBERS* oPhoneNumbers = nullptr, CWnd* pParent = nullptr);
+    
+    virtual ~CPhoneNumbersDlg();
 
-// Dialog Data
+
+    // Constants
+    // ----------------
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_DLG_PHONE_NUMBERS };
+    enum { IDD = IDD_DLG_PHONE_NUMBERS };
 #endif
 
 
+    // MFC Overrides
+    // ----------------
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
+    BOOL OnInitDialog() override;
+    void OnOK() override;
+    void OnCancel() override;
 
-	DECLARE_MESSAGE_MAP()
+    //Methods
+    // ----------------
 private:
-	CPhoneTypesArray* m_pPhoneTypeArray;
-	PHONE_NUMBERS* m_pPhoneNumbers;
-	CEdit m_EdbPhoneNumber;
-	CComboBox m_CmbPhoneType;
-	bool m_bAllocatedNumber;
-	bool ValidateData();
+    bool ValidateData();
 public:
-	PHONE_NUMBERS& GetNumber();
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	virtual void OnCancel();
+    PHONE_NUMBERS& GetNumber();
+
+
+    //Members
+    // ----------------
+private:
+    CPhoneTypesArray* m_pPhoneTypeArray;
+    PHONE_NUMBERS* m_pPhoneNumbers;
+    CEdit m_EdbPhoneNumber;
+    CComboBox m_CmbPhoneType;
+    bool m_bAllocatedNumber;
+   
 };
 
 #define PHONE_NUMBER_LENGTH 10
