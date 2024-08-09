@@ -51,29 +51,7 @@ bool CDBConnection::IsActionSuccessful(const HRESULT& hResult)
 
     if (hResult == S_OK)
         return TRUE;
-    
-    //Return more accurate error info
-    CString strError;
-    switch (hResult) {
-
-    case DB_E_INTEGRITYVIOLATION:
-        strError=OBJECT_CURRENTLY_IN_USE;
-        break;
-
-    case DB_E_ERRORSOCCURRED:
-        strError=OBJECT_CURRENTLY_IN_USE;
-        break;
-
-    case DB_S_ENDOFROWSET:
-        strError=OBJECT_NOT_FOUND;
-        break;
-
-    default:
-        strError=QUERY_UNSUCCESSFUL;
-        break;
-    }
-    AfxMessageBox(strError);
-
+ 
     return FALSE;
 }
 
@@ -82,9 +60,8 @@ bool CDBConnection::CheckValidSession()
 
     bool bResultConnection(true);
     //if connection is not up
-    if (!m_oDataSource.m_spInit) {
+    if (!m_oDataSource.m_spInit) 
         bResultConnection = OpenConnection();
-    }
 
     if (!bResultConnection) {
         CString strError;
@@ -93,9 +70,9 @@ bool CDBConnection::CheckValidSession()
         return FALSE;
     }
     //if session is not up
-    if (!m_oSession.m_spOpenRowset) {
+    if (!m_oSession.m_spOpenRowset) 
         bResultConnection = OpenSession();
-    }
+    
 
     if (!bResultConnection) {
         CStringW strError;
@@ -135,9 +112,7 @@ bool CDBConnection::OpenSession()
 {
     HRESULT oHresult = m_oSession.Open(m_oDataSource);
     if (FAILED(oHresult))
-    {
         return FALSE;
-    }
     return TRUE;
 
 }

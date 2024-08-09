@@ -1,27 +1,29 @@
 #pragma once
 #include "Structures.h"
 
-class CPerson
+class CPersonExtend
 {
     // Constructor / Destructor
     // ----------------
 public:
-    CPerson();
-    CPerson(PERSONS oPerson);
-    CPerson(PERSONS oPerson, CPhoneNumbersArray oPhoneNumbersArray);
-    CPerson(const CPerson& oPerson);
-    virtual ~CPerson();
+    CPersonExtend();
+
+    CPersonExtend(PERSONS oPerson);
+
+    CPersonExtend(PERSONS oPerson, CPhoneNumbersArray oPhoneNumbersArray);
+
+    CPersonExtend(const CPersonExtend& oPerson);
+
+    virtual ~CPersonExtend();
     // Methods
     // ----------------
 public:
-    CPerson& operator=(const CPerson& oPerson)
+    CPersonExtend& operator=(const CPersonExtend& oPerson)
     {   
         m_oRecPerson = oPerson.m_oRecPerson;
-        m_oPhoneNumbersArray = m_oPhoneNumbersArray;
+        m_oPhoneNumbersArray = oPerson.m_oPhoneNumbersArray;
         return *this;
     }
-    CPhoneNumbersArray GetPhoneNumbers();
-    PERSONS GetPerson();
     // Members
     // ----------------
 public:
@@ -29,4 +31,4 @@ public:
     CPhoneNumbersArray m_oPhoneNumbersArray;
 };
 
-typedef CAutoMemoryArray<CPerson> CPersonArray;
+typedef CAutoMemoryArray<CPersonExtend> CPersonArray;

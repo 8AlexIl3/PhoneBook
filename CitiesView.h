@@ -99,7 +99,7 @@ inline CCitiesDocument* CCitiesView::GetDocument() const
 
 #define INDEX_NOT_FOUND -1
 
-#define ЕRROR_FETCHING_CITY AfxMessageBox(L"Данните не могат да бъдат заредени\n")
-#define CITY_CANNOT_BE_SELECTED AfxMessageBox(L"Градът не може да бъде избран вмомента")
-#define CITY_CANNOT_BE_DELETED AfxMessageBox(L"Градът не може да бъде изтрит")
-#define CITY_NOT_IN_TABLE AfxMessageBox(L"Градът вече не съществува")
+#define ЕRROR_FETCHING_CITY L"Данните не могат да бъдат заредени\n"
+#define CITY_CANNOT_BE_SELECTED L"Градът не може да бъде избран вмомента"
+#define CITY_CANNOT_BE_DELETED L"Градът не може да бъде изтрит"
+#define CITY_NOT_IN_TABLE L"Градът вече не съществува"

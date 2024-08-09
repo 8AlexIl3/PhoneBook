@@ -16,6 +16,8 @@
 #define IDR_MAINFRAME_256               129
 #define IDR_PhoneBookTYPE               130
 #define ID_WINDOW_MANAGER               131
+#define IDR_CitiesTYPE                  132
+#define IDR_PersonsTYPE                 133
 #define IDR_THEME_MENU                  200
 #define ID_SET_STYLE                    201
 #define IDR_POPUP_EDIT1                 201
@@ -88,13 +90,15 @@
 #define IDM_DELETE                      32805
 #define IDM_DELETE_RECORD               32806
 #define IDM_EDIT_RECORD                 32807
+#define ID_NE_ID                        32808
+#define ID_NE_DE                        32809
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        316
-#define _APS_NEXT_COMMAND_VALUE         32808
+#define _APS_NEXT_COMMAND_VALUE         32810
 #define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

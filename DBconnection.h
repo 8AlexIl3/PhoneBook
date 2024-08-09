@@ -60,11 +60,6 @@ private:
     CDataSource m_oDataSource;
     CSession m_oSession;
 };
-
-
-#define OBJECT_CURRENTLY_IN_USE L"Обектът не може да бъде изтрит,защото се използва вмомента"
-#define OBJECT_NOT_FOUND L"Обектът не беше намерен"
-#define QUERY_UNSUCCESSFUL L"Заявката е неуспешна"
-#define SERVER_CONNECTION_ERROR L"Не може да се създаде връзка към сървъра"
+#define SERVER_CONNECTION_ERROR L"Не може да се създаде връзка към сървър"
 #define SESSION_CREATE_ERROR L"Не може да се създаде сесия"
 

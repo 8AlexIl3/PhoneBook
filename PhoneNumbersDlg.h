@@ -39,14 +39,14 @@ protected:
 private:
     bool ValidateData();
 public:
-    PHONE_NUMBERS& GetNumber();
+    PHONE_NUMBERS GetNumber();
 
 
     //Members
     // ----------------
 private:
     CPhoneTypesArray* m_pPhoneTypeArray;
-    PHONE_NUMBERS* m_pPhoneNumbers;
+    PHONE_NUMBERS* m_pPhoneNumber;
     CEdit m_EdbPhoneNumber;
     CComboBox m_CmbPhoneType;
     bool m_bAllocatedNumber;

@@ -30,7 +30,7 @@ public:
 public:
     /// <param name="oPersons">Person to be inserted(its counter will be updated(so its not const)</param>
     /// <returns>true if successful, false otherwise</returns>
-    bool InsertPerson(CPerson& oPersons);
+    bool InsertPerson(CPersonExtend& oPersons);
 
     /// <param name="lID">Id to delete</param>
     /// <param name="lrowIndexer">index from listctrl</param>
@@ -40,12 +40,12 @@ public:
     /// <param name="lID">Id to update</param>
     /// <param name="oPersons">Person that will get updated</param>
     /// <returns>true if successful, false otherwise</returns>
-    bool UpdatePerson(const long lID, CPerson& oPersons);
+    bool UpdatePerson(const long lID, CPersonExtend& oPersons);
 
     /// <param name="lID">Id to select</param>
     /// <param name="oPersons">Object that will get initilized</param>
     /// <returns>true if successful, false otherwise</returns>
-    bool SelectPerson(const long lID, CPerson& oPersons);
+    bool SelectPerson(const long lID, CPersonExtend& oPersons);
 
     /// <summary>Get all Persons from table</summary>
     /// <returns>true if successful, false otherwise</returns>

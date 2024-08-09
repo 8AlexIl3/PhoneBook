@@ -19,7 +19,7 @@ public:
 	/// <param name="bEditPermission">view mode </param>
 	/// <param name="pPerson">the person that will be edited/added</param>
 	/// <param name="pParent">parent window</param>
-	CPersonsDlg(CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypesArray,bool bEditPermission, CPerson* pPerson = nullptr, CWnd* pParent = nullptr);
+	CPersonsDlg(CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypesArray,bool bEditPermission, CPersonExtend* pPerson = nullptr, CWnd* pParent = nullptr);
 
 	virtual ~CPersonsDlg();
 
@@ -53,7 +53,7 @@ private:
 public:
 	/// <summary>Getter for person </summary>
 	/// <returns>a reference to the person object</returns>
-	CPerson& GetPerson();
+	CPersonExtend& GetPerson();
 private:
 	CEdit m_EdbAddress;
 	CEdit m_EdbSurname;
@@ -63,7 +63,7 @@ private:
 	CListCtrl m_LscPhoneNumbers;
 	CComboBox m_CmbCities;
 	CPhoneTypesArray* m_pPhoneTypes;
-	CPerson* m_pPerson;
+	CPersonExtend* m_pPerson;
 	CCitiesArray* m_pCitiesArray;
 	CMap<long, long, CString, CString> m_oPhoneTypeToString;
 	bool m_bAllocatedPerson;

@@ -105,7 +105,7 @@ BOOL CPhoneBookApp::InitInstance()
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
 	CMultiDocTemplate* pPersonsTemplate;
-	pPersonsTemplate = new CMultiDocTemplate(IDR_PhoneBookTYPE,
+	pPersonsTemplate = new CMultiDocTemplate(IDR_PersonsTYPE,
 		RUNTIME_CLASS(CPersonsDocument),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CPersonsView));
@@ -113,13 +113,14 @@ BOOL CPhoneBookApp::InitInstance()
 		return FALSE;
 	AddDocTemplate(pPersonsTemplate);
 
-	pPersonsTemplate = new CMultiDocTemplate(IDR_PhoneBookTYPE,
+	CMultiDocTemplate* pCitiesTemplate;
+	pCitiesTemplate = new CMultiDocTemplate(IDR_CitiesTYPE,
 		RUNTIME_CLASS(CCitiesDocument),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CCitiesView));
-	if (!pPersonsTemplate)
+	if (!pCitiesTemplate)
 		return FALSE;
-	AddDocTemplate(pPersonsTemplate);
+	AddDocTemplate(pCitiesTemplate);
 
 
 	// create main MDI Frame window
@@ -195,8 +196,8 @@ END_MESSAGE_MAP()
 // App command to run the dialog
 void CPhoneBookApp::OnAppAbout()
 {
-	CCitiesDlg A;
-	A.DoModal();
+	CAboutDlg oAboutDlg;
+	oAboutDlg.DoModal();
 }
 
 // CPhoneBookApp customization load/save methods

@@ -102,8 +102,11 @@ private:
     void ClearArray()
     {
         for (long lIndexer(0); (INT_PTR) lIndexer < this->GetCount(); ++lIndexer)
-        {
-            delete this->GetAt(lIndexer);
+        {	
+			TYPE* pElement= this->GetAt(lIndexer);
+			if (!pElement)
+				continue;
+            delete pElement;
         }
         this->RemoveAll();
     }
@@ -113,6 +116,8 @@ private:
         for (long lIndexer(0); (INT_PTR) lIndexer < other.GetCount(); ++lIndexer)
         {
             TYPE* pNewElem = other.GetAt(lIndexer);
+			if (!pNewElem)
+				continue;
             this->Add(pNewElem);
         }
     }

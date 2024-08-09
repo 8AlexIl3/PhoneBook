@@ -145,17 +145,15 @@ bool CCitiesView::InsertCity()
 
     CCitiesDlg oCitiesDialog;
 
-    if (oCitiesDialog.DoModal() == IDCANCEL) {
+    if (oCitiesDialog.DoModal() == IDCANCEL) 
         return FALSE;
-    }
 
     CITIES& oCities=*oCitiesDialog.GetCity();
 
     //Copy the data
 
-    if (!pCitiesDocument->InsertCity(oCities)) {
+    if (!pCitiesDocument->InsertCity(oCities))
         return FALSE;
-    }
 
     return TRUE;
 }
@@ -220,7 +218,7 @@ bool CCitiesView::DeleteCity()
         AfxMessageBox(CITY_CANNOT_BE_SELECTED);
         return FALSE;
     }
-    else if (!pCitiesDocument->DeleteCity(lCityID, lIndexer)) {
+    if (!pCitiesDocument->DeleteCity(lCityID, lIndexer)) {
         AfxMessageBox(CITY_CANNOT_BE_DELETED);
         return FALSE;
     }
@@ -255,15 +253,13 @@ bool CCitiesView::UpdateCity()
     //Initialize the dialog edit controls with values from the selected city
     CCitiesDlg oCitiesDialog(oCities);
 
-    if (oCitiesDialog.DoModal() == IDCANCEL) {
+    if (oCitiesDialog.DoModal() == IDCANCEL) 
         return FALSE;
-    }
 
     oCities = *oCitiesDialog.GetCity();
 
-    if (!pCitiesDocument->UpdateCity(lCityID,oCities)) {
+    if (!pCitiesDocument->UpdateCity(lCityID,oCities))
         return FALSE;
-    }
 
     return TRUE;
 }
@@ -282,14 +278,14 @@ void CCitiesView::DisplayData()
     for (long lIndexer(0);(INT_PTR)lIndexer < pCitiesDocument->GetCityArray().GetCount(); ++lIndexer)
     {
         CITIES* pCities = pCitiesDocument->GetCityArray().GetAt(lIndexer);
-        if (pCities!=nullptr) {
-            CString strID;
-            strID.Format(_T("%ld"), pCities->lID);
-            m_oListCtrl.InsertItem(lIndexer, strID);
-            m_oListCtrl.SetItemText(lIndexer, CITY_COLUMN, pCities->szCityName);
-            m_oListCtrl.SetItemText(lIndexer, RESIDENCE_COLUMN, pCities->szTownResidence);
-            m_oListCtrl.SetItemData(lIndexer, pCities->lID);
-        }
+        if (!pCities)
+            continue;
+        CString strID;
+        strID.Format(_T("%ld"), pCities->lID);
+        m_oListCtrl.InsertItem(lIndexer, strID);
+        m_oListCtrl.SetItemText(lIndexer, CITY_COLUMN, pCities->szCityName);
+        m_oListCtrl.SetItemText(lIndexer, RESIDENCE_COLUMN, pCities->szTownResidence);
+        m_oListCtrl.SetItemData(lIndexer, pCities->lID);
     }
 }
 
