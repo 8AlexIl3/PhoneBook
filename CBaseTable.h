@@ -40,16 +40,13 @@ public:
         oHresult = Open(m_oConnection.GetSession(), oStrQuery);
         //If query is not successful
         if (!m_oConnection.IsActionSuccessful(oHresult))
-        {
-
             return FALSE;
-        }
+        
         oHresult = MoveFirst();
         //If there is no data in the table
         if (!m_oConnection.IsActionSuccessful(oHresult))
-        {
             return FALSE;
-        }
+
         //add all phone numbers to the array
         do
         {
@@ -73,9 +70,9 @@ public:
     }
 
     virtual bool SelectWhereID(const long lID, RecordType& rec) {
-        if (!m_oConnection.CheckValidSession()) {
+        if (!m_oConnection.CheckValidSession()) 
             return FALSE;
-        }
+
         CString strQuery;
         strQuery.Format(_T("SELECT * FROM %s WTIH (NOLOCK) WHERE ID = %d"), static_cast<const wchar_t*>(m_strTableName), lID);
         HRESULT oHresult;
@@ -83,10 +80,9 @@ public:
         oHresult = Open(m_oConnection.GetSession(), strQuery);
 
         //If query is NOT sucessful 
-        if (!m_oConnection.IsActionSuccessful(oHresult)) {
-
+        if (!m_oConnection.IsActionSuccessful(oHresult)) 
             return FALSE;
-        }
+        
         oHresult = MoveFirst();
 
         if (FAILED(oHresult)) {
@@ -110,9 +106,9 @@ public:
     virtual bool SelectMultipleWhereID(const long lID, CAutoMemoryArray<RecordType>& oArray)
     {
         //Connect to server->database->open session
-        if (!m_oConnection.CheckValidSession()) {
+        if (!m_oConnection.CheckValidSession())
             return FALSE;
-        }
+        
 
         //Set query
         CString oStrQuery;
@@ -124,10 +120,8 @@ public:
         oHresult = Open(m_oConnection.GetSession(), oStrQuery);
         //If query is not successful
         if (!m_oConnection.IsActionSuccessful(oHresult))
-        {
-
             return FALSE;
-        }
+        
         oHresult = MoveFirst();
         //If there is no data in the table
         if (!m_oConnection.IsActionSuccessful(oHresult))
@@ -160,9 +154,9 @@ public:
     }
     virtual bool UpdateWhereID(const long lID, RecordType& rec) {
 
-        if (!m_oConnection.CheckValidSession()) {
+        if (!m_oConnection.CheckValidSession()) 
             return FALSE;
-        }
+        
         HRESULT oHresult;
         CString strQuery;
         strQuery.Format(_T("SELECT * FROM %s WITH (UPDLOCK) WHERE ID = %d"), static_cast<const wchar_t*>(m_strTableName), lID);
@@ -170,10 +164,9 @@ public:
         oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
         //If query is successful
-        if (!m_oConnection.IsActionSuccessful(oHresult)) {
-
+        if (!m_oConnection.IsActionSuccessful(oHresult)) 
             return FALSE;
-        }
+        
         oHresult = MoveFirst();
 
         if (FAILED(oHresult)) {
@@ -215,9 +208,9 @@ public:
     }
     virtual bool InsertRecord(RecordType& rec) {
         // Connect to server -> database -> open session
-        if (!m_oConnection.CheckValidSession()) {
+        if (!m_oConnection.CheckValidSession()) 
             return FALSE;
-        }
+        
         HRESULT oHresult;
         CString strQuery;
         strQuery.Format(_T("SELECT TOP(0) * FROM %s"), static_cast<const wchar_t*>(m_strTableName));
@@ -248,9 +241,9 @@ public:
     };
     virtual bool DeleteWhereID(const long lID) {
         //Connect to server->database->open session
-        if (!m_oConnection.CheckValidSession()) {
+        if (!m_oConnection.CheckValidSession()) 
             return FALSE;
-        }
+        
         HRESULT oHresult;
         CString strQuery;
         strQuery.Format(_T("SELECT * FROM %s WHERE ID = %d"), static_cast<const wchar_t*>(m_strTableName), lID);

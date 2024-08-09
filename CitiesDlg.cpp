@@ -47,9 +47,8 @@ void CCitiesDlg::DoDataExchange(CDataExchange* pDX)
 
 void CCitiesDlg::OnOK()
 {
-	if (!ValidateData()) {
+	if (!ValidateData()) 
 		return;
-	}
 
 	CDialogEx::OnOK();
 }
@@ -81,12 +80,12 @@ bool CCitiesDlg::ValidateData() {
 	strNameGetter.Trim();
 
 	oPatternChecker = strNameGetter.GetString();
-	if (strNameGetter.IsEmpty()) {
+	if (strNameGetter.IsEmpty()) 
 		oErrors.Add(EMPTY_CITY_FIELD);
-	}
-	else if (!std::regex_match(oPatternChecker, oPattern)) {
+	
+	else if (!std::regex_match(oPatternChecker, oPattern)) 
 		oErrors.Add(USE_CITY_FIELD_WITH_BULGARIAN_TEXT);
-	}
+	
 
 	Capitalize(strNameGetter);
 
@@ -96,24 +95,23 @@ bool CCitiesDlg::ValidateData() {
 
 	oPatternChecker = strResidenceGetter.GetString();
 
-	if (strResidenceGetter.IsEmpty()) {
+	if (strResidenceGetter.IsEmpty()) 
 		oErrors.Add(EMPTY_RESIDENCE_FIELD);
-	}
-	else if (!std::regex_match(oPatternChecker, oPattern)) {
+
+	else if (!std::regex_match(oPatternChecker, oPattern)) 
 		oErrors.Add(USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT);
-	}
+
 	else if (!(_tcscmp(strNameGetter, m_oCities.szCityName)||
 		_tcscmp(strResidenceGetter, m_oCities.szTownResidence)
-		)) {
+		)) 
 		oErrors.Add(SAME_TEXT_AS_INITIAL);
-	}
+
 
 	Capitalize(strResidenceGetter);
 
 	if (!oErrors.IsEmpty()) {
-		for (long lIndexer(0); (INT_PTR)lIndexer < oErrors.GetCount(); lIndexer++) {
+		for (long lIndexer(0); (INT_PTR)lIndexer < oErrors.GetCount(); lIndexer++)
 			AfxMessageBox(oErrors.GetAt(lIndexer), MB_OK | MB_ICONEXCLAMATION);
-		}
 
 		return FALSE;
 	}
@@ -127,15 +125,13 @@ bool CCitiesDlg::ValidateData() {
 void CCitiesDlg::Capitalize(CString& oString)
 {
 	//Capitilize first letter
-	if (oString.GetAt(0) > L'ß') {
+	if (oString.GetAt(0) > L'ß') 
 		oString.SetAt(0, oString.GetAt(0) - 0x20);
-	}
 	//LowerCase all others
-	for (long lIndexer(1);(int) lIndexer < oString.GetLength(); lIndexer++) {
-		if (oString.GetAt(lIndexer) < L'à') {
+	for (long lIndexer(1);(int) lIndexer < oString.GetLength(); lIndexer++)
+		if (oString.GetAt(lIndexer) < L'à')
 			oString.SetAt(lIndexer, oString.GetAt(lIndexer) + 0x20);
-		}
-	}
+		
 }
 
  CITIES* CCitiesDlg::GetCity()

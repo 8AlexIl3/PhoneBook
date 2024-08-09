@@ -68,9 +68,8 @@ bool CPersonsDocument::InsertPerson(CPersonExtend& oPersons)
         return FALSE;
 
     CPersonExtend* pPersons = new CPersonExtend(oPersons);
-    if (!pPersons) {
+    if (!pPersons) 
         return FALSE;
-    }
 
     m_oPersonsArray.Add(pPersons);
 
@@ -84,9 +83,9 @@ bool CPersonsDocument::DeletePerson(const long lID, const long lrowIndexer)
     CPersonsData oPersonsData;
 
     CPersonExtend* pPersons = m_oPersonsArray.GetAt(lrowIndexer);
-    if (!pPersons) {
+    if (!pPersons)
         return FALSE;
-    }
+    
 
     if (!oPersonsData.DeletePersonExtended(*pPersons))
         return FALSE;

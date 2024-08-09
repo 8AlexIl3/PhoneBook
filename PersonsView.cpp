@@ -57,7 +57,7 @@ void CPersonsView::OnInitialUpdate()
     m_oListCtrl.InsertColumn(ADDRESS_COLUMN, _T("Адрес"), LVCFMT_LEFT, 2*DEFAULT_COLUMN_WIDTH);
     m_oListCtrl.InsertColumn(PRIMARY_PHONE_COLUMN, _T("Главен телефон"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
 
-    DisplayData();
+    OnRefresh();
 }
 
 
@@ -77,7 +77,7 @@ void CPersonsView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 
 void CPersonsView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
-    OnRefresh();
+    DisplayData();
 }
 
 void CPersonsView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -287,29 +287,31 @@ void CPersonsView::DisplayData()
 
     m_oListCtrl.DeleteAllItems();
 
-    for (long lIndexer(0); (INT_PTR)lIndexer < pPersonsDocument->GetPersonArray().GetCount(); ++lIndexer)
+    for (long lIndexer(0),lCtrlListIndex(0); (INT_PTR)lIndexer < pPersonsDocument->GetPersonArray().GetCount(); ++lIndexer)
     {
         CPersonExtend* pPerson = pPersonsDocument->GetPersonArray().GetAt(lIndexer);
         if (!pPerson) 
             continue;
 
-        m_oListCtrl.InsertItem(lIndexer, L"");
-        m_oListCtrl.SetItemText(lIndexer, FIRST_NAME_COLUMN, pPerson->m_oRecPerson.szFirstName);
-        m_oListCtrl.SetItemText(lIndexer, LAST_NAME_COLUMN, pPerson->m_oRecPerson.szLastName);
-
-        CString strCityID;
-        pPersonsDocument->GetStringCity().Lookup(pPerson->m_oRecPerson.lCityID, strCityID);
-        m_oListCtrl.SetItemText(lIndexer, CITY_ID_COLUMN, strCityID);
-
-        m_oListCtrl.SetItemText(lIndexer, ADDRESS_COLUMN, pPerson->m_oRecPerson.szAddress);
-
-        m_oListCtrl.SetItemData(lIndexer, pPerson->m_oRecPerson.lID);
-
         PHONE_NUMBERS* pPhoneNumber = pPerson->m_oPhoneNumbersArray.GetAt(NULL);
 
         if (!pPhoneNumber)
             continue;
-        m_oListCtrl.SetItemText(lIndexer, PRIMARY_PHONE_COLUMN, pPhoneNumber->szPhone);
+
+        m_oListCtrl.InsertItem(lCtrlListIndex, L"");
+        m_oListCtrl.SetItemText(lCtrlListIndex, FIRST_NAME_COLUMN, pPerson->m_oRecPerson.szFirstName);
+        m_oListCtrl.SetItemText(lCtrlListIndex, LAST_NAME_COLUMN, pPerson->m_oRecPerson.szLastName);
+
+        CString strCityID;
+        pPersonsDocument->GetStringCity().Lookup(pPerson->m_oRecPerson.lCityID, strCityID);
+        m_oListCtrl.SetItemText(lCtrlListIndex, CITY_ID_COLUMN, strCityID);
+
+        m_oListCtrl.SetItemText(lCtrlListIndex, ADDRESS_COLUMN, pPerson->m_oRecPerson.szAddress);
+
+        m_oListCtrl.SetItemData(lCtrlListIndex, pPerson->m_oRecPerson.lID);
+
+        
+        m_oListCtrl.SetItemText(lCtrlListIndex++, PRIMARY_PHONE_COLUMN, pPhoneNumber->szPhone);
         
     }
 }

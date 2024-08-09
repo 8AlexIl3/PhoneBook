@@ -75,7 +75,11 @@ void CCitiesView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 
 void CCitiesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
-    OnRefresh();
+    DisplayData();
+}
+void CCitiesView::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+    UpdateCity();
 }
 
 void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

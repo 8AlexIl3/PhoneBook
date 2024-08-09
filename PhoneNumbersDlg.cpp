@@ -42,22 +42,29 @@ END_MESSAGE_MAP()
 
 PHONE_NUMBERS CPhoneNumbersDlg::GetNumber()
 {
-	return *m_pPhoneNumber;
+	if(m_pPhoneNumber)
+		return *m_pPhoneNumber;
+	PHONE_NUMBERS oEmptyNumber;
+	return oEmptyNumber;
+
+	
 }
 
 BOOL CPhoneNumbersDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 	m_EdbPhoneNumber.SetLimitText(PHONE_NUMBER_LENGTH);
-	m_EdbPhoneNumber.SetCueBanner(L"Напр:0987654321",1);
+	m_EdbPhoneNumber.SetCueBanner(L"Напр:0987654321",true);
 
 	if (m_pPhoneNumber)
 		m_EdbPhoneNumber.SetWindowTextW(m_pPhoneNumber->szPhone);
 	
 	for (INT_PTR nIndexer(0); nIndexer < m_pPhoneTypeArray->GetCount(); nIndexer++) {
 		PHONE_TYPES* pPhoneTypes= m_pPhoneTypeArray->GetAt(nIndexer);
+
 		if (!pPhoneTypes)
 			continue;
+
 		m_CmbPhoneType.AddString(pPhoneTypes->szPhoneType);
 		m_CmbPhoneType.SetItemData((int)nIndexer, pPhoneTypes->lID);
 
@@ -99,9 +106,8 @@ bool CPhoneNumbersDlg::ValidateData()
 	//(happens when we call the constructor with nullptr)
 	if (!m_pPhoneNumber) {
 		m_pPhoneNumber = new PHONE_NUMBERS;
-		if (m_pPhoneNumber) {
+		if (m_pPhoneNumber)
 			m_bAllocatedNumber = true;
-		}
 		else {
 			AfxMessageBox(L"Възникна грешка, опитайте по-късно");
 			return false;
