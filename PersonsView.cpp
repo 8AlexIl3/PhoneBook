@@ -100,9 +100,9 @@ void CPersonsView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
         break;
     }
     //If actions in the switch fail update the view to most recent version
-    if (!bUpToDate) {
+    if (!bUpToDate)
         OnRefresh();
-    }
+    
     CListView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 

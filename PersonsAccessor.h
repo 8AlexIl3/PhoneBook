@@ -3,8 +3,8 @@
 #include <atldbcli.h>
 #define ACCESSOR_COUNT          2
 
-#define ACCESSOR_0              0
-#define ACCESSOR_1              1
+#define ACCESSOR_IDENTITY       0
+#define ACCESSOR_DATA           1
 
 #define REC_ID                  1
 
@@ -19,21 +19,21 @@
 class CPersonsAccessor
 {
 protected:
-    PERSONS m_recPerson;
+    PERSONS m_rec;
 
     BEGIN_ACCESSOR_MAP(CPersonsAccessor, ACCESSOR_COUNT)
-        BEGIN_ACCESSOR(ACCESSOR_0, true)
-        COLUMN_ENTRY(REC_ID, m_recPerson.lID)
+        BEGIN_ACCESSOR(ACCESSOR_IDENTITY, true)
+        COLUMN_ENTRY(REC_ID, m_rec.lID)
         END_ACCESSOR()
 
-        BEGIN_ACCESSOR(ACCESSOR_1, true)
-        COLUMN_ENTRY(CITY_ID, m_recPerson.lCityID)
-        COLUMN_ENTRY(PERSON_UPDATE_COUNTER, m_recPerson.lUpdateCounter)
-        COLUMN_ENTRY(FIRST_NAME, m_recPerson.szFirstName)
-        COLUMN_ENTRY(SURNAME, m_recPerson.szSurname)
-        COLUMN_ENTRY(LAST_NAME, m_recPerson.szLastName)
-        COLUMN_ENTRY(EGN, m_recPerson.szEGN)
-        COLUMN_ENTRY(ADDRESS, m_recPerson.szAddress)
+        BEGIN_ACCESSOR(ACCESSOR_DATA, true)
+        COLUMN_ENTRY(CITY_ID, m_rec.lCityID)
+        COLUMN_ENTRY(PERSON_UPDATE_COUNTER, m_rec.lUpdateCounter)
+        COLUMN_ENTRY(FIRST_NAME, m_rec.szFirstName)
+        COLUMN_ENTRY(SURNAME, m_rec.szSurname)
+        COLUMN_ENTRY(LAST_NAME, m_rec.szLastName)
+        COLUMN_ENTRY(EGN, m_rec.szEGN)
+        COLUMN_ENTRY(ADDRESS, m_rec.szAddress)
         END_ACCESSOR()
 
     END_ACCESSOR_MAP()

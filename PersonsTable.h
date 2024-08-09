@@ -9,10 +9,10 @@
 #include "Structures.h"
 #include "PersonsAccessor.h"
 #include "DBconnectionSingleton.h"
-#include "Itable.h"
+#include "CBaseTable.h"
 
 
-class CPersonsTable : private CCommand<CAccessor<CPersonsAccessor>>, public ITable<PERSONS>
+class CPersonsTable : public CBaseTable<PERSONS, CPersonsAccessor>
 {
 
     // Constructor / Destructor
@@ -52,13 +52,14 @@ public:
     /// <summary>Delete a city by ID from table</summary>
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    bool DeleteWhereID(const long lID) override;
+    bool DeleteWhereID(const long lID);
 
 
     // Members
     // ----------------
 private:
-    CDBConnection& m_oConnection;
+    CString m_strTableName;
+
 };
 
 

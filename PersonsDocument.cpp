@@ -64,7 +64,7 @@ bool CPersonsDocument::InsertPerson(CPersonExtend& oPersons)
 {
     CPersonsData oPersonsData;
 
-    if (!oPersonsData.InsertPerson(oPersons))
+    if (!oPersonsData.InsertPersonExtended(oPersons))
         return FALSE;
 
     CPersonExtend* pPersons = new CPersonExtend(oPersons);
@@ -88,7 +88,7 @@ bool CPersonsDocument::DeletePerson(const long lID, const long lrowIndexer)
         return FALSE;
     }
 
-    if (!oPersonsData.DeletePerson(*pPersons))
+    if (!oPersonsData.DeletePersonExtended(*pPersons))
         return FALSE;
 
     delete pPersons;
@@ -134,7 +134,7 @@ bool CPersonsDocument::LoadPersons()
     CPersonsData oPersonsData;
 
     ClearPersonsArray();
-    if (!oPersonsData.SelectAll(m_oPersonsArray))
+    if (!oPersonsData.SelectAllPersonsExtended(m_oPersonsArray))
         return FALSE;
 
     return TRUE;
@@ -144,7 +144,7 @@ bool CPersonsDocument::UpdatePerson(const long lID, CPersonExtend& oPersons)
 {
     CPersonsData oPersonsData;
 
-    if (!oPersonsData.UpdateWhereID(lID, oPersons))
+    if (!oPersonsData.UpdatePersonExtendedWhereID(lID, oPersons))
         return FALSE;
     
     UpdateAllViews(NULL);
@@ -156,7 +156,7 @@ bool CPersonsDocument::SelectPerson(const long lID, CPersonExtend& oPersons)
 {
     CPersonsData oPersonsData;
 
-    if (!oPersonsData.SelectWhereID(lID, oPersons))
+    if (!oPersonsData.SelectPersonExtendedWhereID(lID, oPersons))
         return FALSE;
 
     return TRUE;

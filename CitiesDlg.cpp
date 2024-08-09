@@ -47,9 +47,6 @@ void CCitiesDlg::DoDataExchange(CDataExchange* pDX)
 
 void CCitiesDlg::OnOK()
 {
-	UpdateData(TRUE);
-
-	
 	if (!ValidateData()) {
 		return;
 	}
@@ -64,7 +61,6 @@ BOOL CCitiesDlg::OnInitDialog()
 	m_EdbName.SetLimitText(CITY_FIELD_SIZE);
 	m_EdbName.SetWindowTextW(m_oCities.szCityName);
 	m_EdbResidence.SetWindowTextW(m_oCities.szTownResidence);
-	UpdateData(TRUE);
 
 	return TRUE;
 }

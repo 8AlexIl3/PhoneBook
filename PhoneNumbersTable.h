@@ -9,10 +9,10 @@
 #include "Structures.h"
 #include "PhoneNumbersAccessor.h"
 #include "DBconnectionSingleton.h"
-#include "Itable.h"
+#include "CBaseTable.h"
 
 
-class CPhoneNumbersTable : private CCommand<CAccessor<CPhoneNumbersAccessor>>, public ITable<PHONE_NUMBERS>
+class CPhoneNumbersTable : public CBaseTable<PHONE_NUMBERS, CPhoneNumbersAccessor>
 {
 
     // Constructor / Destructor
@@ -69,5 +69,5 @@ public:
     // Members
     // ----------------
 private:
-    CDBConnection& m_oConnection;
+    CString m_strTable;
 };

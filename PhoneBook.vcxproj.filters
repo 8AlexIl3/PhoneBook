@@ -69,7 +69,7 @@
     <ClInclude Include="DBConnectionSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ITable.h">
+    <ClInclude Include="CBaseTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CitiesAccessor.h">

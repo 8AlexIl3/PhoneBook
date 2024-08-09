@@ -21,7 +21,7 @@ CPersonsData::~CPersonsData()
 // Methods
 // ----------------
 
-bool CPersonsData::SelectAll(CPersonArray& oPersonArray)
+bool CPersonsData::SelectAllPersonsExtended(CPersonArray& oPersonArray)
 {
     CPersonsTable oPersonsTable;
     CPhoneNumbersTable oPhoneNumbersTable;
@@ -49,7 +49,7 @@ bool CPersonsData::SelectAll(CPersonArray& oPersonArray)
     return TRUE;
 }
 
-bool CPersonsData::SelectWhereID(const long lID, CPersonExtend& recPerson)
+bool CPersonsData::SelectPersonExtendedWhereID(const long lID, CPersonExtend& recPerson)
 {
     CPersonsTable oPersonsTable;
     CPhoneNumbersTable oPhoneNumbersTable;
@@ -67,7 +67,7 @@ bool CPersonsData::SelectWhereID(const long lID, CPersonExtend& recPerson)
     return TRUE;
 }
 
-bool CPersonsData::UpdateWhereID(const long lID, CPersonExtend& recPerson)
+bool CPersonsData::UpdatePersonExtendedWhereID(const long lID, CPersonExtend& recPerson)
 {
     CPersonsTable oPersonsTable;
 
@@ -91,7 +91,7 @@ bool CPersonsData::UpdateWhereID(const long lID, CPersonExtend& recPerson)
 }
 
 
-bool CPersonsData::DeletePerson(CPersonExtend& recPerson)
+bool CPersonsData::DeletePersonExtended(CPersonExtend& recPerson)
 {
     if (m_oConnection.GetSession().StartTransaction() != S_OK) {
         return FALSE;
@@ -159,7 +159,7 @@ bool CPersonsData::UpdatePersonExtendedData(CPersonExtend& recPerson)
     }
     return TRUE;
 }
-bool CPersonsData::InsertPerson(CPersonExtend& recPerson)
+bool CPersonsData::InsertPersonExtended(CPersonExtend& recPerson)
 {
     if (m_oConnection.GetSession().StartTransaction() != S_OK)
         return FALSE;

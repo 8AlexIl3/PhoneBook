@@ -51,9 +51,9 @@ BOOL CPhoneNumbersDlg::OnInitDialog()
 	m_EdbPhoneNumber.SetLimitText(PHONE_NUMBER_LENGTH);
 	m_EdbPhoneNumber.SetCueBanner(L"Напр:0987654321",1);
 
-	if (m_pPhoneNumber) {
+	if (m_pPhoneNumber)
 		m_EdbPhoneNumber.SetWindowTextW(m_pPhoneNumber->szPhone);
-	}
+	
 	for (INT_PTR nIndexer(0); nIndexer < m_pPhoneTypeArray->GetCount(); nIndexer++) {
 		PHONE_TYPES* pPhoneTypes= m_pPhoneTypeArray->GetAt(nIndexer);
 		if (!pPhoneTypes)
@@ -61,11 +61,11 @@ BOOL CPhoneNumbersDlg::OnInitDialog()
 		m_CmbPhoneType.AddString(pPhoneTypes->szPhoneType);
 		m_CmbPhoneType.SetItemData((int)nIndexer, pPhoneTypes->lID);
 
-		if (m_pPhoneNumber) {
-			if (pPhoneTypes->lID == m_pPhoneNumber->lPhoneTypeID) {
+		if (m_pPhoneNumber) 
+			if (pPhoneTypes->lID == m_pPhoneNumber->lPhoneTypeID) 
 				m_CmbPhoneType.SetCurSel((int)nIndexer);
-			}
-		}
+			
+		
 	}
 
 	return TRUE;
@@ -121,9 +121,8 @@ bool CPhoneNumbersDlg::ValidateData()
 
 void CPhoneNumbersDlg::OnCancel()
 {
-	if (m_bAllocatedNumber) {
+	if (m_bAllocatedNumber) 
 		delete m_pPhoneNumber;
-	}
 
 	CDialogEx::OnCancel();
 }
