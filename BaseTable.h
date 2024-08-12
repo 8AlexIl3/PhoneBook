@@ -70,6 +70,7 @@ public:
     }
 
     virtual bool SelectWhereID(const long lID, RecordType& rec) {
+
         if (!m_oConnection.CheckValidSession()) 
             return FALSE;
 
@@ -154,55 +155,85 @@ public:
     }
     virtual bool UpdateWhereID(const long lID, RecordType& rec) {
 
+
         if (!m_oConnection.CheckValidSession()) 
             return FALSE;
         
+
         HRESULT oHresult;
         CString strQuery;
         strQuery.Format(_T("SELECT * FROM %s WITH (UPDLOCK) WHERE ID = %d"), static_cast<const wchar_t*>(m_strTableName), lID);
 
+        bool bTransactionOccured = m_oConnection.StartTransaction();
+
         oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
         //If query is successful
-        if (!m_oConnection.IsActionSuccessful(oHresult)) 
+        if (!m_oConnection.IsActionSuccessful(oHresult)) {
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+                
+                Close();
             return FALSE;
+        }
         
         oHresult = MoveFirst();
 
         if (FAILED(oHresult)) {
-            CString oStrError;
-            SELECT_ID_FAIL;
-            AfxMessageBox(oStrError);
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
 
-            Close();
+                Close();
+
+            CString oStrError;
+            AfxMessageBox(SELECT_ID_FAIL);
 
             return FALSE;
         }
 
         //record is NOT up to date
         if (rec.lUpdateCounter != m_rec.lUpdateCounter) {
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
+                Close();
+
             AfxMessageBox(UPDATE_COUNTER_MISMATCH);
-            Close();
 
             return FALSE;
         }
-        //ensure this record is up to date in the future
-        ++rec.lUpdateCounter;
-        m_rec = rec;
-
+        //No need to update to same value
+        if (memcmp(&rec, &m_rec, sizeof(rec))) {
+            ++rec.lUpdateCounter;
+            m_rec = rec;
+        }
+        
         //Set new data
         oHresult = SetData(ACCESSOR_DATA);
+
         if (FAILED(oHresult)) {
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
+                Close();
 
             CString strError;
+
             if (oHresult == DB_E_CONCURRENCYVIOLATION)
                 strError = CONCURRENCY_VIOLATION;
+
             else
                 strError = DATA_UPDATE_FAIL;
+
             AfxMessageBox(strError);
+            
             return FALSE;
         }
-        Close();
+        
+        if (bTransactionOccured) {
+            m_oConnection.CommitTransaction();
+            Close();
+        }
 
         return TRUE;
     }
@@ -210,13 +241,19 @@ public:
         // Connect to server -> database -> open session
         if (!m_oConnection.CheckValidSession()) 
             return FALSE;
-        
+       
         HRESULT oHresult;
         CString strQuery;
         strQuery.Format(_T("SELECT TOP(0) * FROM %s"), static_cast<const wchar_t*>(m_strTableName));
+
+        bool bTransactionOccured = m_oConnection.StartTransaction();
+
         oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
         if (!m_oConnection.IsActionSuccessful(oHresult)) {
-            Close();
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
+                Close();
             return FALSE;
         }
 
@@ -225,17 +262,29 @@ public:
         // Insert new record
         oHresult = Insert(ACCESSOR_DATA);
         if (!m_oConnection.IsActionSuccessful(oHresult)) {
-            Close();
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
+                Close();
             return FALSE;
         }
         oHresult = MoveFirst();
         if (!m_oConnection.IsActionSuccessful(oHresult)) {
-            Close();
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
+                Close();
             return FALSE;
         }
-        //To get The inserted phone number's ID
+        //Gets The records' ID
         rec = m_rec;
-        Close();
+
+        if (bTransactionOccured) {
+            m_oConnection.CommitTransaction();
+
+                Close();
+        }
+
 
         return TRUE;
     };
@@ -248,9 +297,14 @@ public:
         CString strQuery;
         strQuery.Format(_T("SELECT * FROM %s WHERE ID = %d"), static_cast<const wchar_t*>(m_strTableName), lID);
 
+        bool bTransactionOccured = m_oConnection.StartTransaction();
+
         oHresult = Open(m_oConnection.GetSession(), strQuery, &m_oConnection.GetUpdatePropSet());
 
         if (!m_oConnection.IsActionSuccessful(oHresult)) {
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
             Close();
 
             return FALSE;
@@ -259,6 +313,9 @@ public:
         oHresult = MoveFirst();
 
         if (!m_oConnection.IsActionSuccessful(oHresult)) {
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
             Close();
 
             return FALSE;
@@ -267,12 +324,19 @@ public:
         oHresult = Delete();
 
         if (!m_oConnection.IsActionSuccessful(oHresult)) {
+            if (bTransactionOccured)
+                m_oConnection.RollbackTransaction();
+
             Close();
 
             return FALSE;
         }
 
-        Close();
+        if (bTransactionOccured) {
+            m_oConnection.CommitTransaction();
+
+            Close();
+        }
 
         return TRUE;
     }
@@ -281,6 +345,7 @@ private:
     CString m_strTableName;
     CString m_strColumnName;
 };
+
 template <typename RecordType, typename Accessor>
 inline CBaseTable<RecordType, Accessor>::CBaseTable():
 m_oConnection(CDBConnectionSingleton::GetInstance())

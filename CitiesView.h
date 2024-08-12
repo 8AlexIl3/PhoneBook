@@ -92,9 +92,8 @@ inline CCitiesDocument* CCitiesView::GetDocument() const
    { return reinterpret_cast<CCitiesDocument*>(m_pDocument); }
 #endif
 
-#define ID_COLUMN			0
-#define CITY_COLUMN			1
-#define RESIDENCE_COLUMN	2
+#define CITY_COLUMN			0
+#define RESIDENCE_COLUMN	1
 
 #define DEFAULT_COLUMN_WIDTH 150
 

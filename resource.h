@@ -18,6 +18,7 @@
 #define ID_WINDOW_MANAGER               131
 #define IDR_CitiesTYPE                  132
 #define IDR_PersonsTYPE                 133
+#define IDR_PhoneTypesTYPE              134
 #define IDR_THEME_MENU                  200
 #define ID_SET_STYLE                    201
 #define IDR_POPUP_EDIT1                 201
@@ -37,6 +38,7 @@
 #define IDD_DLG_CITIES                  312
 #define IDD_DLG_PERSONS                 313
 #define IDD_DLG_PHONE_NUMBERS           314
+#define IDD_DLG_PHONE_TYPES             316
 #define ID_SHOW_CITIES                  330
 #define IDC_LSC_CITIES                  1000
 #define IDC_EDB_CITIES_NAME             1001
@@ -63,6 +65,8 @@
 #define IDC_STT_PHONE_NUMBER            1021
 #define IDC_STT_PHONE_TYPE              1022
 #define IDC_CMB_PHONE_TYPE              1023
+#define IDC_EDIT1                       1024
+#define IDC_EDB_PHONE_TYPE              1024
 #define ID_FILE_SELECTWHEREID           32781
 #define ID_FILE_UPDATEWHEREID           32782
 #define ID_FILE_INSERT                  32783
@@ -97,9 +101,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_RESOURCE_VALUE        318
 #define _APS_NEXT_COMMAND_VALUE         32810
-#define _APS_NEXT_CONTROL_VALUE         1024
+#define _APS_NEXT_CONTROL_VALUE         1025
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

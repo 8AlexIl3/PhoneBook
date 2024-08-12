@@ -190,8 +190,9 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="CitiesDocument.h" />
     <ClInclude Include="CitiesView.h" />
+    <ClInclude Include="PersonsCredentials.h" />
     <ClInclude Include="Person.h" />
-    <ClInclude Include="CBaseTable.h" />
+    <ClInclude Include="BaseTable.h" />
     <ClInclude Include="DBconnection.h" />
     <ClInclude Include="DBConnectionSingleton.h" />
     <ClInclude Include="framework.h" />
@@ -208,8 +209,11 @@
     <ClInclude Include="PhoneNumbersTable.h" />
     <ClInclude Include="PhoneNumbersAccessor.h" />
     <ClInclude Include="PhoneTypesData.h" />
+    <ClInclude Include="PhoneTypesDlg.h" />
+    <ClInclude Include="PhoneTypesDocument.h" />
     <ClInclude Include="PhoneTypesTable.h" />
     <ClInclude Include="PhoneTypesAccessor.h" />
+    <ClInclude Include="PhoneTypesView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="targetver.h" />
@@ -230,6 +234,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PersonsCredentials.cpp" />
     <ClCompile Include="PersonsData.cpp" />
     <ClCompile Include="PersonsDlg.cpp" />
     <ClCompile Include="PersonsDocument.cpp" />
@@ -239,7 +244,10 @@
     <ClCompile Include="PhoneNumbersDlg.cpp" />
     <ClCompile Include="PhoneNumbersTable.cpp" />
     <ClCompile Include="PhoneTypesData.cpp" />
+    <ClCompile Include="PhoneTypesDlg.cpp" />
+    <ClCompile Include="PhoneTypesDocument.cpp" />
     <ClCompile Include="PhoneTypesTable.cpp" />
+    <ClCompile Include="PhoneTypesView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PhoneBook.rc" />

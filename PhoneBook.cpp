@@ -15,6 +15,9 @@
 #include "PersonsView.h"
 #include "CitiesTable.h"
 #include "CitiesDlg.h"
+#include "PhoneTypesDocument.h"
+#include "PhoneTypesView.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -121,6 +124,15 @@ BOOL CPhoneBookApp::InitInstance()
 	if (!pCitiesTemplate)
 		return FALSE;
 	AddDocTemplate(pCitiesTemplate);
+
+	CMultiDocTemplate* pPhoneTypesTemplate;
+	pPhoneTypesTemplate = new CMultiDocTemplate(IDR_PhoneTypesTYPE,
+		RUNTIME_CLASS(CPhoneTypesDocument),
+		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+		RUNTIME_CLASS(CPhoneTypesView));
+	if (!pPhoneTypesTemplate)
+		return FALSE;
+	AddDocTemplate(pPhoneTypesTemplate);
 
 
 	// create main MDI Frame window

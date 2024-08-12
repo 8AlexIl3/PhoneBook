@@ -99,7 +99,7 @@ void CPersonsView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     default:
         break;
     }
-    //If actions in the switch fail update the view to most recent version
+    //If action in the switch fail update the view to most recent version
     if (!bUpToDate)
         OnRefresh();
     
@@ -119,16 +119,16 @@ void CPersonsView::OnDeletePerson()
     DeletePerson();
 }
 
-void CPersonsView::OnRefresh() {
-    CPersonsDocument* pPersonsDocument = GetDocument();
-    pPersonsDocument->LoadCities();
-    pPersonsDocument->LoadPersons();
-    DisplayData();
-}
-
 void CPersonsView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
     UpdatePerson();
+}
+
+void CPersonsView::OnRefresh() {
+    CPersonsDocument* pPersonsDocument = GetDocument();
+    pPersonsDocument->GetCredentials().RefreshData();
+    pPersonsDocument->LoadPersons();
+    DisplayData();
 }
 
 
@@ -148,11 +148,10 @@ bool CPersonsView::InsertPerson()
     if (!pPersonsDocument)
         return FALSE;
 
-    pPersonsDocument->LoadCities();
-    pPersonsDocument->LoadPhoneTypes();
+    pPersonsDocument->GetCredentials().RefreshData();
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
-        &pPersonsDocument->GetPhoneTypesArray(),true);
+
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(),true);
 
     if (oPersonsDialog.DoModal() == IDCANCEL)
         return FALSE;
@@ -194,11 +193,10 @@ bool CPersonsView::SelectPerson()
         return FALSE;
     }
     
-    pPersonsDocument->LoadCities();
-    pPersonsDocument->LoadPhoneTypes();
+    pPersonsDocument->GetCredentials().RefreshData();
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
-        &pPersonsDocument->GetPhoneTypesArray(), false, &oPerson);
+
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), false, &oPerson);
 
     oPersonsDialog.DoModal();
       
@@ -252,16 +250,18 @@ bool CPersonsView::UpdatePerson()
    
     long lCityID = (long)m_oListCtrl.GetItemData(lIndexer);
 
-    CPersonExtend oPerson;
+    //see if element pointer is null
+    CPersonExtend* pPerson = pPersonsDocument->GetPersonArray().GetAt(lIndexer);
    
-    if (!pPersonsDocument->SelectPerson(lCityID, oPerson)) 
+    if (!pPerson)
         return FALSE;
 
-    pPersonsDocument->LoadCities();
-    pPersonsDocument->LoadPhoneTypes();
+    CPersonExtend& oPerson = *pPerson;
+      
+    
+    pPersonsDocument->GetCredentials().RefreshData();
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCitiesArray(),
-        &pPersonsDocument->GetPhoneTypesArray(),true, &oPerson);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(),true, &oPerson);
 
     if (oPersonsDialog.DoModal() == IDCANCEL) 
         return FALSE;
@@ -271,7 +271,6 @@ bool CPersonsView::UpdatePerson()
 
     if (!pPersonsDocument->UpdatePerson(oPerson.m_oRecPerson.lID, oPersonsDialog.GetPerson())) 
         return FALSE;
-    
     
     return TRUE;
 }
@@ -303,14 +302,13 @@ void CPersonsView::DisplayData()
         m_oListCtrl.SetItemText(lCtrlListIndex, LAST_NAME_COLUMN, pPerson->m_oRecPerson.szLastName);
 
         CString strCityID;
-        pPersonsDocument->GetStringCity().Lookup(pPerson->m_oRecPerson.lCityID, strCityID);
+        pPersonsDocument->GetCredentials().GetStringtoCityMap().Lookup(pPerson->m_oRecPerson.lCityID, strCityID);
         m_oListCtrl.SetItemText(lCtrlListIndex, CITY_ID_COLUMN, strCityID);
 
         m_oListCtrl.SetItemText(lCtrlListIndex, ADDRESS_COLUMN, pPerson->m_oRecPerson.szAddress);
 
         m_oListCtrl.SetItemData(lCtrlListIndex, pPerson->m_oRecPerson.lID);
 
-        
         m_oListCtrl.SetItemText(lCtrlListIndex++, PRIMARY_PHONE_COLUMN, pPhoneNumber->szPhone);
         
     }
@@ -328,7 +326,6 @@ long CPersonsView::GetRowIndex()
 
     return lIndexer;
 }
-
 
 // Implementaion
 // ----------------

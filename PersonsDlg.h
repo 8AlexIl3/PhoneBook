@@ -3,6 +3,7 @@
 #include "Person.h"
 #include "PhoneNumbersDlg.h"
 #include <regex>
+#include "PersonsCredentials.h"
 // CPersonsDlg dialog
 
 class CPersonsDlg : public CDialogEx
@@ -19,7 +20,7 @@ public:
 	/// <param name="bEditPermission">view mode </param>
 	/// <param name="pPerson">the person that will be edited/added</param>
 	/// <param name="pParent">parent window</param>
-	CPersonsDlg(CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypesArray,bool bEditPermission, CPersonExtend* pPerson = nullptr, CWnd* pParent = nullptr);
+	CPersonsDlg(CPersonsCredentials& oPersonsCredentials,bool bEditPermission=true, CPersonExtend* pPerson = nullptr, CWnd* pParent = nullptr);
 
 	virtual ~CPersonsDlg();
 
@@ -62,10 +63,13 @@ private:
 	CEdit m_EdbFirstName;
 	CListCtrl m_LscPhoneNumbers;
 	CComboBox m_CmbCities;
-	CPhoneTypesArray* m_pPhoneTypes;
 	CPersonExtend* m_pPerson;
-	CCitiesArray* m_pCitiesArray;
-	CMap<long, long, CString, CString> m_oPhoneTypeToString;
+	CButton m_BtnAddNumber;
+	CButton m_BtnUpdateNumber;
+	CButton m_BtnDeleteNumber;
+
+	CPersonsCredentials& m_oPersonsCredentials;
+	//CMap<long, long, CString, CString> m_oPhoneTypeToString;
 	bool m_bAllocatedPerson;
 	bool m_bEditPermitted;
 
@@ -89,14 +93,15 @@ private:
 	long GetRowIndex();
 
 	void Capitalize(CString& oString);
+	
 };
 #define INDEX_NOT_FOUND		-1
 
 #define PHONE_NUMBER_COLUMN 0
 #define PHONE_TYPE_COLUMN	1
 
-#define NAME_LENGTH			31
-#define ADDRESS_LENGTH		63
+#define NAME_LENGTH			NAME_SIZE-1
+#define ADDRESS_LENGTH		ADDRESS_SIZE-1
 #define EGN_LENGTH			10
 
-#define PX250				250
+#define PIXEL_WIDTH_250		250

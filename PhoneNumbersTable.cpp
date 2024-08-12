@@ -54,8 +54,8 @@ bool CPhoneNumbersTable::InsertRecord(PHONE_NUMBERS& recPhoneNumber)
     return oTable.InsertRecord(recPhoneNumber);
 }
 
-bool CPhoneNumbersTable::DeleteWhereID(const long lID) {
-
+bool CPhoneNumbersTable::DeleteWhereID(const long lID)
+{
     CBaseTable oTable(m_strTable);
     return oTable.DeleteWhereID(lID);
    

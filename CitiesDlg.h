@@ -30,7 +30,7 @@ private:
 public:
 	CCitiesDlg(CWnd* pParent = nullptr);
 	/// <param name="oCities">City to fill the fields if redaction is needed</param>
-	CCitiesDlg(CITIES& oCities, CWnd* pParent = nullptr);
+	CCitiesDlg(CITIES& oCities, bool bEditPermission = true, CWnd* pParent = nullptr);
 	virtual ~CCitiesDlg();
 
 
@@ -60,10 +60,12 @@ private:
 	CEdit m_EdbResidence;
 	CITIES* m_pCities;
 	CITIES m_oCities;
+	bool m_bEditPermission;
+
 };
 
 
-#define CITY_FIELD_SIZE 31
+#define CITY_FIELD_SIZE NAME_SIZE-1
 #define USE_CITY_FIELD_WITH_BULGARIAN_TEXT L"въведете полето на града с бълграски текст"
 #define EMPTY_CITY_FIELD L"въведете град"
 #define USE_RESIDENCE_FIELD_WITH_BULGARIAN_TEXT L"въведете полето на областта с бълграски текст"

@@ -50,7 +50,6 @@ void CCitiesView::OnInitialUpdate()
 
     m_oListCtrl.ModifyStyle(0, LVS_REPORT| LVS_SINGLESEL);
     m_oListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-    m_oListCtrl.InsertColumn(ID_COLUMN, _T("ID"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
     m_oListCtrl.InsertColumn(CITY_COLUMN, _T("Град"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
     m_oListCtrl.InsertColumn(RESIDENCE_COLUMN, _T("Област"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
     
@@ -191,13 +190,9 @@ bool CCitiesView::SelectCity()
     }
     CString strCity;
 
-    //Print City
-    strCity.Format(L"Населено място: %s,Област: %s, ID: %d, Брояч: %d",
-        oCities.szCityName,
-        oCities.szTownResidence,
-        oCities.lID,
-        oCities.lUpdateCounter);
-    AfxMessageBox(strCity);
+    CCitiesDlg oCitiesDialog(oCities, false);
+
+    oCitiesDialog.DoModal();
 
     return TRUE;
 }
@@ -222,6 +217,10 @@ bool CCitiesView::DeleteCity()
         AfxMessageBox(CITY_CANNOT_BE_SELECTED);
         return FALSE;
     }
+
+    if (AfxMessageBox(L"Потвърдете изтриването", MB_OKCANCEL) == IDCANCEL)
+        return FALSE;
+
     if (!pCitiesDocument->DeleteCity(lCityID, lIndexer)) {
         AfxMessageBox(CITY_CANNOT_BE_DELETED);
         return FALSE;
@@ -284,10 +283,8 @@ void CCitiesView::DisplayData()
         CITIES* pCities = pCitiesDocument->GetCityArray().GetAt(lIndexer);
         if (!pCities)
             continue;
-        CString strID;
-        strID.Format(_T("%ld"), pCities->lID);
-        m_oListCtrl.InsertItem(lIndexer, strID);
-        m_oListCtrl.SetItemText(lIndexer, CITY_COLUMN, pCities->szCityName);
+      
+        m_oListCtrl.InsertItem(lIndexer, pCities->szCityName);
         m_oListCtrl.SetItemText(lIndexer, RESIDENCE_COLUMN, pCities->szTownResidence);
         m_oListCtrl.SetItemData(lIndexer, pCities->lID);
     }

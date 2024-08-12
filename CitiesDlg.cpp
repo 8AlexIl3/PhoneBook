@@ -20,13 +20,15 @@ END_MESSAGE_MAP()
 CCitiesDlg::CCitiesDlg(CWnd* pParent)
 	: CDialogEx(IDD_DLG_CITIES, pParent)
 {
+	m_bEditPermission = true;
 	m_pCities = &m_oCities;
 }
 
-CCitiesDlg::CCitiesDlg(CITIES & oCities, CWnd * pParent)
+CCitiesDlg::CCitiesDlg(CITIES & oCities,bool bEditPermission, CWnd * pParent)
 	: CDialogEx(IDD_DLG_CITIES, pParent),
 	m_pCities(&oCities),
-	m_oCities(oCities)
+	m_oCities(oCities),
+	m_bEditPermission(bEditPermission)
 {
 }
 
@@ -47,7 +49,9 @@ void CCitiesDlg::DoDataExchange(CDataExchange* pDX)
 
 void CCitiesDlg::OnOK()
 {
-	if (!ValidateData()) 
+	if (!m_bEditPermission);
+
+	else if (!ValidateData()) 
 		return;
 
 	CDialogEx::OnOK();
@@ -58,8 +62,13 @@ BOOL CCitiesDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	m_EdbResidence.SetLimitText(CITY_FIELD_SIZE);
 	m_EdbName.SetLimitText(CITY_FIELD_SIZE);
-	m_EdbName.SetWindowTextW(m_oCities.szCityName);
 	m_EdbResidence.SetWindowTextW(m_oCities.szTownResidence);
+	m_EdbName.SetWindowTextW(m_oCities.szCityName);
+
+	if (!m_bEditPermission) {
+		m_EdbResidence.EnableWindow(false);
+		m_EdbName.EnableWindow(false);
+	}
 
 	return TRUE;
 }
@@ -86,7 +95,6 @@ bool CCitiesDlg::ValidateData() {
 	else if (!std::regex_match(oPatternChecker, oPattern)) 
 		oErrors.Add(USE_CITY_FIELD_WITH_BULGARIAN_TEXT);
 	
-
 	Capitalize(strNameGetter);
 
 	m_EdbResidence.GetWindowTextW(strResidenceGetter);

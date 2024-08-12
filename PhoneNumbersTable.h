@@ -9,7 +9,7 @@
 #include "Structures.h"
 #include "PhoneNumbersAccessor.h"
 #include "DBconnectionSingleton.h"
-#include "CBaseTable.h"
+#include "BaseTable.h"
 
 
 class CPhoneNumbersTable : public CBaseTable<PHONE_NUMBERS, CPhoneNumbersAccessor>

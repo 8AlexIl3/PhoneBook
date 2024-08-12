@@ -69,7 +69,7 @@
     <ClInclude Include="DBConnectionSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CBaseTable.h">
+    <ClInclude Include="BaseTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CitiesAccessor.h">
@@ -128,6 +128,18 @@
     </ClInclude>
     <ClInclude Include="PhoneNumbersDlg.h">
       <Filter>Header Files\PhoneNumbers</Filter>
+    </ClInclude>
+    <ClInclude Include="PhoneTypesDocument.h">
+      <Filter>Header Files\PhoneTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="PhoneTypesView.h">
+      <Filter>Header Files\PhoneTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="PhoneTypesDlg.h">
+      <Filter>Header Files\PhoneTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="PersonsCredentials.h">
+      <Filter>Header Files\Persons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +201,18 @@
       <Filter>Source Files\PhoneNumbers</Filter>
     </ClCompile>
     <ClCompile Include="Person.cpp">
+      <Filter>Source Files\Persons</Filter>
+    </ClCompile>
+    <ClCompile Include="PhoneTypesDocument.cpp">
+      <Filter>Source Files\PhoneTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="PhoneTypesView.cpp">
+      <Filter>Source Files\PhoneTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="PhoneTypesDlg.cpp">
+      <Filter>Source Files\PhoneTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="PersonsCredentials.cpp">
       <Filter>Source Files\Persons</Filter>
     </ClCompile>
   </ItemGroup>

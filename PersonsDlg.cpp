@@ -18,25 +18,20 @@ BEGIN_MESSAGE_MAP(CPersonsDlg, CDialogEx)
 	ON_COMMAND(IDC_BTN_DELETE_NUMBER, &CPersonsDlg::onDeleteNumber)
 END_MESSAGE_MAP()
 
-CPersonsDlg::CPersonsDlg( CCitiesArray& oCitiesArray, CPhoneTypesArray* pPhoneTypesArray,
-	bool bEditPermission, CPersonExtend* pPerson /*nullptr*/, CWnd* pParent /*nullptr*/)
+CPersonsDlg::CPersonsDlg(CPersonsCredentials& oPersonsCredentials,
+	bool bEditPermission/*=true*/, CPersonExtend* pPerson /*nullptr*/, CWnd* pParent /*nullptr*/)
 	: CDialogEx(IDD_DLG_PERSONS, pParent),
 	m_pPerson(pPerson),
-	m_pCitiesArray(&oCitiesArray),
-	m_pPhoneTypes(pPhoneTypesArray),
+	m_oPersonsCredentials(oPersonsCredentials),
 	m_bEditPermitted(bEditPermission)
 	
 {
 	m_bAllocatedPerson = false;
-	MapPhoneTypeIDToString();
 }
 
 CPersonsDlg::~CPersonsDlg()
 {
-	m_pCitiesArray = nullptr;
 	m_pPerson = nullptr;
-	m_pPhoneTypes = nullptr;
-	m_oPhoneTypeToString.RemoveAll();
 }
 
 bool CPersonsDlg::ValidateData()
@@ -118,7 +113,7 @@ void CPersonsDlg::DisplayData()
 		m_LscPhoneNumbers.InsertItem((int)nIndexer, pPhoneNumbers->szPhone);
 
 		CString strTypeID;
-		m_oPhoneTypeToString.Lookup(pPhoneNumbers->lPhoneTypeID, strTypeID);
+		m_oPersonsCredentials.GetStringToPhoneTypeMap().Lookup(pPhoneNumbers->lPhoneTypeID, strTypeID);
 		m_LscPhoneNumbers.SetItemText((int)nIndexer, PHONE_TYPE_COLUMN, strTypeID);
 
 	}
@@ -149,6 +144,9 @@ void CPersonsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDB_FIRST_NAME, m_EdbFirstName);
 	DDX_Control(pDX, IDC_LSC_PHONE_NUMBERS, m_LscPhoneNumbers);
 	DDX_Control(pDX, IDC_CMB_CITIES, m_CmbCities);
+	DDX_Control(pDX, IDC_BTN_ADD_NUMBER, m_BtnAddNumber);
+	DDX_Control(pDX, IDC_BTN_UPDATE_NUMBER, m_BtnUpdateNumber);
+	DDX_Control(pDX, IDC_BTN_DELETE_NUMBER, m_BtnDeleteNumber);
 }
 
 // CPersonsDlg message handlers
@@ -160,7 +158,7 @@ void CPersonsDlg::onInsertNumber()
 	if (!m_bEditPermitted)
 		return;
 
-	CPhoneNumbersDlg oPhoneNumbersdlg(m_pPhoneTypes);
+	CPhoneNumbersDlg oPhoneNumbersdlg(&m_oPersonsCredentials.GetPhoneTypesArray());
 
 	if (oPhoneNumbersdlg.DoModal() == IDCANCEL)
 		return;
@@ -174,7 +172,7 @@ void CPersonsDlg::onInsertNumber()
 	m_LscPhoneNumbers.InsertItem(nCount, oPhoneNumbers.szPhone);
 
 	CString strTypeID;
-	m_oPhoneTypeToString.Lookup(oPhoneNumbers.lPhoneTypeID, strTypeID);
+	m_oPersonsCredentials.GetStringToPhoneTypeMap().Lookup(oPhoneNumbers.lPhoneTypeID, strTypeID);
 	m_LscPhoneNumbers.SetItemText(nCount, PHONE_TYPE_COLUMN, strTypeID);
 	
 	PHONE_NUMBERS* pPhoneNumbers = new PHONE_NUMBERS(oPhoneNumbers);
@@ -211,7 +209,7 @@ void CPersonsDlg::onUpdateNumber()
 		return;
 	}
 
-	CPhoneNumbersDlg oPhoneNumbersdlg(m_pPhoneTypes, pPhoneNumbers);
+	CPhoneNumbersDlg oPhoneNumbersdlg(&m_oPersonsCredentials.GetPhoneTypesArray(), pPhoneNumbers);
 
 	if (oPhoneNumbersdlg.DoModal() == IDCANCEL)
 		return;
@@ -221,7 +219,7 @@ void CPersonsDlg::onUpdateNumber()
 	m_LscPhoneNumbers.SetItemText(lIndexer, PHONE_NUMBER_COLUMN, pPhoneNumbers->szPhone);
 
 	CString strTypeID;
-	m_oPhoneTypeToString.Lookup(pPhoneNumbers->lPhoneTypeID, strTypeID);
+	m_oPersonsCredentials.GetStringToPhoneTypeMap().Lookup(pPhoneNumbers->lPhoneTypeID, strTypeID);
 	m_LscPhoneNumbers.SetItemText(lIndexer, PHONE_TYPE_COLUMN, strTypeID);
 
 	m_LscPhoneNumbers.Update(lIndexer);
@@ -275,11 +273,11 @@ void CPersonsDlg::onDeleteNumber()
 
 void CPersonsDlg::MapPhoneTypeIDToString()
 {
-	for (INT_PTR nIndexer(0); nIndexer < m_pPhoneTypes->GetCount(); nIndexer++) {
-		PHONE_TYPES* pPhoneType = m_pPhoneTypes->GetAt(nIndexer);
+	for (INT_PTR nIndexer(0); nIndexer < m_oPersonsCredentials.GetPhoneTypesArray().GetCount(); nIndexer++) {
+		PHONE_TYPES* pPhoneType = m_oPersonsCredentials.GetPhoneTypesArray().GetAt(nIndexer);
 		if (!pPhoneType)
 			continue;
-		m_oPhoneTypeToString.SetAt(pPhoneType->lID, pPhoneType->szPhoneType);
+		m_oPersonsCredentials.GetStringToPhoneTypeMap().SetAt(pPhoneType->lID, pPhoneType->szPhoneType);
 	}
 }
 
@@ -327,8 +325,8 @@ BOOL CPersonsDlg::OnInitDialog()
 
 	m_LscPhoneNumbers.ModifyStyle(0, LVS_REPORT | LVS_SINGLESEL);
 	m_LscPhoneNumbers.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-	m_LscPhoneNumbers.InsertColumn(PHONE_NUMBER_COLUMN, _T("Телефон"), LVCFMT_CENTER, PX250);
-	m_LscPhoneNumbers.InsertColumn(PHONE_TYPE_COLUMN, _T("План"), LVCFMT_LEFT, PX250);
+	m_LscPhoneNumbers.InsertColumn(PHONE_NUMBER_COLUMN, _T("Телефон"), LVCFMT_CENTER, PIXEL_WIDTH_250);
+	m_LscPhoneNumbers.InsertColumn(PHONE_TYPE_COLUMN, _T("План"), LVCFMT_LEFT, PIXEL_WIDTH_250);
 
 	if (!m_bEditPermitted) {
 		m_EdbAddress.EnableWindow(false);
@@ -338,7 +336,10 @@ BOOL CPersonsDlg::OnInitDialog()
 		m_EdbFirstName.EnableWindow(false);
 		m_CmbCities.EnableWindow(false);
 		m_LscPhoneNumbers.EnableWindow(false);
-		SetWindowText(L"Информация за човек (Преглед)");
+		m_BtnAddNumber.EnableWindow(false);
+		m_BtnUpdateNumber.EnableWindow(false);
+		m_BtnDeleteNumber.EnableWindow(false);
+		SetWindowTextW(L"Информация за човек (Преглед)");
 	}
 
 	if (!m_pPerson) {
@@ -364,9 +365,9 @@ BOOL CPersonsDlg::OnInitDialog()
 }
 void CPersonsDlg::SetCityComboboxItems()
 {
-	for (INT_PTR nIndexer(0); nIndexer < m_pCitiesArray->GetCount(); nIndexer++) {
+	for (INT_PTR nIndexer(0); nIndexer < m_oPersonsCredentials.GetCitiesArray().GetCount(); nIndexer++) {
 
-		CITIES oCities = *m_pCitiesArray->GetAt(nIndexer);
+		CITIES oCities = *m_oPersonsCredentials.GetCitiesArray().GetAt(nIndexer);
 
 		CString strCityName = oCities.szCityName;
 		CString strResidenceName = oCities.szTownResidence;

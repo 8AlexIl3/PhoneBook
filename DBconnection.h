@@ -36,6 +36,12 @@ public:
     /// <returns>TRUE if succesful/FALSE if not</returns>
     bool CheckValidSession();
 
+    bool StartTransaction();
+
+    bool RollbackTransaction();
+
+    bool CommitTransaction();
+
 private:
     /// <returns>Database connection to the server</returns>
     CDBPropSet SetDBProperties();
@@ -51,7 +57,6 @@ private:
     /// <returns>TRUE if succesful/FALSE if not</returns>
     bool OpenConnection();
 
-
 // Members
 // ----------------
 private:
@@ -62,4 +67,5 @@ private:
 };
 #define SERVER_CONNECTION_ERROR L"Не може да се създаде връзка към сървър"
 #define SESSION_CREATE_ERROR L"Не може да се създаде сесия"
-
+#define TRANSACTION_STARTED 4096l
+#define TRANSACTION_NOT_STARTED 0l

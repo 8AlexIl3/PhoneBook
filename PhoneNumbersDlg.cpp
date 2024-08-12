@@ -22,7 +22,6 @@ CPhoneNumbersDlg::CPhoneNumbersDlg(CPhoneTypesArray* oPhoneTypeArray,PHONE_NUMBE
 CPhoneNumbersDlg::~CPhoneNumbersDlg()
 {
 	m_pPhoneNumber = nullptr;
-	m_pPhoneTypeArray = nullptr;
 }
 
 void CPhoneNumbersDlg::DoDataExchange(CDataExchange* pDX)

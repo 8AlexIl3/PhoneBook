@@ -20,7 +20,6 @@ CPersonsDocument::CPersonsDocument()
 
 CPersonsDocument::~CPersonsDocument()
 {
-    m_oCityIDtoString.RemoveAll();
 }
 
 // MFC Overrides
@@ -78,6 +77,18 @@ bool CPersonsDocument::InsertPerson(CPersonExtend& oPersons)
     return TRUE;
 }
 
+bool CPersonsDocument::UpdatePerson(const long lID, CPersonExtend& oPersons)
+{
+    CPersonsData oPersonsData;
+
+    if (!oPersonsData.UpdatePersonExtendedWhereID(lID, oPersons))
+        return FALSE;
+
+    UpdateAllViews(NULL);
+
+    return TRUE;
+}
+
 bool CPersonsDocument::DeletePerson(const long lID, const long lrowIndexer)
 {
     CPersonsData oPersonsData;
@@ -99,35 +110,7 @@ bool CPersonsDocument::DeletePerson(const long lID, const long lrowIndexer)
     return TRUE;
 }
 
-bool CPersonsDocument::LoadCities()
-{
-    CCitiesData oCitiesData;
 
-    ClearCitiesArray();
-
-    if (!oCitiesData.SelectAll(m_oCitiesArray))
-        return FALSE;
-
-    for (INT_PTR nIndexer(0); nIndexer < m_oCitiesArray.GetCount(); nIndexer++) {
-        CITIES* pCities = m_oCitiesArray.GetAt(nIndexer);
-        if (!pCities)
-            continue;
-        m_oCityIDtoString.SetAt(pCities->lID,pCities->szCityName);
-
-    }
-    return TRUE;
-}
-bool CPersonsDocument::LoadPhoneTypes()
-{
-    CPhoneTypesData oPhoneTypesData;
-
-    ClearPhoneTypesArray();
-
-    if (!oPhoneTypesData.SelectAll(m_oPhoneTypesArray))
-        return FALSE;
-
-    return TRUE;
-}
 bool CPersonsDocument::LoadPersons()
 {
     CPersonsData oPersonsData;
@@ -139,16 +122,9 @@ bool CPersonsDocument::LoadPersons()
     return TRUE;
 }
 
-bool CPersonsDocument::UpdatePerson(const long lID, CPersonExtend& oPersons)
+CPersonsCredentials& CPersonsDocument::GetCredentials()
 {
-    CPersonsData oPersonsData;
-
-    if (!oPersonsData.UpdatePersonExtendedWhereID(lID, oPersons))
-        return FALSE;
-    
-    UpdateAllViews(NULL);
-
-    return TRUE;
+    return m_oCredentials;
 }
 
 bool CPersonsDocument::SelectPerson(const long lID, CPersonExtend& oPersons)
@@ -167,20 +143,6 @@ CPersonArray& CPersonsDocument::GetPersonArray()
     return m_oPersonsArray;
 }
 
-CCitiesArray& CPersonsDocument::GetCitiesArray()
-{
-    return m_oCitiesArray;
-}
-
-CPhoneTypesArray& CPersonsDocument::GetPhoneTypesArray()
-{
-    return m_oPhoneTypesArray;
-}
-
-CMap<long, long, CString, CString>& CPersonsDocument::GetStringCity()
-{
-    return m_oCityIDtoString;
-}
 
 void CPersonsDocument::ClearPersonsArray()
 {
@@ -193,26 +155,6 @@ void CPersonsDocument::ClearPersonsArray()
     m_oPersonsArray.RemoveAll();
 }
 
-void CPersonsDocument::ClearCitiesArray()
-{
-    for (long lIndexer = 0; (INT_PTR)lIndexer < m_oCitiesArray.GetCount(); lIndexer++) {
-        CITIES* pCity=m_oCitiesArray.GetAt(lIndexer);
-        if (!pCity)
-            continue;
-        delete pCity;
-    }
-    m_oCitiesArray.RemoveAll();
-}
-void CPersonsDocument::ClearPhoneTypesArray()
-{
-    for (long lIndexer = 0; (INT_PTR)lIndexer < m_oPhoneTypesArray.GetCount(); lIndexer++) {
-       PHONE_TYPES* pPhoneType= m_oPhoneTypesArray.GetAt(lIndexer);
-       if (!pPhoneType)
-           continue;
-        delete pPhoneType;
-    }
-    m_oPhoneTypesArray.RemoveAll();
-}
 
 // Implementation
 // ----------------

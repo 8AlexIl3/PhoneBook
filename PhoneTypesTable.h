@@ -7,7 +7,7 @@
 #include "Structures.h"
 #include "PhoneTypesAccessor.h"
 #include "DBconnectionSingleton.h"
-#include "CBaseTable.h"
+#include "BaseTable.h"
 
 
 class CPhoneTypesTable :  public CBaseTable<PHONE_TYPES,CPhoneTypesAccessor>

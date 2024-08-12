@@ -9,6 +9,7 @@
 #include "PhoneTypesData.h"
 #include "Structures.h"
 #include "Person.h"
+#include "PersonsCredentials.h"
 class CPersonsDocument : public CDocument
 {
 
@@ -51,31 +52,15 @@ public:
     /// <returns>true if successful, false otherwise</returns>
     bool LoadPersons();
 
-    /// <summary>Get all Cities from table</summary>
-    /// <returns>true if successful, false otherwise</returns>
-    bool LoadCities();
-
-    /// <summary>Get all Phone types from table</summary>
-   /// <returns>true if successful, false otherwise</returns>
-    bool LoadPhoneTypes();
+    CPersonsCredentials& GetCredentials();
 
     /// <summary>Getter for personArray</summary>
     CPersonArray& GetPersonArray();
 
-    /// <summary>Getter for CitiesArray</summary>
-    CCitiesArray& GetCitiesArray();
-
-    /// <summary>Getter for PhoneTypesArray</summary>
-    CPhoneTypesArray& GetPhoneTypesArray();
-
-    CMap<long, long, CString, CString>&GetStringCity();
-
+   
 private:
     void ClearPersonsArray();
-
-    void ClearCitiesArray();
-
-    void ClearPhoneTypesArray();
+    
 
 
     // Overrides
@@ -91,9 +76,8 @@ public:
 private:
     // Array to hold person records
     CPersonArray m_oPersonsArray;
-    CCitiesArray m_oCitiesArray;
-    CPhoneTypesArray m_oPhoneTypesArray;
-    CMap<long, long, CString, CString> m_oCityIDtoString;
+    CPersonsCredentials m_oCredentials;
+    //CMap<long, long, CString, CString> m_oCityIDtoString;
 
     // Implementation
     // ----------------

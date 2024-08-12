@@ -57,7 +57,6 @@ bool CDBConnection::IsActionSuccessful(const HRESULT& hResult)
 
 bool CDBConnection::CheckValidSession()
 {
-
     bool bResultConnection(true);
     //if connection is not up
     if (!m_oDataSource.m_spInit) 
@@ -72,7 +71,7 @@ bool CDBConnection::CheckValidSession()
     //if session is not up
     if (!m_oSession.m_spOpenRowset) 
         bResultConnection = OpenSession();
-    
+   
 
     if (!bResultConnection) {
         CStringW strError;
@@ -127,4 +126,64 @@ bool CDBConnection::OpenConnection()
     return TRUE;
 }
 
+bool CDBConnection::StartTransaction()
+{
+    
+    XACTTRANSINFO* oTransactionInfo = new XACTTRANSINFO;
+
+    if (!oTransactionInfo)
+        return false;
+
+    m_oSession.GetTransactionInfo(oTransactionInfo);
+
+    bool bResult = false;
+    if (oTransactionInfo->isoLevel==TRANSACTION_NOT_STARTED) {
+        m_oSession.StartTransaction();
+        bResult = true;
+
+    }
+    delete oTransactionInfo;
+
+    return bResult;
+   
+}
+
+bool CDBConnection::RollbackTransaction()
+{
+
+    XACTTRANSINFO* oTransactionInfo = new XACTTRANSINFO;
+    if (!oTransactionInfo)
+        return false;
+
+    m_oSession.GetTransactionInfo(oTransactionInfo);
+
+    bool bResult = false;
+    if (oTransactionInfo->isoLevel == TRANSACTION_STARTED) {
+        m_oSession.Abort();
+        bResult = true;
+    }
+    delete oTransactionInfo;
+
+    return bResult;
+
+}
+bool CDBConnection::CommitTransaction()
+{
+
+    XACTTRANSINFO* oTransactionInfo = new XACTTRANSINFO;
+    if (!oTransactionInfo)
+        return false;
+
+    m_oSession.GetTransactionInfo(oTransactionInfo);
+
+    bool bResult = false;
+    if (oTransactionInfo->isoLevel == TRANSACTION_STARTED) {
+        m_oSession.Commit();
+        bResult = true;
+    }
+    delete oTransactionInfo;
+
+    return bResult;
+
+}
 

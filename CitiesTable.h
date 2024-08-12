@@ -9,7 +9,7 @@
 #include "Structures.h"
 #include "CitiesAccessor.h"
 #include "DBconnectionSingleton.h"
-#include "CBaseTable.h"
+#include "BaseTable.h"
 
 
 class CCitiesTable : public CBaseTable<CITIES, CCitiesAccessor>
