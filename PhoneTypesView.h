@@ -29,6 +29,8 @@ protected:
 	afx_msg void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnContextUpdatePhoneType(CCmdUI* pCmdUI);
+	afx_msg void OnContextDeletePhoneType(CCmdUI* pCmdUI);
 	afx_msg void OnInsertPhoneType();
 	afx_msg void OnUpdatePhoneType();
 	afx_msg void OnDeletePhoneType();

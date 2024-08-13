@@ -20,7 +20,7 @@ public:
 	/// <param name="bEditPermission">view mode </param>
 	/// <param name="pPerson">the person that will be edited/added</param>
 	/// <param name="pParent">parent window</param>
-	CPersonsDlg(CPersonsCredentials& oPersonsCredentials,bool bEditPermission=true, CPersonExtend* pPerson = nullptr, CWnd* pParent = nullptr);
+	CPersonsDlg(CPersonsCredentials& oPersonsCredentials, CPersonExtend& oPerson, bool bEditPermission=true,  CWnd* pParent = nullptr);
 
 	virtual ~CPersonsDlg();
 
@@ -63,7 +63,7 @@ private:
 	CEdit m_EdbFirstName;
 	CListCtrl m_LscPhoneNumbers;
 	CComboBox m_CmbCities;
-	CPersonExtend* m_pPerson;
+	CPersonExtend& m_oPerson;
 	CButton m_BtnAddNumber;
 	CButton m_BtnUpdateNumber;
 	CButton m_BtnDeleteNumber;

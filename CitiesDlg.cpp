@@ -24,7 +24,7 @@ CCitiesDlg::CCitiesDlg(CWnd* pParent)
 	m_pCities = &m_oCities;
 }
 
-CCitiesDlg::CCitiesDlg(CITIES & oCities,bool bEditPermission, CWnd * pParent)
+CCitiesDlg::CCitiesDlg(CITIES& oCities,bool bEditPermission, CWnd * pParent)
 	: CDialogEx(IDD_DLG_CITIES, pParent),
 	m_pCities(&oCities),
 	m_oCities(oCities),
@@ -68,6 +68,7 @@ BOOL CCitiesDlg::OnInitDialog()
 	if (!m_bEditPermission) {
 		m_EdbResidence.EnableWindow(false);
 		m_EdbName.EnableWindow(false);
+		SetWindowTextW(L"Град (Преглед)");
 	}
 
 	return TRUE;

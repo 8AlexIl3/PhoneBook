@@ -20,7 +20,8 @@ BEGIN_MESSAGE_MAP(CPersonsView, CListView)
     ON_COMMAND(IDM_REFRESH_VIEW, &CPersonsView::OnRefresh)
     ON_COMMAND(IDM_EDIT_RECORD, &CPersonsView::OnUpdatePerson)
     ON_COMMAND(IDM_DELETE_RECORD, &CPersonsView::OnDeletePerson)
-
+    ON_UPDATE_COMMAND_UI(IDM_EDIT_RECORD, &CPersonsView::OnContextUpdatePerson)
+    ON_UPDATE_COMMAND_UI(IDM_DELETE_RECORD, &CPersonsView::OnContextDeletePerson)
 END_MESSAGE_MAP()
 
 
@@ -78,6 +79,15 @@ void CPersonsView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 void CPersonsView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
     DisplayData();
+}
+void CPersonsView::OnContextUpdatePerson(CCmdUI* pCmdUI)
+{
+    pCmdUI->Enable(m_oListCtrl.GetSelectedCount() > 0);
+}
+
+void CPersonsView::OnContextDeletePerson(CCmdUI* pCmdUI)
+{
+    pCmdUI->Enable(m_oListCtrl.GetSelectedCount() > 0);
 }
 
 void CPersonsView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -150,8 +160,9 @@ bool CPersonsView::InsertPerson()
 
     pPersonsDocument->GetCredentials().RefreshData();
 
+    CPersonExtend oPerson;
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(),true);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), oPerson,true);
 
     if (oPersonsDialog.DoModal() == IDCANCEL)
         return FALSE;
@@ -196,7 +207,7 @@ bool CPersonsView::SelectPerson()
     pPersonsDocument->GetCredentials().RefreshData();
 
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), false, &oPerson);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), oPerson,false);
 
     oPersonsDialog.DoModal();
       
@@ -261,7 +272,7 @@ bool CPersonsView::UpdatePerson()
     
     pPersonsDocument->GetCredentials().RefreshData();
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(),true, &oPerson);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(),oPerson,true);
 
     if (oPersonsDialog.DoModal() == IDCANCEL) 
         return FALSE;

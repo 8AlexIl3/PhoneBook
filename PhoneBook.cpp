@@ -27,9 +27,12 @@
 
 BEGIN_MESSAGE_MAP(CPhoneBookApp, CWinAppEx)
 	ON_COMMAND(ID_APP_ABOUT, &CPhoneBookApp::OnAppAbout)
-	// Standard file based document commands
-	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
+	ON_COMMAND(ID_FILE_NEW_PERSONS, &CPhoneBookApp::OnFileNewPersons)
+	ON_COMMAND(ID_FILE_NEW_CITIES, &CPhoneBookApp::OnFileNewCities)
+	ON_COMMAND(ID_FILE_NEW_PHONE_TYPES, &CPhoneBookApp::OnFileNewPhoneTypes)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
+	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
+
 END_MESSAGE_MAP()
 
 
@@ -37,6 +40,10 @@ END_MESSAGE_MAP()
 
 CPhoneBookApp::CPhoneBookApp() noexcept
 {
+	pPersonsTemplate=nullptr;
+	pCitiesTemplate= nullptr;
+	pPhoneTypesTemplate= nullptr;
+
 	m_bHiColorIcons = TRUE;
 	
 	m_nAppLook = 0;
@@ -107,33 +114,27 @@ BOOL CPhoneBookApp::InitInstance()
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views
-	CMultiDocTemplate* pPersonsTemplate;
 	pPersonsTemplate = new CMultiDocTemplate(IDR_PersonsTYPE,
-		RUNTIME_CLASS(CPersonsDocument),
-		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
-		RUNTIME_CLASS(CPersonsView));
-	if (!pPersonsTemplate)
-		return FALSE;
-	AddDocTemplate(pPersonsTemplate);
+			RUNTIME_CLASS(CPersonsDocument),
+			RUNTIME_CLASS(CChildFrame),
+			RUNTIME_CLASS(CPersonsView));
 
-	CMultiDocTemplate* pCitiesTemplate;
-	pCitiesTemplate = new CMultiDocTemplate(IDR_CitiesTYPE,
+	 pCitiesTemplate = new CMultiDocTemplate(IDR_CitiesTYPE,
 		RUNTIME_CLASS(CCitiesDocument),
-		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+		RUNTIME_CLASS(CChildFrame),
 		RUNTIME_CLASS(CCitiesView));
-	if (!pCitiesTemplate)
-		return FALSE;
-	AddDocTemplate(pCitiesTemplate);
 
-	CMultiDocTemplate* pPhoneTypesTemplate;
 	pPhoneTypesTemplate = new CMultiDocTemplate(IDR_PhoneTypesTYPE,
 		RUNTIME_CLASS(CPhoneTypesDocument),
-		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+		RUNTIME_CLASS(CChildFrame),
 		RUNTIME_CLASS(CPhoneTypesView));
-	if (!pPhoneTypesTemplate)
-		return FALSE;
-	AddDocTemplate(pPhoneTypesTemplate);
 
+	if (!pPersonsTemplate || !pCitiesTemplate || !pPhoneTypesTemplate)
+		return FALSE;
+
+	AddDocTemplate(pPersonsTemplate);
+	AddDocTemplate(pCitiesTemplate);
+	AddDocTemplate(pPhoneTypesTemplate);
 
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;
@@ -144,17 +145,12 @@ BOOL CPhoneBookApp::InitInstance()
 	}
 	m_pMainWnd = pMainFrame;
 
+	if (pPersonsTemplate)
+	{
+		pPersonsTemplate->OpenDocumentFile(NULL);
+	}
+	
 
-	// Parse command line for standard shell commands, DDE, file open
-	CCommandLineInfo cmdInfo;
-	ParseCommandLine(cmdInfo);
-
-
-
-	// Dispatch commands specified on the command line.  Will return FALSE if
-	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
-	if (!ProcessShellCommand(cmdInfo))
-		return FALSE;
 	// The main window has been initialized, so show and update it
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
@@ -210,6 +206,30 @@ void CPhoneBookApp::OnAppAbout()
 {
 	CAboutDlg oAboutDlg;
 	oAboutDlg.DoModal();
+}
+
+void CPhoneBookApp::OnFileNewPersons()
+{
+	if (pPersonsTemplate)
+	{
+		pPersonsTemplate->OpenDocumentFile(NULL);
+	}
+}
+
+void CPhoneBookApp::OnFileNewCities()
+{
+	if (pCitiesTemplate)
+	{
+		pCitiesTemplate->OpenDocumentFile(NULL);
+	}
+}
+
+void CPhoneBookApp::OnFileNewPhoneTypes()
+{
+	if (pPhoneTypesTemplate)
+	{
+		pPhoneTypesTemplate->OpenDocumentFile(NULL);
+	}
 }
 
 // CPhoneBookApp customization load/save methods

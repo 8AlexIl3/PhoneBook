@@ -20,6 +20,8 @@ BEGIN_MESSAGE_MAP(CCitiesView, CListView)
     ON_COMMAND(IDM_REFRESH_VIEW, &CCitiesView::OnRefresh)
     ON_COMMAND(IDM_EDIT_RECORD, &CCitiesView::OnUpdateCity)
     ON_COMMAND(IDM_DELETE_RECORD, &CCitiesView::OnDeleteCity)
+    ON_UPDATE_COMMAND_UI(IDM_EDIT_RECORD, &CCitiesView::OnContextUpdateCity)
+    ON_UPDATE_COMMAND_UI(IDM_DELETE_RECORD, &CCitiesView::OnContextDeleteCity)
 END_MESSAGE_MAP()
 
 
@@ -50,8 +52,8 @@ void CCitiesView::OnInitialUpdate()
 
     m_oListCtrl.ModifyStyle(0, LVS_REPORT| LVS_SINGLESEL);
     m_oListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
-    m_oListCtrl.InsertColumn(CITY_COLUMN, _T("Град"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
-    m_oListCtrl.InsertColumn(RESIDENCE_COLUMN, _T("Област"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(CITY_COLUMN, _T("Град"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(RESIDENCE_COLUMN, _T("Област"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
     
     DisplayData();
 
@@ -79,6 +81,16 @@ void CCitiesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 void CCitiesView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
     UpdateCity();
+}
+
+void CCitiesView::OnContextUpdateCity(CCmdUI* pCmdUI)
+{
+    pCmdUI->Enable(m_oListCtrl.GetSelectedCount() > 0);
+}
+
+void CCitiesView::OnContextDeleteCity(CCmdUI* pCmdUI)
+{
+    pCmdUI->Enable(m_oListCtrl.GetSelectedCount() > 0);
 }
 
 void CCitiesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

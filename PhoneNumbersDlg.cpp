@@ -11,17 +11,15 @@
 
 IMPLEMENT_DYNAMIC(CPhoneNumbersDlg, CDialogEx)
 
-CPhoneNumbersDlg::CPhoneNumbersDlg(CPhoneTypesArray* oPhoneTypeArray,PHONE_NUMBERS* oPhoneNumber/*=nullptr*/, CWnd* pParent /*=nullptr*/)
+CPhoneNumbersDlg::CPhoneNumbersDlg(CPhoneTypesArray& oPhoneTypeArray,PHONE_NUMBERS& oPhoneNumber/*=nullptr*/, CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DLG_PHONE_NUMBERS, pParent),
-	m_pPhoneNumber(oPhoneNumber),
-	m_pPhoneTypeArray(oPhoneTypeArray)
+	m_oPhoneNumber(oPhoneNumber),
+	m_oPhoneTypeArray(oPhoneTypeArray)
 {
-	m_bAllocatedNumber = false;
 }
 
 CPhoneNumbersDlg::~CPhoneNumbersDlg()
 {
-	m_pPhoneNumber = nullptr;
 }
 
 void CPhoneNumbersDlg::DoDataExchange(CDataExchange* pDX)
@@ -39,14 +37,10 @@ END_MESSAGE_MAP()
 
 // CPhoneNumbersDlg message handlers
 
-PHONE_NUMBERS CPhoneNumbersDlg::GetNumber()
+PHONE_NUMBERS& CPhoneNumbersDlg::GetNumber()
 {
-	if(m_pPhoneNumber)
-		return *m_pPhoneNumber;
-	PHONE_NUMBERS oEmptyNumber;
-	return oEmptyNumber;
+	return m_oPhoneNumber;
 
-	
 }
 
 BOOL CPhoneNumbersDlg::OnInitDialog()
@@ -54,12 +48,10 @@ BOOL CPhoneNumbersDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 	m_EdbPhoneNumber.SetLimitText(PHONE_NUMBER_LENGTH);
 	m_EdbPhoneNumber.SetCueBanner(L"Напр:0987654321",true);
-
-	if (m_pPhoneNumber)
-		m_EdbPhoneNumber.SetWindowTextW(m_pPhoneNumber->szPhone);
+	m_EdbPhoneNumber.SetWindowTextW(m_oPhoneNumber.szPhone);
 	
-	for (INT_PTR nIndexer(0); nIndexer < m_pPhoneTypeArray->GetCount(); nIndexer++) {
-		PHONE_TYPES* pPhoneTypes= m_pPhoneTypeArray->GetAt(nIndexer);
+	for (INT_PTR nIndexer(0); nIndexer < m_oPhoneTypeArray.GetCount(); nIndexer++) {
+		PHONE_TYPES* pPhoneTypes= m_oPhoneTypeArray.GetAt(nIndexer);
 
 		if (!pPhoneTypes)
 			continue;
@@ -67,11 +59,9 @@ BOOL CPhoneNumbersDlg::OnInitDialog()
 		m_CmbPhoneType.AddString(pPhoneTypes->szPhoneType);
 		m_CmbPhoneType.SetItemData((int)nIndexer, pPhoneTypes->lID);
 
-		if (m_pPhoneNumber) 
-			if (pPhoneTypes->lID == m_pPhoneNumber->lPhoneTypeID) 
+		if (pPhoneTypes->lID == m_oPhoneNumber.lPhoneTypeID)
 				m_CmbPhoneType.SetCurSel((int)nIndexer);
 			
-		
 	}
 
 	return TRUE;
@@ -101,33 +91,19 @@ bool CPhoneNumbersDlg::ValidateData()
 		return false;
 	}
 
-	//in case we are trying to write to null
-	//(happens when we call the constructor with nullptr)
-	if (!m_pPhoneNumber) {
-		m_pPhoneNumber = new PHONE_NUMBERS;
-		if (m_pPhoneNumber)
-			m_bAllocatedNumber = true;
-		else {
-			AfxMessageBox(L"Възникна грешка, опитайте по-късно");
-			return false;
-		}
-	}
 	
-	_tcscpy_s(m_pPhoneNumber->szPhone, strPhoneNumber);
-	if (m_pPhoneNumber->szPhone[0] != L'0') {
+	_tcscpy_s(m_oPhoneNumber.szPhone, strPhoneNumber);
+	if (m_oPhoneNumber.szPhone[0] != L'0') {
 		AfxMessageBox(L"Номерът трябва да започва с нула");
 		return false;
 	}
 
-	m_pPhoneNumber->lPhoneTypeID = (int)m_CmbPhoneType.GetItemData(nIndexer);
+	m_oPhoneNumber.lPhoneTypeID = (int)m_CmbPhoneType.GetItemData(nIndexer);
 
 	return true;
 }
 
 void CPhoneNumbersDlg::OnCancel()
 {
-	if (m_bAllocatedNumber) 
-		delete m_pPhoneNumber;
-
 	CDialogEx::OnCancel();
 }

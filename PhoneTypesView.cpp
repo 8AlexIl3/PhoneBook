@@ -20,6 +20,8 @@ BEGIN_MESSAGE_MAP(CPhoneTypesView, CListView)
     ON_COMMAND(IDM_REFRESH_VIEW, &CPhoneTypesView::OnRefresh)
     ON_COMMAND(IDM_EDIT_RECORD, &CPhoneTypesView::OnUpdatePhoneType)
     ON_COMMAND(IDM_DELETE_RECORD, &CPhoneTypesView::OnDeletePhoneType)
+    ON_UPDATE_COMMAND_UI(IDM_EDIT_RECORD, &CPhoneTypesView::OnContextUpdatePhoneType)
+    ON_UPDATE_COMMAND_UI(IDM_DELETE_RECORD, &CPhoneTypesView::OnContextDeletePhoneType)
 END_MESSAGE_MAP()
 
 
@@ -79,6 +81,16 @@ void CPhoneTypesView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
     UpdatePhoneType();
 }
+void CPhoneTypesView::OnContextUpdatePhoneType(CCmdUI* pCmdUI)
+{
+    pCmdUI->Enable(m_oListCtrl.GetSelectedCount() > 0);
+}
+
+void CPhoneTypesView::OnContextDeletePhoneType(CCmdUI* pCmdUI)
+{
+    pCmdUI->Enable(m_oListCtrl.GetSelectedCount() > 0);
+}
+
 
 void CPhoneTypesView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {

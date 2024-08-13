@@ -19,7 +19,6 @@
 #define IDR_CitiesTYPE                  132
 #define IDR_PersonsTYPE                 133
 #define IDR_PhoneTypesTYPE              134
-#define IDR_THEME_MENU                  200
 #define ID_SET_STYLE                    201
 #define IDR_POPUP_EDIT1                 201
 #define ID_VIEW_APPLOOK_WIN_2000        205
@@ -32,7 +31,6 @@
 #define ID_VIEW_APPLOOK_OFF_2007_BLACK  216
 #define ID_VIEW_APPLOOK_OFF_2007_SILVER 217
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
-#define ID_VIEW_APPLOOK_WINDOWS_7       219
 #define IDS_EDIT_MENU                   306
 #define IDR_MENU1                       310
 #define IDD_DLG_CITIES                  312
@@ -67,6 +65,9 @@
 #define IDC_CMB_PHONE_TYPE              1023
 #define IDC_EDIT1                       1024
 #define IDC_EDB_PHONE_TYPE              1024
+#define ID_FILE_NEW_PERSONS             32771
+#define ID_FILE_NEW_CITIES              32772
+#define ID_FILE_NEW_PHONE_TYPES         32773
 #define ID_FILE_SELECTWHEREID           32781
 #define ID_FILE_UPDATEWHEREID           32782
 #define ID_FILE_INSERT                  32783
@@ -96,13 +97,15 @@
 #define IDM_EDIT_RECORD                 32807
 #define ID_NE_ID                        32808
 #define ID_NE_DE                        32809
+#define ID_FILE_NEW_PHONE_NUMBERS       32812
+#define ID_VIEW_TOOLBAR                 0xE800
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        318
-#define _APS_NEXT_COMMAND_VALUE         32810
+#define _APS_NEXT_COMMAND_VALUE         32814
 #define _APS_NEXT_CONTROL_VALUE         1025
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

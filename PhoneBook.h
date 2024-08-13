@@ -32,10 +32,16 @@ public:
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();
-
+	
 	afx_msg void OnAppAbout();
-
+	afx_msg void OnFileNewPhoneTypes();
+	afx_msg void OnFileNewCities();
+	afx_msg void OnFileNewPersons();
 	DECLARE_MESSAGE_MAP()
+//	Members
+	CMultiDocTemplate* pPersonsTemplate;
+	CMultiDocTemplate* pCitiesTemplate;
+	CMultiDocTemplate* pPhoneTypesTemplate;
 };
 
 extern CPhoneBookApp theApp;

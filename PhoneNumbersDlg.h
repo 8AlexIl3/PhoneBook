@@ -14,7 +14,7 @@ class CPhoneNumbersDlg : public CDialogEx
     // Constructor / Destructor
     // ----------------
 public:
-    CPhoneNumbersDlg(CPhoneTypesArray* oPhoneTypeArray, PHONE_NUMBERS* oPhoneNumbers = nullptr, CWnd* pParent = nullptr);
+    CPhoneNumbersDlg(CPhoneTypesArray& oPhoneTypeArray, PHONE_NUMBERS& oPhoneNumbers, CWnd* pParent = nullptr);
     
     virtual ~CPhoneNumbersDlg();
 
@@ -39,18 +39,16 @@ protected:
 private:
     bool ValidateData();
 public:
-    PHONE_NUMBERS GetNumber();
+    PHONE_NUMBERS& GetNumber();
 
 
     //Members
     // ----------------
 private:
-    CPhoneTypesArray* m_pPhoneTypeArray;
-    PHONE_NUMBERS* m_pPhoneNumber;
+    CPhoneTypesArray& m_oPhoneTypeArray;
+    PHONE_NUMBERS& m_oPhoneNumber;
     CEdit m_EdbPhoneNumber;
     CComboBox m_CmbPhoneType;
-    bool m_bAllocatedNumber;
-   
 };
 
 #define PHONE_NUMBER_LENGTH 10
