@@ -1,10 +1,13 @@
 #pragma once
 #include "afxdialogex.h"
-#include "Person.h"
+#include "PersonExtend.h"
 #include "PhoneNumbersDlg.h"
 #include <regex>
 #include "PersonsCredentials.h"
-// CPersonsDlg dialog
+
+	
+/////////////////////////////////////////////////////////////////////////////
+// CPersonsDlg
 
 class CPersonsDlg : public CDialogEx
 {
@@ -15,12 +18,12 @@ class CPersonsDlg : public CDialogEx
 	// Constructor / Destructor
 	// ----------------
 public:
-	/// <param name="oCitiesArray">Array of cities to be loaded</param>
-	/// <param name="pPhoneTypesArray">Array of phone types  </param>
-	/// <param name="bEditPermission">view mode </param>
-	/// <param name="pPerson">the person that will be edited/added</param>
-	/// <param name="pParent">parent window</param>
-	CPersonsDlg(CPersonsCredentials& oPersonsCredentials, CPersonExtend& oPerson, bool bEditPermission=true,  CWnd* pParent = nullptr);
+	/// <summary>
+	/// Constructor for the dialog class
+	/// </summary>
+	/// <param name="oPersonsCredentials">Dialog elements</param>
+	/// <param name="pPerson">person info to be filled</param>
+	CPersonsDlg(CPersonsCredentials& oPersonsCredentials, CPersonExtend* pPerson=nullptr, bool bEditPermission=true,  CWnd* pParent = nullptr);
 
 	virtual ~CPersonsDlg();
 
@@ -63,7 +66,7 @@ private:
 	CEdit m_EdbFirstName;
 	CListCtrl m_LscPhoneNumbers;
 	CComboBox m_CmbCities;
-	CPersonExtend& m_oPerson;
+	CPersonExtend* m_pPerson;
 	CButton m_BtnAddNumber;
 	CButton m_BtnUpdateNumber;
 	CButton m_BtnDeleteNumber;
@@ -73,9 +76,7 @@ private:
 	bool m_bAllocatedPerson;
 	bool m_bEditPermitted;
 
-	/// <summary>
-	/// Set Initial checkbox item list
-	/// </summary>
+	/// <summary>Set Initial checkbox item list</summary>
 	void SetCityComboboxItems();
 	
 	/// <summary>assign a string to the id of phonetypes</summary>

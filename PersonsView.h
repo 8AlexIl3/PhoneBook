@@ -52,15 +52,15 @@ private:
 	/// <returns>TRUE if successful/FALSE if NOT</returns>
 	bool InsertPerson();
 
-	/// <summary> Called by pressing enter key while selected a city </summary>
+	/// <summary> Called by pressing enter key while selected a person </summary>
 	/// <returns>TRUE if successful/FALSE if NOT</returns>
 	bool SelectPerson();
 
-	/// <summary> Called by pressing delete key while selected a city </summary>
+	/// <summary> Called by pressing delete key while selected a person </summary>
 	/// <returns>TRUE if successful/FALSE if NOT</returns>
 	bool DeletePerson();
 
-	/// <summary> Called by pressing delete key while selected a city </summary>
+	/// <summary> Called by pressing delete key while selected a person </summary>
 	/// <returns>TRUE if successful/FALSE if NOT</returns>
 	bool UpdatePerson();
 
@@ -97,7 +97,7 @@ inline CPersonsDocument* CPersonsView::GetDocument() const
 
 #define FIRST_NAME_COLUMN 0
 #define LAST_NAME_COLUMN 1
-#define CITY_ID_COLUMN 2
+#define CITY_NAME_COLUMN 2
 #define ADDRESS_COLUMN 3
 #define PRIMARY_PHONE_COLUMN 4
 

@@ -1,12 +1,10 @@
 #pragma once
+#include "afxdialogex.h"
+#include "Structures.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CCitiesDlg
-
-#include "afxdialogex.h"
-#include "Structures.h"
-
 
 class CCitiesDlg : public CDialogEx
 {
@@ -51,6 +49,7 @@ private:
 	/// <summary> Reformat the string </summary>
 	void Capitalize(CString& oString);
 public:
+	/// <summary> Getter</summary>
 	CITIES* GetCity();
 
 // Members

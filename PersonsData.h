@@ -1,10 +1,10 @@
 #pragma once
+#include "PersonExtend.h"
+#include "PersonsTable.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CPersonsData
-#include "Person.h"
-#include "PersonsTable.h"
 
 class CPersonsData
 {

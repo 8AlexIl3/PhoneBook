@@ -1,11 +1,15 @@
 #pragma once
 #include "Structures.h"
 #include <atldbcli.h>
+
+
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumbersAccessor
+
 #define ACCESSOR_COUNT              2
 
 #define ACCESSOR_IDENTITY           0
 #define ACCESSOR_DATA               1
-
 
 #define REC_ID                      1
 

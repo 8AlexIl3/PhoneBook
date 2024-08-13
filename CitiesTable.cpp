@@ -9,9 +9,8 @@
 // Constructor / Destructor
 // ----------------
 
-CCitiesTable::CCitiesTable()
+CCitiesTable::CCitiesTable():CBaseTable(CString(L"CITIES"))
 {
-    m_strTableName.Format(L"CITIES");
 }
 
 CCitiesTable::~CCitiesTable()
@@ -19,34 +18,29 @@ CCitiesTable::~CCitiesTable()
 }
 
 
-//Overrides
+//Methods
 // ----------------
 
 bool CCitiesTable::SelectAll(CCitiesArray& oCitiesArray)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.SelectAll(oCitiesArray);
+    return CBaseTable::SelectAll(oCitiesArray);
 }
 bool CCitiesTable::SelectWhereID(const long lID, CITIES& recCity)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.SelectWhereID(lID, recCity);
+    return CBaseTable::SelectWhereID(lID, recCity);
 }
 
 bool CCitiesTable::UpdateWhereID(const long lID,CITIES& recCity)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.UpdateWhereID(lID,recCity);
+    return CBaseTable::UpdateWhereID(lID,recCity);
 }
 
 bool CCitiesTable::InsertRecord(CITIES& recCity)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.InsertRecord(recCity);
+    return CBaseTable::InsertRecord(recCity);
 }
 
 bool CCitiesTable::DeleteWhereID(const long lID)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.DeleteWhereID(lID);
+    return CBaseTable::DeleteWhereID(lID);
 }

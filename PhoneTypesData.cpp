@@ -20,7 +20,7 @@ CPhoneTypesData::~CPhoneTypesData()
 // Methods
 // ----------------
 
-bool CPhoneTypesData::SelectAll(CPhoneTypesArray& oPhoneTypesArray)
+bool CPhoneTypesData::SelectAllPhoneTypes(CPhoneTypesArray& oPhoneTypesArray)
 {
     CPhoneTypesTable oPhoneTypesTable;
 
@@ -29,7 +29,7 @@ bool CPhoneTypesData::SelectAll(CPhoneTypesArray& oPhoneTypesArray)
     return !oPhoneTypesArray.IsEmpty();
 }
 
-bool CPhoneTypesData::SelectWhereID(const long lID, PHONE_TYPES& recPhoneNumber)
+bool CPhoneTypesData::SelectPhoneTypeWhereID(const long lID, PHONE_TYPES& recPhoneNumber)
 {
     CPhoneTypesTable oPhoneTypesTable;
 
@@ -38,7 +38,7 @@ bool CPhoneTypesData::SelectWhereID(const long lID, PHONE_TYPES& recPhoneNumber)
     return recPhoneNumber.lID;
 }
 
-bool CPhoneTypesData::UpdateWhereID(const long lID, PHONE_TYPES& recPhoneNumber)
+bool CPhoneTypesData::UpdatePhoneTypeWhereID(const long lID, PHONE_TYPES& recPhoneNumber)
 {
     CPhoneTypesTable oPhoneTypesTable;
 
@@ -52,7 +52,7 @@ bool CPhoneTypesData::InsertPhoneType(PHONE_TYPES& recPhoneNumber)
     return  oPhoneTypesTable.InsertRecord(recPhoneNumber);
 }
 
-bool CPhoneTypesData::DeleteWhereID(const long lID)
+bool CPhoneTypesData::DeletePhoneTypeWhereID(const long lID)
 {
     CPhoneTypesTable oPhoneTypesTable;
 

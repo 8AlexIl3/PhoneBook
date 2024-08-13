@@ -1,9 +1,4 @@
 #pragma once
-
-
-/////////////////////////////////////////////////////////////////////////////
-// CPhoneNumbersTable
-
 #include <atldbcli.h>
 #include <atlstr.h> 
 #include "Structures.h"
@@ -11,6 +6,9 @@
 #include "DBconnectionSingleton.h"
 #include "BaseTable.h"
 
+
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumbersTable
 
 class CPhoneNumbersTable : public CBaseTable<PHONE_NUMBERS, CPhoneNumbersAccessor>
 {
@@ -20,54 +18,46 @@ class CPhoneNumbersTable : public CBaseTable<PHONE_NUMBERS, CPhoneNumbersAccesso
 public:
 
     CPhoneNumbersTable();
+    CPhoneNumbersTable(CString& strColumnName);
     virtual ~CPhoneNumbersTable();
 
 
-    // Overrides
+    // Methods
     // ----------------
 public:
-    /// <summary>Loads up all cities from the table </summary>
+    /// <summary>Loads up all Phone numbers from the table </summary>
     /// <param name="oCitiesArray">Cities that will be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    bool SelectAll(CPhoneNumbersArray& oPhoneNumbersArray) override;
+    bool SelectAll(CPhoneNumbersArray& oPhoneNumbersArray);
 
-    /// <summary>Get a city structure by its' id </summary>
+    /// <summary>Get a phone number structure by its' id </summary>
     /// <param name="lID">ID to be searched for</param>
-    /// <param name="recCity">Reference to the city that is searched (if not found
+    /// <param name="recPhoneNumber">Reference to the phone number that is searched (if not found
     /// remains empty)</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    bool SelectWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber) override;
+    bool SelectWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber);
 
-    /// <summary>Update a row from the database with new values from recCity</summary>
-    /// <param name="lID">ID to be matched from recCity to ensure it is the correct one</param>
-    /// <param name="recCity">Cities will get its update counter incremented</param>
+    /// <summary>Update a row from the database with new values from recPhoneNumber</summary>
+    /// <param name="lID">ID to be matched from recPhoneNumber to ensure it is the correct one</param>
+    /// <param name="recPhoneNumber">Cities will get its update counter incremented</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    bool UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber) override;
+    bool UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber);
 
     /// <summary>Insert a new row into the table</summary>
-    /// <param name="recCity">City to be added</param>
+    /// <param name="recPhoneNumber">Phone number to be added</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    bool InsertRecord(PHONE_NUMBERS& recPhoneNumber) override;
+    bool InsertRecord(PHONE_NUMBERS& recPhoneNumber);
 
-    /// <summary>Delete a city by ID from table</summary>
+    /// <summary>Delete a phone number by ID from table</summary>
     /// <param name="lID">Id to delete from table</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
-    bool DeleteWhereID(const long lID) override;
+    bool DeleteWhereID(const long lID);
 
-
-    //Methods
-    // ----------------
-public:
-    /// <summary>Get a city structure by its' id </summary>
+    /// <summary>Get a phone number structure by its' id </summary>
     /// <param name="lID">ID to be searched for</param>
-    /// <param name="recCity">Reference to the city that is searched (if not found
+    /// <param name="recPhoneNumber">Reference to the phone number that is searched (if not found
     /// remains empty)</param>
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool SelectMultipleWhereID(const long lID, CPhoneNumbersArray& oPhoneNumbersArray);
 
-
-    // Members
-    // ----------------
-private:
-    CString m_strTable;
 };

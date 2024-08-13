@@ -86,7 +86,7 @@ bool CCitiesDocument::DeleteCity(const long lID, const long lrowIndexer)
 {
     CCitiesData oCitiesData;
 
-    if (!oCitiesData.DeleteWhereID(lID))
+    if (!oCitiesData.DeleteCityWhereID(lID))
         return FALSE;
 
     CITIES* pCities = m_oCitiesArray.GetAt(lrowIndexer);
@@ -106,7 +106,7 @@ bool CCitiesDocument::UpdateCity(const long lID,CITIES& oCities)
 {
     CCitiesData oCitiesData;
 
-    if (!oCitiesData.UpdateWhereID(lID, oCities))
+    if (!oCitiesData.UpdateCityWhereID(lID, oCities))
         return FALSE;
 
     UpdateAllViews(NULL);
@@ -118,7 +118,7 @@ bool CCitiesDocument::SelectCity(const long lID, CITIES& oCities)
 {
     CCitiesData oCitiesData;
 
-    if (!oCitiesData.SelectWhereID(lID,oCities))
+    if (!oCitiesData.SelectCityWhereID(lID,oCities))
         return FALSE;
 
     return TRUE;
@@ -129,7 +129,7 @@ bool CCitiesDocument::LoadCities()
     CCitiesData oCitiesData;
 
     ClearArray();
-    if (!oCitiesData.SelectAll(m_oCitiesArray))
+    if (!oCitiesData.SelectAllCities(m_oCitiesArray))
         return FALSE;
 
     return TRUE;

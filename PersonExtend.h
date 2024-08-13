@@ -1,6 +1,10 @@
 #pragma once
 #include "Structures.h"
 
+
+/////////////////////////////////////////////////////////////////////////////
+// CBasePersonExtend
+
 class CPersonExtend
 {
     // Constructor / Destructor
@@ -15,15 +19,6 @@ public:
     CPersonExtend(const CPersonExtend& oPerson);
 
     virtual ~CPersonExtend();
-    // Methods
-    // ----------------
-public:
-    CPersonExtend& operator=(const CPersonExtend& oPerson)
-    {   
-        m_oRecPerson = oPerson.m_oRecPerson;
-        m_oPhoneNumbersArray = oPerson.m_oPhoneNumbersArray;
-        return *this;
-    }
     // Members
     // ----------------
 public:

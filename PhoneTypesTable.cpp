@@ -9,9 +9,8 @@
 // Constructor / Destructor
 // ----------------
 
-CPhoneTypesTable::CPhoneTypesTable()
+CPhoneTypesTable::CPhoneTypesTable():CBaseTable(CString(L"PHONE_TYPES"))
 {
-    m_strTableName.Format(L"PHONE_TYPES");
 }
 
 CPhoneTypesTable::~CPhoneTypesTable()
@@ -19,33 +18,30 @@ CPhoneTypesTable::~CPhoneTypesTable()
 }
 
 
-//Overrides
+//Methods
 // ----------------
 
 bool CPhoneTypesTable::SelectAll(CPhoneTypesArray& oPhonetypesArray)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.SelectAll(oPhonetypesArray);
+    return CBaseTable::SelectAll(oPhonetypesArray);
 }
 
-bool CPhoneTypesTable::SelectWhereID(const long lID, PHONE_TYPES& recPhoneType) {
-
-    CBaseTable oTable(m_strTableName);
-    return oTable.SelectWhereID(lID, recPhoneType);
+bool CPhoneTypesTable::SelectWhereID(const long lID, PHONE_TYPES& recPhoneType)
+{
+    return CBaseTable::SelectWhereID(lID, recPhoneType);
 }
 
 bool CPhoneTypesTable::UpdateWhereID(const long lID, PHONE_TYPES& recPhoneType)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.UpdateWhereID(lID, recPhoneType);
+    return CBaseTable::UpdateWhereID(lID, recPhoneType);
 }
 
-bool CPhoneTypesTable::InsertRecord(PHONE_TYPES& recPhoneType) {
-    CBaseTable oTable(m_strTableName);
-    return oTable.InsertRecord(recPhoneType);
+bool CPhoneTypesTable::InsertRecord(PHONE_TYPES& recPhoneType)
+{
+    return CBaseTable::InsertRecord(recPhoneType);
 }
 
-bool CPhoneTypesTable::DeleteWhereID(const long lID) {
-    CBaseTable oTable(m_strTableName);
-    return oTable.DeleteWhereID(lID);
+bool CPhoneTypesTable::DeleteWhereID(const long lID)
+{
+    return CBaseTable::DeleteWhereID(lID);
 }

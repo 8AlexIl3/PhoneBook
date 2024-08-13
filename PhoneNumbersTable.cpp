@@ -9,9 +9,13 @@
 // Constructor / Destructor
 // ----------------
 
-CPhoneNumbersTable::CPhoneNumbersTable()
+CPhoneNumbersTable::CPhoneNumbersTable():CBaseTable(CString(L"PHONE_NUMBERS"))
 {
-    m_strTable.Format(L"PHONE_NUMBERS");
+}
+
+CPhoneNumbersTable::CPhoneNumbersTable(CString& strColumnName) :
+    CBaseTable(CString(L"PHONE_NUMBERS"),strColumnName)
+{
 }
 
 CPhoneNumbersTable::~CPhoneNumbersTable()
@@ -19,44 +23,36 @@ CPhoneNumbersTable::~CPhoneNumbersTable()
 }
 
 
-//Overrides
+//Methods
 // ----------------
 
 bool CPhoneNumbersTable::SelectAll(CPhoneNumbersArray& oPhoneNumbersArray)
 {
-    CBaseTable oTable(m_strTable);
-    return oTable.SelectAll(oPhoneNumbersArray);
+    return CBaseTable::SelectAll(oPhoneNumbersArray);
 }
 
 bool CPhoneNumbersTable::SelectWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber)
 {
-    CBaseTable oTable(m_strTable);
-    return oTable.SelectWhereID(lID,recPhoneNumber);
+    return CBaseTable::SelectWhereID(lID,recPhoneNumber);
 }
 
 bool CPhoneNumbersTable::SelectMultipleWhereID(const long lID, CPhoneNumbersArray& oPhoneNumbersArray)
 {
-    CString strColumnName;
-    strColumnName.Format(L"PERSON_ID");
-    CBaseTable oTable(m_strTable,strColumnName);
-    return oTable.SelectMultipleWhereID(lID, oPhoneNumbersArray);
+    return CBaseTable::SelectMultipleWhereID(lID, oPhoneNumbersArray);
 }
 
 bool CPhoneNumbersTable::UpdateWhereID(const long lID, PHONE_NUMBERS& recPhoneNumber)
 {
-    CBaseTable oTable(m_strTable);
-    return oTable.UpdateWhereID(lID,recPhoneNumber);
+    return CBaseTable::UpdateWhereID(lID,recPhoneNumber);
 }
 
 bool CPhoneNumbersTable::InsertRecord(PHONE_NUMBERS& recPhoneNumber)
 {    
-    CBaseTable oTable(m_strTable);
-    return oTable.InsertRecord(recPhoneNumber);
+    return CBaseTable::InsertRecord(recPhoneNumber);
 }
 
 bool CPhoneNumbersTable::DeleteWhereID(const long lID)
 {
-    CBaseTable oTable(m_strTable);
-    return oTable.DeleteWhereID(lID);
+    return CBaseTable::DeleteWhereID(lID);
    
 }

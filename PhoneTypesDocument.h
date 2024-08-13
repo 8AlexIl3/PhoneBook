@@ -1,10 +1,10 @@
 #pragma once
+#include "PhoneTypesData.h"
+#include "Structures.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CPhoneTypesDocument
-
-#include "PhoneTypesData.h"
-#include "Structures.h"
 
 class CPhoneTypesDocument : public CDocument
 {
@@ -65,7 +65,7 @@ public:
     // Members
     // ----------------
 private:
-    // Array to hold city records
+    // Array to hold PhoneType records
     CPhoneTypesArray m_oPhoneTypesArray;
 
 

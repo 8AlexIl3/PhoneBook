@@ -54,7 +54,7 @@ void CPersonsView::OnInitialUpdate()
     m_oListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
     m_oListCtrl.InsertColumn(FIRST_NAME_COLUMN, _T("Име"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
     m_oListCtrl.InsertColumn(LAST_NAME_COLUMN, _T("Фамилия"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
-    m_oListCtrl.InsertColumn(CITY_ID_COLUMN, _T("Град"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(CITY_NAME_COLUMN, _T("Град"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
     m_oListCtrl.InsertColumn(ADDRESS_COLUMN, _T("Адрес"), LVCFMT_LEFT, 2*DEFAULT_COLUMN_WIDTH);
     m_oListCtrl.InsertColumn(PRIMARY_PHONE_COLUMN, _T("Главен телефон"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
 
@@ -160,9 +160,8 @@ bool CPersonsView::InsertPerson()
 
     pPersonsDocument->GetCredentials().RefreshData();
 
-    CPersonExtend oPerson;
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), oPerson,true);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials());
 
     if (oPersonsDialog.DoModal() == IDCANCEL)
         return FALSE;
@@ -206,8 +205,7 @@ bool CPersonsView::SelectPerson()
     
     pPersonsDocument->GetCredentials().RefreshData();
 
-
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), oPerson,false);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), &oPerson,false);
 
     oPersonsDialog.DoModal();
       
@@ -267,12 +265,10 @@ bool CPersonsView::UpdatePerson()
     if (!pPerson)
         return FALSE;
 
-    CPersonExtend& oPerson = *pPerson;
-      
     
     pPersonsDocument->GetCredentials().RefreshData();
 
-    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(),oPerson,true);
+    CPersonsDlg oPersonsDialog(pPersonsDocument->GetCredentials(), pPerson,true);
 
     if (oPersonsDialog.DoModal() == IDCANCEL) 
         return FALSE;
@@ -280,7 +276,7 @@ bool CPersonsView::UpdatePerson()
 
     //Copy the data
 
-    if (!pPersonsDocument->UpdatePerson(oPerson.m_oRecPerson.lID, oPersonsDialog.GetPerson())) 
+    if (!pPersonsDocument->UpdatePerson(pPerson->m_oRecPerson.lID, oPersonsDialog.GetPerson()))
         return FALSE;
     
     return TRUE;
@@ -314,7 +310,7 @@ void CPersonsView::DisplayData()
 
         CString strCityID;
         pPersonsDocument->GetCredentials().GetStringtoCityMap().Lookup(pPerson->m_oRecPerson.lCityID, strCityID);
-        m_oListCtrl.SetItemText(lCtrlListIndex, CITY_ID_COLUMN, strCityID);
+        m_oListCtrl.SetItemText(lCtrlListIndex, CITY_NAME_COLUMN, strCityID);
 
         m_oListCtrl.SetItemText(lCtrlListIndex, ADDRESS_COLUMN, pPerson->m_oRecPerson.szAddress);
 

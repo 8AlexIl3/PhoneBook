@@ -24,7 +24,7 @@ CPersonsData::~CPersonsData()
 bool CPersonsData::SelectAllPersonsExtended(CPersonArray& oPersonArray)
 {
     CPersonsTable oPersonsTable;
-    CPhoneNumbersTable oPhoneNumbersTable;
+    CPhoneNumbersTable oPhoneNumbersTable(CString(L"PERSON_ID"));
 
     CPersonsArray oPersonsArray;
 
@@ -52,7 +52,7 @@ bool CPersonsData::SelectAllPersonsExtended(CPersonArray& oPersonArray)
 bool CPersonsData::SelectPersonExtendedWhereID(const long lID, CPersonExtend& recPerson)
 {
     CPersonsTable oPersonsTable;
-    CPhoneNumbersTable oPhoneNumbersTable;
+    CPhoneNumbersTable oPhoneNumbersTable(CString(L"PERSON_ID"));
     PERSONS oPersons;
 
     if (!oPersonsTable.SelectWhereID(lID, recPerson.m_oRecPerson)) 
@@ -92,8 +92,8 @@ bool CPersonsData::DeletePersonExtended(CPersonExtend& recPerson)
         return FALSE;
     
     CPersonsTable oPersonsTable;
-    CPhoneNumbersTable oPhoneNumbersTable;
-    
+    CPhoneNumbersTable oPhoneNumbersTable(CString(L"PERSON_ID"));
+
     for (INT_PTR nIndexer(0); nIndexer < recPerson.m_oPhoneNumbersArray.GetCount(); nIndexer++) {
 
         PHONE_NUMBERS* pPhoneNumber= recPerson.m_oPhoneNumbersArray.GetAt(nIndexer);

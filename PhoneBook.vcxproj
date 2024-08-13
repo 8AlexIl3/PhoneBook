@@ -191,7 +191,7 @@
     <ClInclude Include="CitiesDocument.h" />
     <ClInclude Include="CitiesView.h" />
     <ClInclude Include="PersonsCredentials.h" />
-    <ClInclude Include="Person.h" />
+    <ClInclude Include="PersonExtend.h" />
     <ClInclude Include="BaseTable.h" />
     <ClInclude Include="DBconnection.h" />
     <ClInclude Include="DBConnectionSingleton.h" />
@@ -224,7 +224,7 @@
     <ClCompile Include="CitiesData.cpp" />
     <ClCompile Include="CitiesDocument.cpp" />
     <ClCompile Include="CitiesView.cpp" />
-    <ClCompile Include="Person.cpp" />
+    <ClCompile Include="PersonExtend.cpp" />
     <ClCompile Include="DBconnection.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="CitiesTable.cpp" />

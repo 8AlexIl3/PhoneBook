@@ -52,9 +52,4 @@ public:
     /// <returns>TRUE if successful/FALSE if NOT</returns>
     bool DeleteWhereID(const long lID);
 
-
-    // Members
-    // ----------------
-private:
-    CString m_strTableName;
 };

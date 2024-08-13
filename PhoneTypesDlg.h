@@ -2,7 +2,9 @@
 #include "afxdialogex.h"
 #include "Structures.h"
 
-// CPhoneTypesDlg dialog
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumbersDlg
+
 
 class CPhoneTypesDlg : public CDialogEx
 {

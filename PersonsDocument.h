@@ -1,15 +1,15 @@
 #pragma once
+#include "PersonsData.h"
+#include "CitiesData.h"
+#include "PhoneTypesData.h"
+#include "Structures.h"
+#include "PersonExtend.h"
+#include "PersonsCredentials.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CPersonsDocument
 
-#include "PersonsData.h"
-#include "CitiesData.h"
-#include "PhoneTypesData.h"
-#include "Structures.h"
-#include "Person.h"
-#include "PersonsCredentials.h"
 class CPersonsDocument : public CDocument
 {
 
@@ -54,14 +54,12 @@ public:
 
     CPersonsCredentials& GetCredentials();
 
-    /// <summary>Getter for personArray</summary>
     CPersonArray& GetPersonArray();
 
-   
+ 
 private:
     void ClearPersonsArray();
     
-
 
     // Overrides
     // ----------------
@@ -77,7 +75,6 @@ private:
     // Array to hold person records
     CPersonArray m_oPersonsArray;
     CPersonsCredentials m_oCredentials;
-    //CMap<long, long, CString, CString> m_oCityIDtoString;
 
     // Implementation
     // ----------------

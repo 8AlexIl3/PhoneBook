@@ -6,12 +6,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPersonsTable
 
+
 // Constructor / Destructor
 // ----------------
 
-CPersonsTable::CPersonsTable() 
+CPersonsTable::CPersonsTable(): CBaseTable(CString(L"PERSONS"))
 {
-    m_strTableName.Format(L"PERSONS");
 }
 
 CPersonsTable::~CPersonsTable()
@@ -19,35 +19,30 @@ CPersonsTable::~CPersonsTable()
 }
 
 
-//Overrides
+//Methods
 // ----------------
 
 bool CPersonsTable::SelectAll(CPersonsArray& oPersonsArray)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.SelectAll(oPersonsArray);
+    return CBaseTable::SelectAll(oPersonsArray);
 }
 
 bool CPersonsTable::SelectWhereID(const long lID, PERSONS& recPerson)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.SelectWhereID(lID,recPerson);
+    return CBaseTable::SelectWhereID(lID,recPerson);
 }
 
 bool CPersonsTable::UpdateWhereID(const long lID, PERSONS& recPerson)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.UpdateWhereID(lID, recPerson);
+    return CBaseTable::UpdateWhereID(lID, recPerson);
 }
 
 bool CPersonsTable::InsertRecord(PERSONS& recPerson)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.InsertRecord(recPerson);
+    return CBaseTable::InsertRecord(recPerson);
 }
 
 bool CPersonsTable::DeleteWhereID(const long lID)
 {
-    CBaseTable oTable(m_strTableName);
-    return oTable.DeleteWhereID(lID);
+    return CBaseTable::DeleteWhereID(lID);
 }

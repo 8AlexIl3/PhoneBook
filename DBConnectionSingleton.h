@@ -1,9 +1,9 @@
 #pragma once
+#include "DBConnection.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // DBConnectionSingleton
-
-#include "DBConnection.h"
 
 class CDBConnectionSingleton {
 public:

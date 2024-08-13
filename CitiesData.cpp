@@ -20,7 +20,7 @@ CCitiesData::~CCitiesData()
 // Methods
 // ----------------
 
-bool CCitiesData::SelectAll(CCitiesArray& oCitiesArray)
+bool CCitiesData::SelectAllCities(CCitiesArray& oCitiesArray)
 {
     CCitiesTable oCitiesTable;
 
@@ -29,7 +29,7 @@ bool CCitiesData::SelectAll(CCitiesArray& oCitiesArray)
     return !oCitiesArray.IsEmpty();
 }
 
-bool CCitiesData::SelectWhereID(const long lID, CITIES& recCity)
+bool CCitiesData::SelectCityWhereID(const long lID, CITIES& recCity)
 {
     CCitiesTable oCitiesTable;
 
@@ -38,7 +38,7 @@ bool CCitiesData::SelectWhereID(const long lID, CITIES& recCity)
     return recCity.lID;
 }
 
-bool CCitiesData::UpdateWhereID(const long lID, CITIES& recCity)
+bool CCitiesData::UpdateCityWhereID(const long lID, CITIES& recCity)
 {
     CCitiesTable oCitiesTable;
 
@@ -52,7 +52,7 @@ bool CCitiesData::InsertCity(CITIES& recCity)
     return  oCitiesTable.InsertRecord(recCity);
 }
 
-bool CCitiesData::DeleteWhereID(const long lID)
+bool CCitiesData::DeleteCityWhereID(const long lID)
 {
     CCitiesTable oCitiesTable;
 

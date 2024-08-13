@@ -52,7 +52,7 @@ void CPhoneTypesView::OnInitialUpdate()
 
     m_oListCtrl.ModifyStyle(0, LVS_REPORT | LVS_SINGLESEL);
     m_oListCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT);
-    m_oListCtrl.InsertColumn(PHONE_TYPE_COLUMN, _T("План"), LVCFMT_CENTER, DEFAULT_COLUMN_WIDTH);
+    m_oListCtrl.InsertColumn(PHONE_TYPE_COLUMN, _T("План"), LVCFMT_LEFT, DEFAULT_COLUMN_WIDTH);
 
     DisplayData();
 

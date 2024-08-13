@@ -1,11 +1,10 @@
 #pragma once
+#include <atldbcli.h>
+#include <atlstr.h> 
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CDBConnection
-
-#include <atldbcli.h>
-#include <atlstr.h> 
 
 class CDBConnection
 {

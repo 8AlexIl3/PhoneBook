@@ -5,6 +5,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CPersonsDocument
 
+// MFC Macros
+// ----------------
 IMPLEMENT_DYNCREATE(CPersonsDocument, CDocument)
 
 BEGIN_MESSAGE_MAP(CPersonsDocument, CDocument)

@@ -1,5 +1,3 @@
-// PhoneTypesDlg.cpp : implementation file
-//
 
 #include "pch.h"
 #include "PhoneBook.h"
@@ -7,8 +5,9 @@
 #include "PhoneTypesDlg.h"
 #include <regex>
 
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneTypesDlg
 
-// CPhoneTypesDlg dialog
 IMPLEMENT_DYNAMIC(CPhoneTypesDlg, CDialogEx)
 BEGIN_MESSAGE_MAP(CPhoneTypesDlg, CDialogEx)
 END_MESSAGE_MAP()
@@ -65,7 +64,8 @@ BOOL CPhoneTypesDlg::OnInitDialog()
 
 	return TRUE;
 }
-
+//MFC Methods
+// ----------------
 bool CPhoneTypesDlg::ValidateData() {
 	std::wstring oPatternChecker;
 	CString strPhoneTypeGetter;

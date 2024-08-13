@@ -3,7 +3,11 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CPhoneTypesDlg
+// CPhoneTypesDocument
+
+
+//MFC macros
+// ----------------
 
 IMPLEMENT_DYNCREATE(CPhoneTypesDocument, CDocument)
 
@@ -86,7 +90,7 @@ bool CPhoneTypesDocument::DeletePhoneType(const long lID, const long lrowIndexer
 {
     CPhoneTypesData oPhoneTypesData;
 
-    if (!oPhoneTypesData.DeleteWhereID(lID))
+    if (!oPhoneTypesData.DeletePhoneTypeWhereID(lID))
         return FALSE;
 
     PHONE_TYPES* pPhoneTypes = m_oPhoneTypesArray.GetAt(lrowIndexer);
@@ -106,7 +110,7 @@ bool CPhoneTypesDocument::UpdatePhoneType(const long lID, PHONE_TYPES& oPhoneTyp
 {
     CPhoneTypesData oPhoneTypesData;
 
-    if (!oPhoneTypesData.UpdateWhereID(lID, oPhoneTypes))
+    if (!oPhoneTypesData.UpdatePhoneTypeWhereID(lID, oPhoneTypes))
         return FALSE;
 
     UpdateAllViews(NULL);
@@ -118,7 +122,7 @@ bool CPhoneTypesDocument::SelectPhoneType(const long lID, PHONE_TYPES & oPhoneTy
 {
     CPhoneTypesData oPhoneTypesData;
 
-    if (!oPhoneTypesData.SelectWhereID(lID, oPhoneTypes))
+    if (!oPhoneTypesData.SelectPhoneTypeWhereID(lID, oPhoneTypes))
         return FALSE;
 
     return TRUE;
@@ -129,7 +133,7 @@ bool CPhoneTypesDocument::LoadPhoneTypes()
     CPhoneTypesData oPhoneTypesData;
 
     ClearArray();
-    if (!oPhoneTypesData.SelectAll(m_oPhoneTypesArray))
+    if (!oPhoneTypesData.SelectAllPhoneTypes(m_oPhoneTypesArray))
         return FALSE;
 
     return TRUE;

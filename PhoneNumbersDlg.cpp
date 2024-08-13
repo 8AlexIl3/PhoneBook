@@ -1,13 +1,11 @@
-// PhoneNumbersDlg.cpp : implementation file
-//
-
 #include "pch.h"
 #include "PhoneBook.h"
 #include "afxdialogex.h"
 #include "PhoneNumbersDlg.h"
 
 
-// CPhoneNumbersDlg dialog
+/////////////////////////////////////////////////////////////////////////////
+// CPersonsDlg
 
 IMPLEMENT_DYNAMIC(CPhoneNumbersDlg, CDialogEx)
 

@@ -1,9 +1,11 @@
 #pragma once
-
 #include "afxdialogex.h"
 #include "Structures.h"
 
-// CPhoneNumbersDlg dialog
+
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneNumbersDlg
+
 class CPhoneNumbersDlg : public CDialogEx
 {
     // Macros

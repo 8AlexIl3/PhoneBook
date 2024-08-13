@@ -16,8 +16,6 @@ class CBaseTable : public CCommand<CAccessor<Accessor>>
 // Constructor / Destructor
 // ----------------
 public:
-    CBaseTable();
-
     CBaseTable(CString& strTableName, CString strColumnName);
 
     CBaseTable(CString& strTableName);
@@ -26,7 +24,7 @@ public:
 
 // Methods
 // ----------------
-public:
+protected:
     virtual bool SelectAll(CAutoMemoryArray<RecordType>& oArray) {
         //Connect to server->database->open session
         if (!m_oConnection.CheckValidSession()) 
@@ -47,20 +45,19 @@ public:
         if (!m_oConnection.IsActionSuccessful(oHresult))
             return FALSE;
 
-        //add all phone numbers to the array
         do
         {
-            RecordType* pPhoneNumbers = new RecordType(m_rec);
+            RecordType* oRec = new RecordType(m_rec);
 
-            if (!pPhoneNumbers) {//If memory is NOT allocated
+            if (!oRec) {//If memory is NOT allocated
                 CString strError;
-                strError.Format(_T("Неуспешно добавяне на телефонен номер"));
+                strError.Format(_T("Неуспешно добавяне на запис"));
                 AfxMessageBox(strError);
 
                 continue;
 
             }
-            oArray.Add(pPhoneNumbers);
+            oArray.Add(oRec);
 
         } while (MoveNext() == S_OK);
 
@@ -131,21 +128,19 @@ public:
             return FALSE;
         }
         
-        //add all phone numbers to the array
         do
         {
+            RecordType* oRec = new RecordType(m_rec);
 
-            RecordType* pPhoneNumbers = new RecordType(m_rec);
-
-            if (!pPhoneNumbers) {//If memory is NOT allocated
+            if (!oRec) {//If memory is NOT allocated
                 CString strError;
-                strError.Format(_T("Неуспешно добавяне на телефонен номер"));
+                strError.Format(_T("Неуспешно добавяне на запис"));
                 AfxMessageBox(strError);
 
                 continue;
 
             }
-            oArray.Add(pPhoneNumbers);
+            oArray.Add(oRec);
 
         } while (MoveNext() == S_OK);
 
@@ -230,10 +225,10 @@ public:
             return FALSE;
         }
         
-        if (bTransactionOccured) {
+        if (bTransactionOccured) 
             m_oConnection.CommitTransaction();
-            Close();
-        }
+
+        Close();
 
         return TRUE;
     }
@@ -279,12 +274,10 @@ public:
         //Gets The records' ID
         rec = m_rec;
 
-        if (bTransactionOccured) {
+        if (bTransactionOccured) 
             m_oConnection.CommitTransaction();
 
-                Close();
-        }
-
+        Close();
 
         return TRUE;
     };
@@ -332,11 +325,10 @@ public:
             return FALSE;
         }
 
-        if (bTransactionOccured) {
+        if (bTransactionOccured) 
             m_oConnection.CommitTransaction();
-
-            Close();
-        }
+        
+        Close();
 
         return TRUE;
     }
@@ -345,12 +337,6 @@ private:
     CString m_strTableName;
     CString m_strColumnName;
 };
-
-template <typename RecordType, typename Accessor>
-inline CBaseTable<RecordType, Accessor>::CBaseTable():
-m_oConnection(CDBConnectionSingleton::GetInstance())
-{
-}
 
 template <typename RecordType, typename Accessor>
 inline CBaseTable<RecordType, Accessor>::CBaseTable(CString& strTableName, CString strColumnName) :

@@ -1,5 +1,12 @@
 #include "pch.h"
-#include "Person.h"
+#include "PersonExtend.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// CPersonExtend
+
+
+// Constructor / Destructor
+// ----------------
 
 CPersonExtend::CPersonExtend()
 {

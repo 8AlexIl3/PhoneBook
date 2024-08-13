@@ -1,6 +1,10 @@
 #pragma once
 #include "Structures.h"
 #include <atldbcli.h>
+
+/////////////////////////////////////////////////////////////////////////////
+// CCitiesAccessor
+
 #define ACCESSOR_COUNT          2
 
 #define ACCESSOR_IDENTITY       0

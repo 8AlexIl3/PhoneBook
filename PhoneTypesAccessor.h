@@ -1,4 +1,8 @@
 #pragma once
+
+/////////////////////////////////////////////////////////////////////////////
+// CPhoneTypesAccessor
+
 #include "Structures.h"
 #include <atldbcli.h>
 #define ACCESSOR_COUNT              2

@@ -111,7 +111,7 @@
     <ClInclude Include="PhoneTypesAccessor.h">
       <Filter>Header Files\PhoneTypes</Filter>
     </ClInclude>
-    <ClInclude Include="Person.h">
+    <ClInclude Include="PersonExtend.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PersonsDocument.h">
@@ -200,7 +200,7 @@
     <ClCompile Include="PhoneNumbersDlg.cpp">
       <Filter>Source Files\PhoneNumbers</Filter>
     </ClCompile>
-    <ClCompile Include="Person.cpp">
+    <ClCompile Include="PersonExtend.cpp">
       <Filter>Source Files\Persons</Filter>
     </ClCompile>
     <ClCompile Include="PhoneTypesDocument.cpp">

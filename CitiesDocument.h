@@ -1,11 +1,10 @@
 #pragma once
+#include "CitiesData.h"
+#include "Structures.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CCitiesDocument
-
-#include "CitiesData.h"
-#include "Structures.h"
 
 class CCitiesDocument : public CDocument
 {
